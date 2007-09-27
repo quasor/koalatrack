@@ -17,7 +17,7 @@ development:
   database: tcm_development
   username: root
   password:
-  host: localhost
+  host: fisharc.local
 
 # Warning: The database defined as 'test' will be erased and
 # re-generated from your development database when you run 'rake'.
