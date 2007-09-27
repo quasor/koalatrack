@@ -1,0 +1,74 @@
+<p>
+  <b>Title:</b>
+  <%=h @test_case.title %>
+</p>
+
+<p>
+  <b>Body:</b>
+  <%=h @test_case.body %>
+</p>
+
+<p>
+  <b>Owner:</b>
+  <%=h @test_case.user %>
+</p>
+
+<p>
+  <b>Priority in feature:</b>
+  <%=h @test_case.priority_in_feature %>
+</p>
+
+<p>
+  <b>Prioirty in product:</b>
+  <%=h @test_case.prioirty_in_product %>
+</p>
+
+<p>
+  <b>Estimate in hours:</b>
+  <%=h @test_case.estimate_in_hours %>
+</p>
+
+<p>
+  <b>Automated:</b>
+  <%=h @test_case.automated %>
+</p>
+<hr/>
+
+<table border="0" cellspacing="5" cellpadding="5">
+	<tr>
+	    <th>Version</th>
+	    <th>Update date</th>
+	    <th>Updated by</th>
+	
+	    <th>Title</th>
+	    <th>Owner</th>
+<!--	    <th>Body</th>
+	    <th>Owner</th>
+	    <th>Priority in feature</th>
+	    <th>Prioirty in product</th>
+	    <th>Estimate in hours</th>
+	    <th>Automated</th>
+-->
+	</tr>
+<% for test_case in @test_case.versions %>
+	<tr>
+	<td><%=h test_case.version %></td>
+	<td><%=h test_case.updated_at %></td>
+	<td><%=h User.find(test_case.updated_by).login if test_case.updated_by %></td>
+	<td><%=h test_case.title %></td>
+    <td><%=h User.find test_case.user_id %></td>
+<!--
+    <td><%=h test_case.body %></td>
+    <td><%=h test_case.user_id %></td>
+    <td><%=h test_case.priority_in_feature %></td>
+    <td><%=h test_case.prioirty_in_product %></td>
+    <td><%=h test_case.estimate_in_hours %></td>
+    <td><%=h test_case.automated %></td>
+-->
+	</tr>
+<% end %>
+</table>
+<hr/>
+
+<%= link_to 'Edit', edit_test_case_path(@test_case) %> |
+<%= link_to 'Back', test_cases_path %>

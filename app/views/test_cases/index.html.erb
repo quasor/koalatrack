@@ -1,0 +1,34 @@
+<h1>Listing test_cases</h1>
+<%= "Welcome #{current_user.login}" if current_user %>
+<table>
+  <tr>
+    <th>Category</th>
+    <th>Title</th>
+    <th>Body</th>
+    <th>Owner</th>
+    <th>Priority in feature</th>
+    <th>Prioirty in product</th>
+    <th>Estimate in hours</th>
+    <th>Automated</th>
+  </tr>
+
+<% for test_case in @test_cases %>
+  <tr>
+    <td><%=h test_case.category.name if test_case.category %></td>
+    <td><%=h test_case.title %></td>
+    <td><%=h test_case.body %></td>
+    <td><%=h test_case.user.login %></td>
+    <td><%=h test_case.priority_in_feature %></td>
+    <td><%=h test_case.prioirty_in_product %></td>
+    <td><%=h test_case.estimate_in_hours %></td>
+    <td><%=h test_case.automated %></td>
+    <td><%= link_to 'Show', test_case %></td>
+    <td><%= link_to 'Edit', edit_test_case_path(test_case) %></td>
+    <td><%= link_to 'Destroy', test_case, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New test_case', new_test_case_path %>
