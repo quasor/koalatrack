@@ -28,7 +28,7 @@ test:
   database: tcm_test
   username: root
   password:
-  host: localhost
+  host: fisharc.local
 
 production:
   adapter: mysql
