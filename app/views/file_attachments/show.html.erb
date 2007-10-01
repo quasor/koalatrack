@@ -1,0 +1,38 @@
+<p>
+  <b>Test case:</b>
+  <%=h @file_attachment.test_case_id %>
+</p>
+
+<p>
+  <b>Content type:</b>
+  <%=h @file_attachment.content_type %>
+</p>
+
+<p>
+  <b>Filename:</b>
+  <%=h @file_attachment.filename %>
+</p>
+
+<p>
+  <b>Thumbnail:</b>
+  <%=h @file_attachment.thumbnail %>
+</p>
+
+<p>
+  <b>Size:</b>
+  <%=h @file_attachment.size %>
+</p>
+
+<p>
+  <b>Width:</b>
+  <%=h @file_attachment.width %>
+</p>
+
+<p>
+  <b>Height:</b>
+  <%=h @file_attachment.height %>
+</p>
+
+
+<%= link_to 'Edit', edit_file_attachment_path(@file_attachment) %> |
+<%= link_to 'Back', file_attachments_path %>

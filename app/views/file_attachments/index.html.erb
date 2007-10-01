@@ -1,0 +1,32 @@
+<h1>Listing file_attachments</h1>
+
+<table>
+  <tr>
+    <th>Test case</th>
+    <th>Content type</th>
+    <th>Filename</th>
+    <th>Thumbnail</th>
+    <th>Size</th>
+    <th>Width</th>
+    <th>Height</th>
+  </tr>
+
+<% for file_attachment in @file_attachments %>
+  <tr>
+    <td><%=h file_attachment.test_case_id %></td>
+    <td><%=h file_attachment.content_type %></td>
+    <td><%=h file_attachment.filename %></td>
+    <td><%=h file_attachment.thumbnail %></td>
+    <td><%=h file_attachment.size %></td>
+    <td><%=h file_attachment.width %></td>
+    <td><%=h file_attachment.height %></td>
+    <td><%= link_to 'Show', file_attachment %></td>
+    <td><%= link_to 'Edit', edit_file_attachment_path(file_attachment) %></td>
+    <td><%= link_to 'Destroy', file_attachment, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New file_attachment', new_file_attachment_path %>

@@ -46,7 +46,8 @@ Rails::Initializer.run do |config|
 
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
-
+  config.active_record.observers = :user_observer
+  
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
 
@@ -55,3 +56,82 @@ Rails::Initializer.run do |config|
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory is automatically loaded
 end
+
+WhiteListHelper.tags.merge %w(table td th tr tbody span)
+
+
+#First extend ActiveRecord::Base to allow us to override connections 
+module ActiveRecord 
+  class Base 
+
+    # Sets the active connection to conn and runs the given block. Active 
+    # connection is reset to it's previous value once the block finishes. 
+    def self.using_connection(conn) 
+      old_connection = use_connection(conn) 
+      ret = yield if block_given? 
+      use_connection(old_connection) 
+      ret 
+    end 
+
+    # Sets the active connection to conn, returns the previously active connection 
+    def self.use_connection(conn) 
+      old_active_connection = active_connections[active_connection_name] 
+      active_connections[active_connection_name] = conn 
+      old_active_connection 
+    end 
+
+  end 
+end 
+
+class ModelBaseRead < ActiveRecord::Base 
+  self.abstract_class = true 
+  establish_connection "qatraq"
+
+  @@read_connection = self.connection 
+  def self.read_connection 
+    @@read_connection 
+  end 
+
+  def self.use_read_connection 
+    use_connection(read_connection()) 
+  end 
+
+  def self.using_read_connection(&blk) 
+    using_connection(read_connection, &blk) 
+  end 
+end 
+
+class ModelBase < ModelBaseRead 
+  self.abstract_class = true 
+  establish_connection RAILS_ENV if defined? RAILS_ENV 
+
+  @@write_connection = self.connection 
+  def self.write_connection 
+    @@write_connection 
+  end 
+
+  def self.use_write_connection 
+    use_connection(write_connection()) 
+  end 
+
+  def self.using_write_connection(&blk) 
+    using_connection(write_connection, &blk) 
+  end 
+end 
+
+# Then define some model as 
+class SomeModel < ModelBase 
+  # some stuff 
+end 
+
+# Then you can do nifty things like this: 
+#ModelBase.using_read_connection() do 
+#  s = SomeModel.find(:all) 
+#end 
+# or if you like... 
+#ModelBase.use_read_connection() 
+#s = SomeModel.find(:all) 
+#ModelBase.use_write_connection()
+
+
+# connection.execute("some sql where * etc;").

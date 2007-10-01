@@ -9,28 +9,30 @@
   <%= javascript_include_tag "prototype", "effects", "application", "controls" %>
 </head>
 <body>
-<table border="0" cellspacing="0" cellpadding="15">
-	<tr>
-		<td bgcolor="#D4E4FC" valign="top" rowspan="2">
-			<%=	link_to 'All', test_cases_path%><br />
-			<% for category in Category.find(:all) %>
-				<br /><%=	link_to category.name, test_cases_path(:category_id => category)%>
-			<% end %>
-		</td>
-		<td bgcolor="#D4E4FC" valign="top">
-			<%=	link_to_unless_current 'Test Cases', test_cases_path%> |
-			<%=	link_to_unless_current 'Playlists', playlists_path%> 
-			
-		</td>
-		</tr>
+	<table border="0" cellspacing="5" cellpadding="5">
 		<tr>
-		<td valign="top">
-			<p style="color: green"><%= flash[:notice] %></p>
-			<%= yield  %>
-		</td>
-		<td></td>
-		
-	</tr>
-</table>
+			<% begin %>
+			<td valign="top">
+				<% form_tag test_cases_path, :method => 'get' do %>
+				  Search:
+				  <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box, :type => :search %>
+				<% end %>
+				<p><span style='font-size:10px'>
+				<b>Example:</b> reporting AND payment NOT deferred <br/>
+				<%= link_to 'Query Syntax', 'http://lucene.apache.org/java/docs/queryparsersyntax.html' %>
+				</span></p>
+				<%= renderCategoryTree%>
+			</td>
+			<% end unless controller.controller_name == 'playlists'%>
+			<td valign="top">
+				<%=	link_to_unless_current 'Test Cases', test_cases_path%> |
+				<%=	link_to_unless_current 'Playlists', playlists_path%> | 
+				<%= link_to 'New test case', new_test_case_path(:category_id => params[:category_id]) %>			
+				<hr/>
+				<p style="color: green"><%= flash[:notice] %></p>
+				<%= yield  %>		
+			</td>
+		</tr>
+	</table>
 </body>
 </html>

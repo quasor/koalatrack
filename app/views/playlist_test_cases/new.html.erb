@@ -1,0 +1,23 @@
+<h1>New playlist_test_case</h1>
+
+<%= error_messages_for :playlist_test_case %>
+
+<% form_for(@playlist_test_case) do |f| %>
+  <p>
+    <b>Playlist</b><br />
+    <%= f.select(:playlist_id, Playlist.find(:all).collect {|p| [ "#{p.milestone} - #{p.title}", p.id ] } ) %>
+  </p>
+
+    <%= f.hidden_field(:test_case_id ) %>
+
+  <p>
+    <b>User</b><br />
+    <%= f.select(:user_id, User.find(:all).collect {|p| [ p.login, p.id ] } ) %>
+  </p>
+
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', playlist_test_cases_path %>

@@ -69,7 +69,7 @@ class RedirectTest < Test::Unit::TestCase
   def test_simple_redirect
     get :simple_redirect
     assert_response :redirect
-    assert_equal "http://test.host/redirect/hello_world", redirect_to_url
+    assert_equal "http://test.host/redirect/hello_world", redirect_to
   end
 
   def test_simple_redirect_using_options
@@ -115,7 +115,7 @@ class RedirectTest < Test::Unit::TestCase
     @request.env["HTTP_REFERER"] = "http://www.example.com/coming/from"
     get :redirect_to_back
     assert_response :redirect
-    assert_equal "http://www.example.com/coming/from", redirect_to_url
+    assert_equal "http://www.example.com/coming/from", redirect_to
   end
   
   def test_redirect_to_back_with_no_referer
@@ -132,10 +132,10 @@ class RedirectTest < Test::Unit::TestCase
     end
     
     get :redirect_to_existing_record
-    assert_equal "http://test.host/workshops/5", redirect_to_url
+    assert_equal "http://test.host/workshops/5", redirect_to
 
     get :redirect_to_new_record
-    assert_equal "http://test.host/workshops", redirect_to_url
+    assert_equal "http://test.host/workshops", redirect_to
   end
 end
 
@@ -156,7 +156,7 @@ module ModuleTest
     def test_simple_redirect
       get :simple_redirect
       assert_response :redirect
-      assert_equal "http://test.host/module_test/module_redirect/hello_world", redirect_to_url
+      assert_equal "http://test.host/module_test/module_redirect/hello_world", redirect_to
     end
 
     def test_simple_redirect_using_options
@@ -168,7 +168,7 @@ module ModuleTest
     def test_module_redirect
       get :module_redirect
       assert_response :redirect
-      assert_equal "http://test.host/redirect/hello_world", redirect_to_url
+      assert_equal "http://test.host/redirect/hello_world", redirect_to
     end
 
     def test_module_redirect_using_options

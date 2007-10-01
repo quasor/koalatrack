@@ -1,5 +1,13 @@
 require 'digest/sha1'
 class User < ActiveRecord::Base
+  # Associations
+  has_many :test_cases
+  has_many :edited_test_cases, :class_name => "TestCase" 
+  has_many :playlists
+  def to_s
+    login
+  end  
+  
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 

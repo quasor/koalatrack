@@ -3,6 +3,11 @@
 <%= error_messages_for :test_case %>
 
 <% form_for(@test_case) do |f| %>
+	<p>
+	  <b>Category</b><br />
+		<%= f.select(:category_id, Category.find(:all).collect {|p| [ p.name, p.id ] } ) %>
+	</p>
+
   <p>
     <b>Title</b><br />
     <%= f.text_field :title %>

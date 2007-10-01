@@ -438,7 +438,7 @@ module ActionController #:nodoc:
       @response.cookies
     end
 
-    def redirect_to_url
+    def redirect_to
       @response.redirect_url
     end
 

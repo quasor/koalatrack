@@ -1,34 +1,48 @@
-<h1>Listing test_cases</h1>
-<%= "Welcome #{current_user.login}" if logged_in? %>
-<table>
+<% if @test_cases.empty?%>
+<< Select a category or search
+<% form_tag test_cases_path, :method => 'get' do %>
+  <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box_big, :type => :search, :style => 'font-size:22px; padding:4px' %>
+<% end %>
+<p><span style='font-size:10px'>
+<b>Example:</b> reporting AND payment NOT deferred <br/>
+<%= link_to 'Query Syntax', 'http://lucene.apache.org/java/docs/queryparsersyntax.html' %>
+</span></p>
+
+<% else %>
+<h1><%= (@category.ancestors + [@category]).collect(&:name).join(' \ ') if @category%> Test Cases</h1>
+<table border=1>
   <tr>
-    <th>Category</th>
+    <% if @category.nil? %><th>Category</th><% end %>
     <th>Title</th>
-    <th>Body</th>
     <th>Owner</th>
-    <th>Priority in feature</th>
-    <th>Prioirty in product</th>
-    <th>Estimate in hours</th>
-    <th>Automated</th>
+    <th>Tags</th>
+	<% if @total_hits %>
+	<th>Score</th>
+	<% end %>
   </tr>
 
 <% for test_case in @test_cases %>
   <tr>
-    <td><%=h test_case.category.name if test_case.category %></td>
-    <td><%=h test_case.title %></td>
-    <td><%=h test_case.body %></td>
+	<% if test_case.category && @category.nil? %>
+    <td><%= (test_case.category.ancestors + [test_case.category]).collect(&:name).join(' \ ') %></td> 
+	<% end %>
+    <td><%=link_to (h test_case.title), test_case %></td>
     <td><%=h test_case.user.login if test_case.user_id %></td>
-    <td><%=h test_case.priority_in_feature %></td>
-    <td><%=h test_case.prioirty_in_product %></td>
-    <td><%=h test_case.estimate_in_hours %></td>
-    <td><%=h test_case.automated %></td>
-    <td><%= link_to 'Show', test_case %></td>
-    <td><%= link_to 'Edit', edit_test_case_path(test_case) %></td>
-    <td><%= link_to 'Destroy', test_case, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%=h test_case.tag_list %></td>
+	<% if @total_hits %>
+	<td><%= test_case.ferret_score%></td>
+	<% end %>
+	<td><%= link_to 'Edit', edit_test_case_path(test_case) %></td>
+	<td>
+		<% remote_form_for(@playlist_test_case || PlaylistTestCase.new(:test_case_id => test_case.id), :loading=>"Element.toggle('spinner_#{test_case.id}')",:complete => "Element.toggle('spinner_#{test_case.id}')") do |f| %>
+		    <%= f.select(:playlist_id, @playlist_collection ) %>
+		    <%= f.hidden_field(:test_case_id ) %><%= f.submit "Add to playlist" %>
+			<%=image_tag 'spinner.gif', :id => "spinner_#{test_case.id}", :style => "display:none"%>
+		<% end if logged_in? && !@playlists.empty?%>
+	</td>
   </tr>
 <% end %>
 </table>
 
 <br />
-
-<%= link_to 'New test_case', new_test_case_path %>
+<% end %>

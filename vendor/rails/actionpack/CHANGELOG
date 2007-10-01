@@ -2256,7 +2256,7 @@ Default YAML web services were retired, ActionController::Base.param_parsers car
     |                                                               |        :locals => { :a => 1 }                         |
     +---------------------------------------------------------------+-------------------------------------------------------+      
 
-* Deprecated redirect_to_path and redirect_to_url in favor of letting redirect_to do the right thing when passed either a path or url.
+* Deprecated redirect_to_path and redirect_to in favor of letting redirect_to do the right thing when passed either a path or url.
 
 * Fixed use of an integer as return code for renders, so render_text "hello world", 404 now works #1327
 
@@ -2788,7 +2788,7 @@ Default YAML web services were retired, ActionController::Base.param_parsers car
 * Added that renders and redirects called in before_filters will have the same effect as returning false: stopping the chain. Example:
 
     class WeblogController
-      before_filter { |c| c.send(:redirect_to_url("http://www.farfaraway.com")}) }
+      before_filter { |c| c.send(:redirect_to("http://www.farfaraway.com")}) }
       
       def hello
         render_text "I will never be called"
@@ -2908,7 +2908,7 @@ Default YAML web services were retired, ActionController::Base.param_parsers car
 
 * Added "short hypertext note with a hyperlink to the new URI(s)" to redirects to fulfill compliance with RFC 2616 (HTTP/1.1) section 10.3.3 #397 [Tim Bates]
 
-* Added second boolean parameter to Base.redirect_to_url and Response#redirect to control whether the redirect is permanent or not (301 vs 302) #375 [Hodel]
+* Added second boolean parameter to Base.redirect_to and Response#redirect to control whether the redirect is permanent or not (301 vs 302) #375 [Hodel]
 
 * Fixed redirects when the controller and action is named the same. Still haven't fixed same controller, module, and action, though #201 [Josh]
 

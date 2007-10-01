@@ -1,0 +1,26 @@
+<h1>Listing playlist_test_cases</h1>
+
+<table border=1>
+  <tr>
+    <th>Playlist</th>
+    <th>Test case</th>
+    <th>Test case version</th>
+    <th>User</th>
+  </tr>
+
+<% for playlist_test_case in @playlist_test_cases %>
+  <tr>
+    <td><%=h playlist_test_case.playlist_id %></td>
+    <td><%=h playlist_test_case.test_case_id %></td>
+    <td><%=h playlist_test_case.test_case_version %></td>
+    <td><%=h playlist_test_case.user_id %></td>
+    <td><%= link_to 'Show', playlist_test_case %></td>
+    <td><%= link_to 'Edit', edit_playlist_test_case_path(playlist_test_case) %></td>
+    <td><%= link_to 'Destroy', playlist_test_case, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New playlist_test_case', new_playlist_test_case_path %>

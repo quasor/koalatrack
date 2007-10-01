@@ -1,0 +1,5 @@
+<% str = (results.result.to_i == 1) ? "<span class='passed'>P</span>" : "<span class='failed'>F</span>" %>
+<%= link_to_function str, "$('test_case_execution_#{results.id}').toggle()"%>
+<div id="test_case_execution_<%= results.id%>" style="display:none">
+	<%= debug results%>
+</div>

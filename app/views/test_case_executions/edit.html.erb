@@ -1,0 +1,47 @@
+<h1>Editing test_case_execution</h1>
+
+<%= error_messages_for :test_case_execution %>
+
+<% form_for(@test_case_execution) do |f| %>
+  <p>
+    <b>Playlist</b><br />
+    <%= f.select(:playlist_id, Playlist.find(:all).collect {|p| [ "#{p.milestone} - #{p.title}", p.id ] } ) %>
+  </p>
+
+  <p>
+    <b>Test case</b><br />
+    <%= f.select(:test_case_id, TestCase.find(:all).collect {|p| [ p.title, p.id ] } ) %>
+  </p>
+
+  <p>
+    <b>Test case version</b><br />
+    <%= f.text_field :test_case_version %>
+  </p>
+
+  <p>
+    <b>User</b><br />
+    <%= f.select(:user_id, User.find(:all).collect {|p| [ p.login, p.id ] } ) %>
+  </p>
+
+  <p>
+    <b>Result</b><br />
+    <%= f.text_field :result %>
+  </p>
+
+  <p>
+    <b>Bug</b><br />
+    <%= f.text_field :bug_id %>
+  </p>
+
+  <p>
+    <b>Comment</b><br />
+    <%= f.text_area :comment %>
+  </p>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @test_case_execution %> |
+<%= link_to 'Back', test_case_executions_path %>

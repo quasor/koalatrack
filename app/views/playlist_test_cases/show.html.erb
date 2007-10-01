@@ -1,0 +1,18 @@
+<p>
+  <b>Playlist:</b>
+  <%=h @playlist_test_case.playlist_id %>
+</p>
+
+<p>
+  <b>Test case:</b>
+  <%=h @playlist_test_case.test_case_id %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @playlist_test_case.user_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_playlist_test_case_path(@playlist_test_case) %> |
+<%= link_to 'Back', playlist_test_cases_path %>

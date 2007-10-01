@@ -1,0 +1,38 @@
+<p>
+  <b>Playlist:</b>
+  <%=h @test_case_execution.playlist_id %>
+</p>
+
+<p>
+  <b>Test case:</b>
+  <%=h @test_case_execution.test_case_id %>
+</p>
+
+<p>
+  <b>Test case version:</b>
+  <%=h @test_case_execution.test_case_version %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @test_case_execution.user_id %>
+</p>
+
+<p>
+  <b>Result:</b>
+  <%=h @test_case_execution.result %>
+</p>
+
+<p>
+  <b>Bug:</b>
+  <%=h @test_case_execution.bug_id %>
+</p>
+
+<p>
+  <b>Comment:</b>
+  <%=h @test_case_execution.comment %>
+</p>
+
+
+<%= link_to 'Edit', edit_test_case_execution_path(@test_case_execution) %> |
+<%= link_to 'Back', test_case_executions_path %>

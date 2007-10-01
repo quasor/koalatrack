@@ -1,0 +1,32 @@
+<h1>Listing test_case_executions</h1>
+
+<table>
+  <tr>
+    <th>Playlist</th>
+    <th>Test case</th>
+    <th>Test case version</th>
+    <th>User</th>
+    <th>Result</th>
+    <th>Bug</th>
+    <th>Comment</th>
+  </tr>
+
+<% for test_case_execution in @test_case_executions %>
+  <tr>
+    <td><%=h test_case_execution.playlist_id %></td>
+    <td><%=h test_case_execution.test_case_id %></td>
+    <td><%=h test_case_execution.test_case_version %></td>
+    <td><%=h test_case_execution.user_id %></td>
+    <td><%=h test_case_execution.result %></td>
+    <td><%=h test_case_execution.bug_id %></td>
+    <td><%=h test_case_execution.comment %></td>
+    <td><%= link_to 'Show', test_case_execution %></td>
+    <td><%= link_to 'Edit', edit_test_case_execution_path(test_case_execution) %></td>
+    <td><%= link_to 'Destroy', test_case_execution, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New test_case_execution', new_test_case_execution_path %>

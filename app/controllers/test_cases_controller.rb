@@ -1,11 +1,23 @@
 class TestCasesController < ApplicationController
-  # TODO login_required
-  before_filter :login_required
+  before_filter :login_required, :except => [:index, :show]
   
   # GET /test_cases
   # GET /test_cases.xml
   def index
-      @test_cases = params[:category_id] ? TestCase.find(:all, :conditions => {:category_id => params[:category_id]}) : TestCase.find(:all)
+      if params[:category_id]
+        @category = Category.find(params[:category_id])
+        @test_cases =  TestCase.find(:all, :conditions => {:category_id => params[:category_id]})  
+      elsif params[:q]
+        #@match_all = params[:match_all]
+        #@test_cases = TestCase.find_tagged_with(params[:q], :match_all => @match_all == "true")
+        @test_cases = TestCase.find_by_contents( params[:q], :limit => 50 )
+        @total_hits = @test_cases.total_hits
+      else
+        @test_cases = []
+      end
+      
+      @playlists = current_user.playlists if logged_in?
+      @playlist_collection = current_user.playlists.collect {|p| [ "#{p.milestone} - #{p.title}", p.id ] }.reverse
 
     respond_to do |format|
       format.html # index.html.erb
@@ -27,7 +39,7 @@ class TestCasesController < ApplicationController
   # GET /test_cases/new
   # GET /test_cases/new.xml
   def new
-    @test_case = TestCase.new( :user_id => current_user )
+    @test_case = TestCase.new( :user_id => current_user, :category_id => params[:category_id] )
 
     respond_to do |format|
       format.html # new.html.erb
@@ -45,6 +57,7 @@ class TestCasesController < ApplicationController
   def create
     @test_case = TestCase.new(params[:test_case])
     @test_case.updated_by = current_user.id if logged_in?
+    @test_case.tags_list_string = params[:test_case][:tag_list]
 
     respond_to do |format|
       if @test_case.save
@@ -63,6 +76,7 @@ class TestCasesController < ApplicationController
   def update
     @test_case = TestCase.find(params[:id])
     @test_case.updated_by = current_user.id if logged_in?
+    @test_case.tags_list_string = params[:test_case][:tag_list]
 
     respond_to do |format|
       if @test_case.update_attributes(params[:test_case])

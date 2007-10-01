@@ -1,0 +1,23 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+one:
+  id: 1
+  playlist_id: 1
+  test_case_id: 1
+  test_case_version: 1
+  user_id: 1
+  result: 
+  bug_id: MyString
+  comment: MyText
+  created_at: 2007-09-27 13:39:12
+  updated_at: 2007-09-27 13:39:12
+two:
+  id: 2
+  playlist_id: 1
+  test_case_id: 1
+  test_case_version: 1
+  user_id: 1
+  result: 
+  bug_id: MyString
+  comment: MyText
+  created_at: 2007-09-27 13:39:12
+  updated_at: 2007-09-27 13:39:12

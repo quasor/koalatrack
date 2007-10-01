@@ -518,7 +518,7 @@ XML
 
     # Redirect url doesn't care that it wasn't a :redirect response.
     assert_equal 'created resource', @response.redirect_url
-    assert_equal @response.redirect_url, redirect_to_url
+    assert_equal @response.redirect_url, redirect_to
 
     # Must be a :redirect response.
     assert_raise(Test::Unit::AssertionFailedError) do

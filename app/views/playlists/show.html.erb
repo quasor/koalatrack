@@ -1,0 +1,65 @@
+<h1><%=h @playlist.title %></h1>
+
+<p>
+  <%=h @playlist.description %>
+</p>
+
+<p>
+  <b>Owner:</b>
+  <%=h @playlist.user.login %>
+  <b>Milestone:</b>
+  <%=h @playlist.milestone_id %>
+</p>
+
+<table border=1>
+  <tr>
+	<th colspan=2>Action</th>
+    <th>Category</th>
+    <th>Title</th>
+    <th>Owner</th>
+    <th>Pri in feature</th>
+    <th>Pri in product</th>
+    <th>Estimate in hours</th>
+    <th>Automated</th>
+	<th></th>
+    <th>Recent Results</th>
+  </tr>
+
+<h2>Test Cases</h2>
+<% for playlist_test_case in @playlist.playlist_test_cases %>
+	<% test_case = playlist_test_case.test_case%>
+	<% test_case_executions = playlist_test_case.test_case_executions %>
+  <tr id="playlist_test_case_<%=playlist_test_case.id%>">
+	<td>
+		<%= link_to_remote 'Pass', :url => pass_playlist_test_case_path(:id => playlist_test_case), :method => :put %>
+	</td>
+	<td>
+		<%= link_to_remote 'Fail', :url => fail_playlist_test_case_path(:id => playlist_test_case), :method => :put %>
+	</td>
+    <td><%=h playlist_test_case.test_case.category.name if playlist_test_case.test_case.category %></td>
+    <td><%=link_to test_case.title, test_case %></td>
+    <td><%=h test_case.user.login if test_case.user_id %></td>
+    <td><%=h test_case.priority_in_feature %></td>
+    <td><%=h test_case.prioirty_in_product %></td>
+    <td><%=h test_case.estimate_in_hours %></td>
+    <td><%=h test_case.automated %></td>
+    <td><%= link_to 'Remove', playlist_test_case, :confirm => 'Are you sure?', :method => :delete %></td>
+	<td>
+	<%= link_to_function 'History', "$('playlist_test_case_#{playlist_test_case.id}_fullresults').toggle();"%>
+	<%= test_case_executions.last.result.to_i == 1 ? '<span class="passed">PASSED' : '<span class="failed">FAILED</span>' if test_case_executions.last%>
+	</td>
+	<td id="playlist_test_case_<%=playlist_test_case.id%>_results">
+		<% if test_case_executions.empty? %>
+			Not Run
+		<% else %>
+			<div id="playlist_test_case_<%=playlist_test_case.id%>_fullresults" style="display:none">
+				<%= render :partial => 'playlist_test_cases/results', :collection => test_case_executions %>
+			</div>
+		<% end %>
+	</td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
+<%= link_to 'Back', playlists_path %>

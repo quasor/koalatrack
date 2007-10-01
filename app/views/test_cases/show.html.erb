@@ -1,13 +1,12 @@
-<p>
-  <b>Title:</b>
-  <%=h @test_case.title %>
-</p>
+<%= link_to 'Edit', edit_test_case_path(@test_case) %> |
+<%= link_to 'Destroy', @test_case, :confirm => 'Are you sure?', :method => :delete %> |
+<%= link_to 'Back', test_cases_path %>
+  <h2><%=white_list @test_case.title %></h2>
 
 <p>
-  <b>Body:</b>
-  <%=h @test_case.body %>
+  <%=@test_case.body %>
 </p>
-
+<div style="clear:both"></div>
 <p>
   <b>Owner:</b>
   <%=h @test_case.user %>
@@ -69,7 +68,3 @@
 <% end %>
 </table>
 <hr/>
-
-
-<%= link_to 'Edit', edit_test_case_path(@test_case) %> |
-<%= link_to 'Back', test_cases_path %>

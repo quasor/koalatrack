@@ -11,6 +11,7 @@
 #
 
 class Category < ActiveRecord::Base
+  acts_as_tree
   has_many :test_cases
   
   validates_presence_of :name

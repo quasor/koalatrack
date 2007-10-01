@@ -26,7 +26,7 @@ class TestCasesControllerTest < Test::Unit::TestCase
 
   def test_should_create_test_case
     assert_difference('TestCase.count') do
-      post :create, :test_case => { }
+      post :create, :test_case => { :title => 'Foo', :body => 'Bar' }
     end
 
     assert_redirected_to test_case_path(assigns(:test_case))
@@ -43,7 +43,7 @@ class TestCasesControllerTest < Test::Unit::TestCase
   end
 
   def test_should_update_test_case
-    put :update, :id => 1, :test_case => { }
+    put :update, :id => 1, :test_case => { :title => 'Foo', :body => 'Bar' }
     assert_redirected_to test_case_path(assigns(:test_case))
   end
 
