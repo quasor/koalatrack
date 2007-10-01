@@ -43,7 +43,7 @@ class QaTraqImport < ActiveRecord::Migration
 #  | TestCaseVersionID | mediumint(8) unsigned | NO   | PRI | 0       |       | 
 #  | ComponentID       | mediumint(8) unsigned | NO   | PRI | 0       |       | 
 #  +-------------------+-----------------------+------+-----+---------+-------+
-  class SomeModel < ModelBase 
+  class SomeModel < ActiveRecord::Base 
     self.abstract_class = true 
     establish_connection "qatraq"  
   end 
@@ -66,7 +66,7 @@ class QaTraqImport < ActiveRecord::Migration
       test_case = TestCase.find_or_create_by_qatraq_id(:qatraq_id => row['TestCaseID'], :user_id => user.id, :category_id => category.id, :title => row['Title'], :body => row['Content'].gsub(/\n/,'<br>').gsub(/\s{4}/,'&nbsp;&nbsp;&nbsp;&nbsp;') )
     end
 
-    return false
+    #return false
   end
 
   def self.down

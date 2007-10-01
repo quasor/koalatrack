@@ -15,9 +15,11 @@ class TestCasesController < ApplicationController
       else
         @test_cases = []
       end
-      
-      @playlists = current_user.playlists if logged_in?
-      @playlist_collection = current_user.playlists.collect {|p| [ "#{p.milestone} - #{p.title}", p.id ] }.reverse
+
+      if logged_in?
+        @playlists = current_user.playlists 
+        @playlist_collection = current_user.playlists.collect {|p| [ "#{p.milestone} - #{p.title}", p.id ] }.reverse
+      end
 
     respond_to do |format|
       format.html # index.html.erb

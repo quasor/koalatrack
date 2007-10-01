@@ -8,7 +8,7 @@
 #  body                :text          
 #  user_id             :integer(11)   
 #  priority_in_feature :integer(11)   
-#  prioirty_in_product :integer(11)   
+#  priority_in_product :integer(11)   
 #  estimate_in_hours   :float         
 #  automated           :boolean(1)    
 #  created_at          :datetime      

@@ -5,7 +5,7 @@ class CreateTestCases < ActiveRecord::Migration
       t.text :body
       t.integer :owner_id
       t.integer :priority_in_feature
-      t.integer :prioirty_in_product
+      t.integer :priority_in_product
       t.float :estimate_in_hours
       t.boolean :automated
 

@@ -12,7 +12,7 @@
 	<table border="0" cellspacing="5" cellpadding="5">
 		<tr>
 			<% begin %>
-			<td valign="top">
+			<td valign="top" class='a-column'>
 				<% form_tag test_cases_path, :method => 'get' do %>
 				  Search:
 				  <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box, :type => :search %>
