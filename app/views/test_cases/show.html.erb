@@ -54,9 +54,9 @@
 	<tr>
 	<td><%=h test_case.version %></td>
 	<td><%=h test_case.updated_at %></td>
-	<td><%=h User.find(test_case.updated_by).login if test_case.updated_by %></td>
+	<td><%=h test_case.updated_by %></td>
 	<td><%=h test_case.title %></td>
-    <td><%=h User.find test_case.user_id %></td>
+    <td><%=h test_case.user_id %></td>
 <!--
     <td><%=h test_case.body %></td>
     <td><%=h test_case.user_id %></td>
@@ -69,6 +69,7 @@
 <% end %>
 </table>
 <hr/>
+
 
 <%= link_to 'Edit', edit_test_case_path(@test_case) %> |
 <%= link_to 'Back', test_cases_path %>

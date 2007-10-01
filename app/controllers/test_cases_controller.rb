@@ -1,5 +1,6 @@
 class TestCasesController < ApplicationController
   # TODO login_required
+  before_filter :login_required
   
   # GET /test_cases
   # GET /test_cases.xml
@@ -43,7 +44,7 @@ class TestCasesController < ApplicationController
   # POST /test_cases.xml
   def create
     @test_case = TestCase.new(params[:test_case])
-    @test_case.updated_by = current_user.id
+    @test_case.updated_by = current_user.id if logged_in?
 
     respond_to do |format|
       if @test_case.save
@@ -61,7 +62,7 @@ class TestCasesController < ApplicationController
   # PUT /test_cases/1.xml
   def update
     @test_case = TestCase.find(params[:id])
-    @test_case.updated_by = current_user.id
+    @test_case.updated_by = current_user.id if logged_in?
 
     respond_to do |format|
       if @test_case.update_attributes(params[:test_case])

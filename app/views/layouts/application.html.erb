@@ -6,16 +6,24 @@
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title>TestCases: <%= controller.action_name %></title>
   <%= stylesheet_link_tag 'scaffold' %>
+  <%= javascript_include_tag "prototype", "effects", "application", "controls" %>
 </head>
 <body>
 <table border="0" cellspacing="0" cellpadding="15">
 	<tr>
-		<td bgcolor="#D4E4FC" valign="top">
+		<td bgcolor="#D4E4FC" valign="top" rowspan="2">
 			<%=	link_to 'All', test_cases_path%><br />
 			<% for category in Category.find(:all) %>
 				<br /><%=	link_to category.name, test_cases_path(:category_id => category)%>
 			<% end %>
 		</td>
+		<td bgcolor="#D4E4FC" valign="top">
+			<%=	link_to_unless_current 'Test Cases', test_cases_path%> |
+			<%=	link_to_unless_current 'Playlists', playlists_path%> 
+			
+		</td>
+		</tr>
+		<tr>
 		<td valign="top">
 			<p style="color: green"><%= flash[:notice] %></p>
 			<%= yield  %>
