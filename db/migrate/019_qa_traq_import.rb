@@ -60,6 +60,7 @@ class QaTraqImport < ActiveRecord::Migration
     where tvc.TestCaseVersionID = tv.ID and tvc.ComponentID = pc.ID and pc.ProductID = p.ID and u.ID = tv.AuthorID")
 
     while row = @rs.fetch_hash do
+      puts "importing #{row['TestCaseID']}..."
       user = User.find_or_create_by_login(:login => row['UserName'].downcase, :email => "#{row['UserName'].downcase}@expedia.com", :password => 'mttpower', :password_confirmation => 'mttpower')
       user.activate unless user.activated?
       category = Category.find_or_create_by_name(:name => row['ProductName']).children.find_or_create_by_name(:name => row['ProductComponentName'])

@@ -17,7 +17,7 @@ development:
   database: tcm_development
   username: root
   password:
-  host: fisharc.local
+  host: 127.0.0.1
 
 qatraq:
     adapter: mysql
@@ -25,7 +25,8 @@ qatraq:
     database: qatraq
     username: root
     password:
-    host: fisharc.local
+    host: 127.0.0.1
+#    host: localhost
     
 # Warning: The database defined as 'test' will be erased and
 # re-generated from your development database when you run 'rake'.
@@ -36,7 +37,7 @@ test:
   database: tcm_test
   username: root
   password:
-  host: fisharc.local
+  host: localhost
 
 production:
   adapter: mysql
@@ -44,4 +45,5 @@ production:
   database: tcm_production
   username: root
   password: 
-  host: localhost
+  host: 127.0.0.1
+#  host: localhost

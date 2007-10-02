@@ -10,7 +10,7 @@ class TestCasesController < ApplicationController
       elsif params[:q]
         #@match_all = params[:match_all]
         #@test_cases = TestCase.find_tagged_with(params[:q], :match_all => @match_all == "true")
-        @test_cases = TestCase.find_by_contents( params[:q], :limit => 50 )
+        @test_cases = TestCase.find_by_contents( params[:q], :limit => 100 )
         @total_hits = @test_cases.total_hits
       else
         @test_cases = []
