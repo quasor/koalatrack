@@ -79,10 +79,11 @@ class FileAttachmentsController < ApplicationController
   # DELETE /file_attachments/1.xml
   def destroy
     @file_attachment = FileAttachment.find(params[:id])
+    @test_case = @file_attachment.test_case
     @file_attachment.destroy
 
     respond_to do |format|
-      format.html { redirect_to(file_attachments_url) }
+      format.html { redirect_to(@test_case || file_attachments_url) }
       format.xml  { head :ok }
     end
   end

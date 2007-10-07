@@ -1,0 +1,18 @@
+<h1>Listing Quick Tags</h1>
+
+<table>
+  <tr>
+    <th>Tag</th>
+  </tr>
+
+<% for tag_favorite in @tag_favorites %>
+  <tr>
+    <td><%=h tag_favorite.tag.name %></td>
+    <td><%= link_to 'Remove', tag_favorite, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New quick tag', new_tag_favorite_path %>

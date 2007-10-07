@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 13
+# Schema version: 20
 #
 # Table name: test_cases
 #
@@ -16,17 +16,20 @@
 #  version             :integer(11)   
 #  updated_by          :integer(11)   
 #  category_id         :integer(11)   
+#  tags_list_string    :string(255)   
+#  qatraq_id           :integer(11)   
 #
 
 class TestCase < ActiveRecord::Base
   acts_as_taggable
   acts_as_versioned
-  acts_as_ferret :fields => [:title, :body, :tags_list_string]
+  acts_as_ferret :fields => [:title, :body, :tag]
   
   belongs_to :user
   belongs_to :category
   belongs_to :updater,  :class_name => 'User', :foreign_key => "updated_by"  
   has_many :playlist_test_cases
   has_many :test_case_executions
+  has_many :file_attachments
   validates_presence_of     :title, :body
 end

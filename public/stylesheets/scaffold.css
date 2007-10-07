@@ -84,7 +84,30 @@ div.progressBar div.background {
 .b-column {
 	float:left;padding:15px;
 }
-.a-column ul {
-	padding-left:14px;
+ul#category_tree {
+	margin-top:0; margin-bottom:0; list-style-type:disc; list-style-position:outside;
 	font-size:12px;
 }
+ul#category_tree li {
+	list-style-image: url(/images/logo-tiny.jpg);
+	margin:0px 0px 0px -20px;
+}
+ul#category_tree li.has_children {
+	list-style-image: url(/images/plus-small.png);
+	margin:0px 0px 0px -20px;
+}
+
+.test_case_body { padding:4px; border: 1px solid #CCC;}
+.clearfix:after {
+  content:".";
+  display:block;
+  height:0;
+  clear:both;
+  visibility:hidden;
+}
+.clearfix {display:inline-block;}
+/* Hide from IE Mac \*/
+.clearfix {display:block;}
+/* End hide from IE Mac */
+
+p label {float:left; width:150px; text-align:right;}

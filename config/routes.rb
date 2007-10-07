@@ -1,4 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :tag_favorites
+
+  map.resources :tags
+
   map.resources :file_attachments
 
   map.resources :milestones
@@ -7,7 +11,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :playlist_test_cases, :member => { :pass => :put, :fail => :put }
 
-  map.resources :playlists
+  map.resources :playlists, :member => {:assign => :put, :pass => :put, :remove => :delete}
 
   map.resources :categories
 

@@ -4,13 +4,17 @@ class TestCasesController < ApplicationController
   # GET /test_cases
   # GET /test_cases.xml
   def index
-      if params[:category_id]
+      if params[:category_id] && params[:q].nil?
         @category = Category.find(params[:category_id])
-        @test_cases =  TestCase.find(:all, :conditions => {:category_id => params[:category_id]})  
+        @test_cases =  @category.test_cases.find(:all)  
       elsif params[:q]
-        #@match_all = params[:match_all]
-        #@test_cases = TestCase.find_tagged_with(params[:q], :match_all => @match_all == "true")
-        @test_cases = TestCase.find_by_contents( params[:q], :limit => 100 )
+        @category = Category.find(params[:category_id]) if params[:category_id]
+        #if @category.nil?
+          @test_cases = TestCase.find_by_contents( params[:q], :limit => 100 )
+        #else
+          #@test_cases = @category.test_cases.find_by_contents( params[:q], :limit => 100 )
+        #  @test_cases = @category.test_cases.find_by_contents( params[:q], :limit => 100, :conditions => {:category_id => 192})
+        #end
         @total_hits = @test_cases.total_hits
       else
         @test_cases = []
@@ -41,7 +45,7 @@ class TestCasesController < ApplicationController
   # GET /test_cases/new
   # GET /test_cases/new.xml
   def new
-    @test_case = TestCase.new( :user_id => current_user, :category_id => params[:category_id] )
+    @test_case = TestCase.new( :user_id => current_user.id, :category_id => params[:category_id] )
 
     respond_to do |format|
       format.html # new.html.erb
@@ -52,17 +56,25 @@ class TestCasesController < ApplicationController
   # GET /test_cases/1/edit
   def edit
     @test_case = TestCase.find(params[:id])
+    @tag_favorites = TagFavorite.find(:all)
   end
 
   # POST /test_cases
   # POST /test_cases.xml
   def create
+    @uploaded_data = params[:test_case].delete :uploaded_data
     @test_case = TestCase.new(params[:test_case])
     @test_case.updated_by = current_user.id if logged_in?
-    @test_case.tags_list_string = params[:test_case][:tag_list]
+    @tags = (params[:test_case][:tag_list] || "") + (params[:quick_tag_list] || "")
+    @tags = @tags.split(',').collect{ |t| t.strip }.uniq.join(', ')
+    params[:test_case][:tag_list] = @tags
 
     respond_to do |format|
       if @test_case.save
+        unless @uploaded_data.blank?
+          @file_attachment = FileAttachment.new({:uploaded_data => @uploaded_data})
+          @test_case.file_attachments << @file_attachment
+        end        
         flash[:notice] = 'TestCase was successfully created.'
         format.html { redirect_to(@test_case) }
         format.xml  { render :xml => @test_case, :status => :created, :location => @test_case }
@@ -76,12 +88,21 @@ class TestCasesController < ApplicationController
   # PUT /test_cases/1
   # PUT /test_cases/1.xml
   def update
+    @uploaded_data = params[:test_case].delete :uploaded_data
     @test_case = TestCase.find(params[:id])
     @test_case.updated_by = current_user.id if logged_in?
-    @test_case.tags_list_string = params[:test_case][:tag_list]
+    @tags = (params[:test_case][:tag_list] || "") + (params[:quick_tag_list] || "")
+    @tags = @tags.split(',').collect{ |t| t.strip }.uniq.join(', ')
+    params[:test_case][:tag_list] = @tags
+     
+    @test_case.tag = params[:test_case][:tag_list]
 
     respond_to do |format|
       if @test_case.update_attributes(params[:test_case])
+        unless @uploaded_data.blank?
+          @file_attachment = FileAttachment.new({:uploaded_data => @uploaded_data})
+          @test_case.file_attachments << @file_attachment
+        end        
         flash[:notice] = 'TestCase was successfully updated.'
         format.html { redirect_to(@test_case) }
         format.xml  { head :ok }

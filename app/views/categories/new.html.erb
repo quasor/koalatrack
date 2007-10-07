@@ -3,15 +3,12 @@
 <%= error_messages_for :category %>
 
 <% form_for(@category) do |f| %>
+	<%= f.hidden_field :parent_id %>
   <p>
     <b>Name</b><br />
     <%= f.text_field :name %>
   </p>
 
-  <p>
-    <b>Parent</b><br />
-    <%= f.text_field :parent_id %>
-  </p>
 
   <p>
     <%= f.submit "Create" %>

@@ -13,7 +13,12 @@
 		<tr>
 			<% begin %>
 			<td valign="top" class='a-column'>
+				<table border="0">
+					<tr><td><%= image_tag 'logo-64.jpg'%></td><td style="font-size:18px">KoalaTrack<br/>
+						</td></tr>
+				</table>
 				<% form_tag test_cases_path, :method => 'get' do %>
+					<%= hidden_field_tag :category_id, @category.id unless @category.nil?%>
 				  Search:
 				  <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box, :type => :search %>
 				<% end %>
@@ -27,7 +32,7 @@
 			<td valign="top">
 				<%=	link_to_unless_current 'Test Cases', test_cases_path%> |
 				<%=	link_to_unless_current 'Playlists', playlists_path%> | 
-				<%= link_to 'New test case', new_test_case_path(:category_id => params[:category_id]) %>			
+				<%#= link_to 'New test case', new_test_case_path(:category_id => params[:category_id]) %>			
 				<hr/>
 				<p style="color: green"><%= flash[:notice] %></p>
 				<%= yield  %>		

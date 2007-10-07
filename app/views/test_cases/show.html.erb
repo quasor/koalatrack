@@ -1,11 +1,17 @@
+<div>
 <%= link_to 'Edit', edit_test_case_path(@test_case) %> |
-<%= link_to 'Destroy', @test_case, :confirm => 'Are you sure?', :method => :delete %> |
-<%= link_to 'Back', test_cases_path %>
+<%= link_to 'Delete', @test_case, :confirm => 'Are you sure?', :method => :delete %> |
+<%= link_to 'Back', test_cases_path(:category_id => @test_case.category_id) %>
+</div>
   <h2><%=white_list @test_case.title %></h2>
+<p>Tagged: <%=@test_case.tag%></p>
 
-<p>
+<b>Body:</b>
+	<div class="clearfix test_case_body">
+		<p>
   <%=@test_case.body %>
-</p>
+	</p>
+	</div>
 <div style="clear:both"></div>
 <p>
   <b>Owner:</b>
@@ -31,40 +37,34 @@
   <b>Automated:</b>
   <%=h @test_case.automated %>
 </p>
+<p>
+  <b>Attachments</b><br />
+	<% for file_attachment in @test_case.file_attachments %>
+	<li>
+		<%= link_to file_attachment.filename, file_attachment.public_filename if file_attachment.filename%>	    
+	<% end %>
+</p>
+<% if @test_case.versions.size > 1 %>
 <hr/>
-
-<table border="0" cellspacing="5" cellpadding="5">
-	<tr>
-	    <th>Version</th>
-	    <th>Update date</th>
-	    <th>Updated by</th>
+<%= link_to_function "Show/Hide Versions","$('versions').toggle();"%>
+<div id="versions" style="display:none;">
+	<table border="0" cellspacing="5" cellpadding="5">
+		<tr>
+		    <th>Version</th>
+		    <th>Title</th>
+		    <th>Update date</th>
+		    <th>Updated by</th>
 	
-	    <th>Title</th>
-	    <th>Owner</th>
-<!--	    <th>Body</th>
-	    <th>Owner</th>
-	    <th>Priority in feature</th>
-	    <th>Priority in product</th>
-	    <th>Estimate in hours</th>
-	    <th>Automated</th>
--->
-	</tr>
-<% for test_case in @test_case.versions %>
-	<tr>
-	<td><%=h test_case.version %></td>
-	<td><%=h test_case.updated_at %></td>
-	<td><%=h test_case.updated_by %></td>
-	<td><%=h test_case.title %></td>
-    <td><%=h test_case.user_id %></td>
-<!--
-    <td><%=h test_case.body %></td>
-    <td><%=h test_case.user_id %></td>
-    <td><%=h test_case.priority_in_feature %></td>
-    <td><%=h test_case.priority_in_product %></td>
-    <td><%=h test_case.estimate_in_hours %></td>
-    <td><%=h test_case.automated %></td>
--->
-	</tr>
+		</tr>
+	<% for test_case in @test_case.versions %>
+		<tr>
+		<td><%=h test_case.version %></td>
+		<td><%=h test_case.title %></td>
+		<td><%=h test_case.updated_at %></td>
+	    <td><%=h User.find(test_case.updated_by).login if test_case.updated_by%></td>
+		</tr>
+	<% end  %>
+	</table>
+	<hr/>
+</div>
 <% end %>
-</table>
-<hr/>

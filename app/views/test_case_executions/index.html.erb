@@ -1,5 +1,8 @@
 <h1>Listing test_case_executions</h1>
 
+<% @test_case_execution = TestCaseExecution.find(:first) %>
+<span id='foo'>edit me</span>
+<%= in_place_editor(:foo,:url => @test_case_execution) %>
 <table>
   <tr>
     <th>Playlist</th>
@@ -10,7 +13,6 @@
     <th>Bug</th>
     <th>Comment</th>
   </tr>
-
 <% for test_case_execution in @test_case_executions %>
   <tr>
     <td><%=h test_case_execution.playlist_id %></td>
@@ -18,7 +20,8 @@
     <td><%=h test_case_execution.test_case_version %></td>
     <td><%=h test_case_execution.user_id %></td>
     <td><%=h test_case_execution.result %></td>
-    <td><%=h test_case_execution.bug_id %></td>
+    <td><%=test_case_execution.bug_url %>
+	</td>
     <td><%=h test_case_execution.comment %></td>
     <td><%= link_to 'Show', test_case_execution %></td>
     <td><%= link_to 'Edit', edit_test_case_execution_path(test_case_execution) %></td>

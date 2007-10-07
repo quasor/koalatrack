@@ -32,7 +32,9 @@ class PlaylistsController < ApplicationController
   # GET /playlists/new
   # GET /playlists/new.xml
   def new
-    @playlist = Playlist.new
+    @playlist_copy = Playlist.find(params[:id]) if params[:id]
+    @playlist = Playlist.new(:title => "Copy of #{@playlist_copy.title}")
+    @playlist.user_id = current_user.id
 
     respond_to do |format|
       format.html # new.html.erb
@@ -52,6 +54,10 @@ class PlaylistsController < ApplicationController
 
     respond_to do |format|
       if @playlist.save
+        if params[:clone_id]
+          @playlist_test_cases = Playlist.find(params[:clone_id]).playlist_test_cases.collect(&:clone)
+          @playlist.playlist_test_cases << @playlist_test_cases
+        end
         flash[:notice] = 'Playlist was successfully created.'
         format.html { redirect_to(@playlist) }
         format.xml  { render :xml => @playlist, :status => :created, :location => @playlist }
@@ -67,6 +73,11 @@ class PlaylistsController < ApplicationController
   def update
     @playlist = Playlist.find(params[:id])
 
+    @assign = params[:assign]
+    @user_id = params[:playlist][:user_id]
+    unless (@assign.nil? and @user_id.nil?)
+      
+    end
     respond_to do |format|
       if @playlist.update_attributes(params[:playlist])
         flash[:notice] = 'Playlist was successfully updated.'
@@ -76,6 +87,69 @@ class PlaylistsController < ApplicationController
         format.html { render :action => "edit" }
         format.xml  { render :xml => @playlist.errors, :status => :unprocessable_entity }
       end
+    end
+  end
+  
+  # PUT /playlists/1
+  # PUT /playlists/1.xml
+  # Assign 1 or more test cases on this playlist
+  def assign
+    @playlist = Playlist.find(params[:id])
+    @ids = params[:assign][:test_case_ids]
+    @user_id = params[:playlist][:user_id]
+    respond_to do |format|
+      if (@user_id && @ids)
+        @playlist_test_cases = PlaylistTestCase.find(:all, :conditions => "playlist_test_cases.id IN (#{@ids})")
+        @playlist_test_cases.collect { |p| p.update_attributes(:user_id => @user_id )}      
+        flash[:notice] = 'Playlist was successfully updated.'
+        format.html { redirect_to(@playlist) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @playlist.errors, :status => :unprocessable_entity }
+      end    
+    end
+  end
+
+  # PUT /playlists/1
+  # PUT /playlists/1.xml
+  # Assign 1 or more test cases on this playlist
+  def pass
+    @playlist = Playlist.find(params[:id])
+    @ids = params[:pass][:test_case_ids]
+      
+    respond_to do |format|
+      if (@ids)
+        @playlist_test_cases = PlaylistTestCase.find(:all, :conditions => "playlist_test_cases.id IN (#{@ids})")
+        @playlist_test_cases.collect { |p| p.pass_by!(current_user.id) }
+        flash[:notice] = 'Playlist was successfully updated.'
+        format.html { redirect_to(@playlist) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @playlist.errors, :status => :unprocessable_entity }
+      end    
+    end
+  end
+
+  # PUT /playlists/1
+  # PUT /playlists/1.xml
+  # Assign 1 or more test cases on this playlist
+  def remove
+    @playlist = Playlist.find(params[:id])
+    @ids = params[:remove][:test_case_ids]
+      
+    respond_to do |format|
+      if (@ids)
+        @playlist_test_cases = PlaylistTestCase.find(:all, :conditions => "playlist_test_cases.id IN (#{@ids})")
+        @playlist_test_cases.collect { |p| p.destroy }
+        flash[:notice] = 'Playlist was successfully updated.'
+        format.html { redirect_to(@playlist) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @playlist.errors, :status => :unprocessable_entity }
+      end    
     end
   end
 

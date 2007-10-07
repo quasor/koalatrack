@@ -30,3 +30,19 @@ FCKConfig.ToolbarSets["Simple"] = [
 	['TextColor','BGColor'],
 	['-','About']
 ] ;
+
+FCKConfig.ToolbarSets["Koala"] = [
+	['Source','-','-','Templates'],
+	['Cut','Copy','Paste','PasteWord','-'],
+	['Undo','Redo','-','Find','Replace','-','SelectAll'],
+	'/',
+	['Bold','Italic','Underline','StrikeThrough','-','Subscript','Superscript'],
+	['OrderedList','UnorderedList','-','Outdent','Indent'],
+	['JustifyLeft','JustifyCenter','JustifyRight','JustifyFull'],
+	['Link','Unlink'],
+	'/',
+	['Table','Rule'],
+	['FontName','FontSize'],
+	['TextColor','BGColor'],
+	['-','About']
+] ;

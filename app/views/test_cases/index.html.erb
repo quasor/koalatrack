@@ -1,7 +1,15 @@
+<h1><%= (@category.ancestors + [@category]).collect(&:name).join(' \ ') if @category%> Test Cases</h1>
+<% if @category %>
+
+<p>	<%= link_to 'New test case', new_test_case_path(:category_id => params[:category_id])  %> |
+	<%= link_to "New sub-category of #{@category.name}", new_category_path(:parent_id => params[:category_id])  %></p>
+
+<% end %>
 <% if @test_cases.empty?%>
 << Select a category or search
 <% form_tag test_cases_path, :method => 'get' do %>
-  <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box_big, :type => :search, :style => 'font-size:22px; padding:4px' %>
+  <%= hidden_field_tag :category_id, @category.id unless @category.nil?%>
+  <%= text_field_tag :q, params[:q], :size => 55, :id => :search_box_big, :type => :search, :style => 'font-size:22px; padding:4px' %>
 <% end %>
 <p><span style='font-size:10px'>
 <b>Example:</b> reporting AND payment NOT deferred <br/>
@@ -9,7 +17,6 @@
 </span></p>
 
 <% else %>
-<h1><%= (@category.ancestors + [@category]).collect(&:name).join(' \ ') if @category%> Test Cases</h1>
 <table border=1>
   <tr>
     <% if @category.nil? %><th>Category</th><% end %>

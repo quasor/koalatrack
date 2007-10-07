@@ -1,5 +1,7 @@
 class TestCaseExecutionsController < ApplicationController
   before_filter :login_required, :except => [:index, :show]
+  in_place_edit_for :word, :title, :empty_text => '...'
+  
   # GET /test_case_executions
   # GET /test_case_executions.xml
   def index
@@ -42,12 +44,16 @@ class TestCaseExecutionsController < ApplicationController
   # POST /test_case_executions.xml
   def create
     @test_case_execution = TestCaseExecution.new(params[:test_case_execution])
-
+    @test_case_execution.user_id = current_user.id
     respond_to do |format|
       if @test_case_execution.save
         flash[:notice] = 'TestCaseExecution was successfully created.'
-        format.html { redirect_to(@test_case_execution) }
+        format.html { redirect_to(@test_case_execution.playlist) }
         format.xml  { render :xml => @test_case_execution, :status => :created, :location => @test_case_execution }
+        format.js do
+           render :update do |page|
+           end
+        end
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @test_case_execution.errors, :status => :unprocessable_entity }

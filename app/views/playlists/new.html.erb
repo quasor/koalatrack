@@ -1,8 +1,13 @@
-<h1>New playlist</h1>
+<% if params[:id] %>
+	<h1>Clone playlist</h1>
+<% else %>
+	<h1>New playlist</h1>
+<% end %>
 
 <%= error_messages_for :playlist %>
 
 <% form_for(@playlist) do |f| %>
+	<%= hidden_field_tag :clone_id, params[:id] %>
   <p>
     <b>Title</b><br />
     <%= f.text_field :title %>
@@ -20,7 +25,7 @@
 
   <p>
     <b>Milestone</b><br />
-    <%= f.select(:milestone_id, Milestone.find(:all).collect {|p| [ "#{p.name} - {#p.due.to_date}", p.id ] } ) %>
+    <%= f.select(:milestone_id, Milestone.find(:all).collect {|p| [ "#{p.name}", p.id ] } ) %>
   </p>
 
   <p>

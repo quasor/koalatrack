@@ -3,12 +3,12 @@
 <%= error_messages_for :playlist_test_case %>
 
 <% form_for(@playlist_test_case) do |f| %>
-  <p>
+<!--   <p>
     <b>Playlist</b><br />
     <%#= f.select(:playlist_id, Playlist.find(:all).collect {|p| [ "#{p.milestone} - #{p.title}", p.id ] } ) %>
-	<%= f.select(:playlist_id, Playlist.find(:all).collect {|p| [ "#{p.milestone} - #{p.title}", p.id ] } ) %>
+	<%#= f.select(:playlist_id, Playlist.find(:all).collect {|p| [ "#{p.milestone} - #{p.title}", p.id ] } ) %>
   </p>
-
+-->
   <p>
     <b>User</b><br />
     <%= f.select(:user_id, User.find(:all).collect {|p| [ p.login, p.id ] } ) %>

@@ -1,3 +1,25 @@
+<% javascript_tag do %>
+  var multiple_ids = new Array();
+	function foo(o)
+	{
+		if (o.checked)
+		{
+			multiple_ids.push(o.value);
+		}
+		else
+		{
+			multiple_ids = multiple_ids.without(o.value);
+		}
+		$('assign_test_case_ids').value = multiple_ids;
+		$('pass_test_case_ids').value = multiple_ids;
+		$('remove_test_case_ids').value = multiple_ids;
+		if (multiple_ids != '')
+			$('multi_action').show();
+		else
+			$('multi_action').hide();
+	}
+<% end %>
+
 <h1><%=h @playlist.title %></h1>
 
 <p>
@@ -9,57 +31,42 @@
   <%=h @playlist.user.login %>
   <b>Milestone:</b>
   <%=h @playlist.milestone_id %>
+	<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
+	<%= link_to 'Back', playlists_path %>
 </p>
 
-<table border=1>
+<h2>Test Cases</h2>
+<table border=1 id='playlist'>
   <tr>
-	<th colspan=2>Action</th>
+		<th></th>	
+		<th>Action</th>
     <th>Category</th>
     <th>Title</th>
-    <th>Owner</th>
+    <th>Assigned To</th>
+    <th>Recent Results</th>
+    <th>BugID</th>
+    <th>Last Run</th>
     <th>Pri in feature</th>
     <th>Pri in product</th>
-    <th>Estimate in hours</th>
-    <th>Automated</th>
-	<th></th>
-    <th>Recent Results</th>
   </tr>
 
-<h2>Test Cases</h2>
-<% for playlist_test_case in @playlist.playlist_test_cases %>
-	<% test_case = playlist_test_case.test_case%>
-	<% test_case_executions = playlist_test_case.test_case_executions %>
-  <tr id="playlist_test_case_<%=playlist_test_case.id%>">
-	<td>
-		<%= link_to_remote 'Pass', :url => pass_playlist_test_case_path(:id => playlist_test_case), :method => :put %>
-	</td>
-	<td>
-		<%= link_to_remote 'Fail', :url => fail_playlist_test_case_path(:id => playlist_test_case), :method => :put %>
-	</td>
-    <td><%=h playlist_test_case.test_case.category.name if playlist_test_case.test_case.category %></td>
-    <td><%=link_to test_case.title, test_case %></td>
-    <td><%=h test_case.user.login if test_case.user_id %></td>
-    <td><%=h test_case.priority_in_feature %></td>
-    <td><%=h test_case.priority_in_product %></td>
-    <td><%=h test_case.estimate_in_hours %></td>
-    <td><%=h test_case.automated %></td>
-    <td><%= link_to 'Remove', playlist_test_case, :confirm => 'Are you sure?', :method => :delete %></td>
-	<td>
-	<%= link_to_function 'History', "$('playlist_test_case_#{playlist_test_case.id}_fullresults').toggle();"%>
-	<%= test_case_executions.last.result.to_i == 1 ? '<span class="passed">PASSED' : '<span class="failed">FAILED</span>' if test_case_executions.last%>
-	</td>
-	<td id="playlist_test_case_<%=playlist_test_case.id%>_results">
-		<% if test_case_executions.empty? %>
-			Not Run
-		<% else %>
-			<div id="playlist_test_case_<%=playlist_test_case.id%>_fullresults" style="display:none">
-				<%= render :partial => 'playlist_test_cases/results', :collection => test_case_executions %>
-			</div>
-		<% end %>
-	</td>
-  </tr>
-<% end %>
+	<%= render :partial => 'playlist_test_case', :collection => @playlist.playlist_test_cases %>
 </table>
-
-<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
-<%= link_to 'Back', playlists_path %>
+<div id="multi_action" style="display:none">
+	<% form_for(:playlist, :url => pass_playlist_path(@playlist), :html => {:method => :put, :style => 'float:left;'}) do |f| %>
+	  <%= hidden_field(:pass, :test_case_ids )%>
+	    <%= f.submit "Mark all selected as Passed!" %>
+	<% end %>
+	<% form_for(:playlist, :url => assign_playlist_path(@playlist), :html => {:method => :put, :style => 'float:left;'}) do |f| %>
+	  <%= hidden_field(:assign, :test_case_ids )%>
+	    &nbsp; or <b>Assign Selected To:</b>
+	    <%= f.select(:user_id, User.find(:all).collect {|p| [ p.login, p.id ] } ) %>
+	    <%= f.submit "Assign" %>
+	<% end %>
+	<% form_for(:playlist, :url => remove_playlist_path(@playlist), :html => {:method => :delete}) do |f| %>
+	  <%= hidden_field(:remove, :test_case_ids )%>
+	    &nbsp; or 
+			<input onclick="return confirm('About to remove checked test cases from this playlist. Are you sure?');" value="Remove" type="submit">
+	<% end %>
+	
+</div>

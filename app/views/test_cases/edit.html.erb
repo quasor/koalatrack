@@ -3,59 +3,29 @@
 
 <%= error_messages_for :test_case %>
 
-<% form_for(@test_case) do |f| %>
+<% form_for(@test_case, :html => { :multipart => true }) do |f| %>
+	<%= render :partial => 'form', :object => f%>
+	<p>
+	  <label>Attachments:</label>
+		<div>
+		<% for file_attachment in @test_case.file_attachments %>
+			<div>
+			<%= link_to file_attachment.filename, file_attachment.public_filename if file_attachment.filename%>
+			<%= link_to 'Delete', file_attachment, :confirm => 'Are you sure?', :method => :delete %>
+		  </div>
+		<% end %>
+		</div>
+	</p>
+	<p>
+		<label>Add an attachment:</label>
+	   <%= f.file_field :uploaded_data %>
+	</p>
   <p>
-    <b>Category</b><br />
-	<%= f.select(:category_id, Category.find(:all).collect {|p| [ p.name, p.id ] } ) %>
-  </p>
-
-  <p>
-    <b>Title</b><br />
-    <%= f.text_field :title %>
-  </p>
-
-  <p>
-    <b>Body</b><br />
-	<div id="<%= fckeditor_div_id('test_case', 'body') %>">
-        <%= fckeditor_textarea( "test_case", "body" , :width => 800, :height => 600) %> 
-    </div>
-    <%#= f.text_area :body %>
-  </p>
-
-  <p>
-    <b>Tags</b><br />
-    <%= f.text_field :tag_list %>
-  </p>
-
-  <p>
-    <b>Owner</b><br />
-	<%= f.select(:user_id, User.find(:all).collect {|p| [ p.login, p.id ] } ) %>
-  </p>
-
-  <p>
-    <b>Priority in feature</b><br />
-    <%= f.text_field :priority_in_feature %>
-  </p>
-
-  <p>
-    <b>Priority in product</b><br />
-    <%= f.text_field :priority_in_product %>
-  </p>
-
-  <p>
-    <b>Estimate in hours</b><br />
-    <%= f.text_field :estimate_in_hours %>
-  </p>
-
-  <p>
-    <b>Automated</b><br />
-    <%= f.check_box :automated %>
-  </p>
-
-  <p>
-    <%= f.submit "Update" %>
+	<label>&nbsp;</label>
+    <%= f.submit "Save test case" %>
   </p>
 <% end %>
-
+<p>
+</p>
 <%= link_to 'Show', @test_case %> |
 <%= link_to 'Back', test_cases_path %>

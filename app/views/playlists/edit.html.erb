@@ -20,7 +20,7 @@
 
   <p>
     <b>Milestone</b><br />
-    <%= f.select(:milestone_id, Milestone.find(:all).collect {|p| [ "#{p.name} - {#p.due.to_date}", p.id ] } ) %>
+    <%= f.select(:milestone_id, Milestone.find(:all).collect {|p| [ "#{p.name}", p.id ] } ) %>
   </p>
 
   <p>

@@ -1,0 +1,82 @@
+
+<p>
+  <label>Category:</label>
+	<%= form.select(:category_id, Category.find(:all).collect {|p| [ p.name, p.id ] } ) %>
+</p>
+
+<p>
+  <label>Title:</label>
+  <%= form.text_field :title %>
+</p>
+
+<p>
+  <label>Body:</label>
+	<div id="<%= fckeditor_div_id('test_case', 'body') %>">
+      <%= fckeditor_textarea( "test_case", "body" , :width => 800, :height => 400) %> 
+  </div>
+  <%#= form.text_area :body %>
+</p>
+
+<p>
+  <label>Owner:</label>
+	<%= form.select(:user_id, User.find(:all).collect {|p| [ p.login, p.id ] } ) %>
+</p>
+
+<p>
+  <label>Priority in feature:</label>
+  <%= form.text_field :priority_in_feature %>
+</p>
+
+<p>
+  <label>Priority in product:</label>
+  <%= form.text_field :priority_in_product %>
+</p>
+
+<p>
+  <label>Estimate in hours:</label>
+  <%= form.text_field :estimate_in_hours %>
+</p>
+
+<p>
+  <label>Project ID:</label>
+  <%= form.text_field :project_id %>
+</p>
+
+<p>
+	<label>Quick Tags:</label>
+	<% @tag_favorites = TagFavorite.find(:all)%>
+	<% for tag in @tag_favorites %>
+		<%=check_box_tag tag.tag.name, tag.tag.name, false,  :onClick => "toggleQTag(this)" %><%= tag.tag.name%>
+	<% end %>
+</p>
+<p>
+	<script>
+	function toggleQTag(cb)
+	{
+		ar = $('test_case_tag_list').value;
+		ar = ar.replace(/\s,/g, ',');
+		ar = ar.replace(/,\s/g, ',');
+		ar = ar.split(',');
+		//alert(ar);
+		if (cb.checked)
+		{
+			ar.push(cb.value);
+		}
+		else
+		{
+			ar = ar.without(cb.value);
+		}
+		ar = ar.uniq().join(",");
+		ar.replace(/^,/g,'');
+		$('test_case_tag_list').value = ar;
+	}
+	</script>
+  <label>Tags:</label>
+  <%= form.text_field :tag_list %>
+  <%= hidden_field_tag :quick_tag_list %>
+</p>
+
+<p>
+  <label>Automated:</label>
+  <%= form.check_box :automated %>
+</p>

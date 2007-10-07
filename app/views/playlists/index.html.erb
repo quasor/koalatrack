@@ -1,4 +1,4 @@
-<h1>Playlists</h1>
+<h1>My Playlists</h1>
 
 <table>
   <tr>
@@ -14,15 +14,22 @@
     <td><%=h playlist.description %></td>
     <td><%=h playlist.user.login %></td>
     <td><%=h playlist.milestone_id %></td>
+    <td><%= link_to 'Clone', new_playlist_path(:id => playlist.id) %></td>
     <td><%#= link_to 'Destroy', playlist, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
+<tr>
+	<td colspan=5>
+		<h1>Other playlists</h1>
+	</td>
+</tr>
 <% for playlist in @playlists %>
   <tr>
     <td><%=link_to playlist.title, playlist %></td>
     <td><%=h playlist.description %></td>
     <td><%=h playlist.user.login %></td>
     <td><%=h playlist.milestone_id %></td>
+    <td><%= link_to 'Clone', new_playlist_path(:id => playlist.id) %></td>
     <td><%#= link_to 'Destroy', playlist, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>

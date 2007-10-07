@@ -622,6 +622,13 @@ Ajax.InPlaceEditor.prototype = {
     
     if (this.options.textAfterControls)
       this.form.appendChild(document.createTextNode(this.options.textAfterControls));
+	if (this.options.method) {
+	  method = document.createElement("input");
+	  method.name = "_method"
+	  method.type = "hidden";
+	  method.value = this.options.method;
+	  this.form.appendChild(method);
+	}
   },
   hasHTMLLineBreaks: function(string) {
     if (!this.options.handleLineBreaks) return false;
