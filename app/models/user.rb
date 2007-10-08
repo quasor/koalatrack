@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :login, :email, :case_sensitive => false
   before_save :encrypt_password
   before_create :make_activation_code 
-  before_create { |u| u.admin = u.activated = true if User.count == 0 }
+  # before_create { |u| u.admin = true if User.count == 0 }
   
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.

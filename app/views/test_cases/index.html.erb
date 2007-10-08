@@ -36,7 +36,7 @@
 	<% end %>
     <td><%=link_to (h test_case.title), test_case %></td>
     <td><%=h test_case.user.login if test_case.user_id %></td>
-    <td><%=h test_case.tag_list %></td>
+    <td><%=h test_case.tags %></td>
 	<% if @total_hits %>
 	<td><%= test_case.ferret_score%></td>
 	<% end %>

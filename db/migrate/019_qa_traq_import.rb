@@ -57,12 +57,13 @@ class QaTraqImport < ActiveRecord::Migration
     @rs = SomeModel.connection.execute(" \
     select tvc.*, tv.*, p.Name as ProductName, pc.name as ProductComponentName, u.LoginName as UserName from \ 
     testcasesversions tv, testcasesversionscomponents tvc, productscomponents pc, products p, users u \ 
-    where tvc.TestCaseVersionID = tv.ID and tvc.ComponentID = pc.ID and pc.ProductID = p.ID and u.ID = tv.AuthorID")
+    where tvc.TestCaseVersionID = tv.ID and tvc.ComponentID = pc.ID and pc.ProductID = p.ID and u.ID = tv.AuthorID \ 
+    ORDER BY tv.TestCaseId, tv.id DESC")
 
     while row = @rs.fetch_hash do
       puts "importing #{row['TestCaseID']}..."
       user = User.find_or_create_by_login(:login => row['UserName'].downcase, :email => "#{row['UserName'].downcase}@expedia.com", :password => 'mttpower', :password_confirmation => 'mttpower')
-      user.activate unless user.activated?
+      user.activate unless user.activation_code.nil?
       category = Category.find_or_create_by_name(:name => row['ProductName']).children.find_or_create_by_name(:name => row['ProductComponentName'])
       test_case = TestCase.find_or_create_by_qatraq_id(:qatraq_id => row['TestCaseID'], :user_id => user.id, :category_id => category.id, :title => row['Title'], :body => row['Content'].gsub(/\n/,'<br>').gsub(/\s{4}/,'&nbsp;&nbsp;&nbsp;&nbsp;') )
     end

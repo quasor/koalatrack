@@ -15,6 +15,7 @@
   <tr>
     <td><%=h user.login %></td>
     <td><%= "Administrator" if user.admin? %></td>
+    <td><%= "Email: #{activate_path(:activation_code => user.activation_code)}" unless user.activated? or !admin? %></td>
     <td><%= link_to 'Show', user %></td>
     <td><%= link_to 'Edit', edit_user_path(user) %></td>
     <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %></td>

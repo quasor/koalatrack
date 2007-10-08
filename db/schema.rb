@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 28) do
+ActiveRecord::Schema.define(:version => 29) do
 
   create_table "categories", :force => true do |t|
     t.string   "name"
@@ -122,11 +122,11 @@ ActiveRecord::Schema.define(:version => 28) do
     t.boolean  "automated"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "version"
     t.integer  "updated_by"
     t.integer  "category_id"
     t.string   "tag"
     t.integer  "qatraq_id"
+    t.integer  "version"
     t.string   "project_id"
   end
 
