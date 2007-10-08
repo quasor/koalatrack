@@ -92,8 +92,12 @@ ul#category_tree li {
 	list-style-image: url(/images/logo-tiny.jpg);
 	margin:0px 0px 0px -20px;
 }
-ul#category_tree li.has_children {
+ul#category_tree li.has_children_false {
 	list-style-image: url(/images/plus-small.png);
+	margin:0px 0px 0px -20px;
+}
+ul#category_tree li.has_children_true {
+	list-style-image: url(/images/minus-small.png);
 	margin:0px 0px 0px -20px;
 }
 

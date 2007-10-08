@@ -12,7 +12,7 @@ module CategoriesHelper
     ret ||= "" if ret.nil?
     ret += '<ul id="category_tree">'
     groups[i].each do |a,v|
-      ret += "<li class='#{'has_children' if a.children.size > 0}'>"
+      ret += "<li class='#{'has_children' if a.children.size > 0}_#{ session[:expanded_categories].include?(a.id).to_s}'>"
       ret += link_to(a.name, test_cases_path(:category_id => a.id), :class => (curr == a) ? 'selected' : 'unselected' )              
       ret += renderCategoryTreeFastDriver(a.id,groups,curr) if session[:expanded_categories].include?(a.id)
     end if groups[i]
