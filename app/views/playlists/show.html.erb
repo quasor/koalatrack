@@ -1,6 +1,6 @@
 <% javascript_tag do %>
   var multiple_ids = new Array();
-	function foo(o)
+	function pick(o)
 	{
 		if (o.checked)
 		{
@@ -29,29 +29,36 @@
 <p>
   <b>Owner:</b>
   <%=h @playlist.user.login %>
-  <b>Milestone:</b>
-  <%=h @playlist.milestone_id %>
+	<% if @playlist.milestone %>
+  	<b>Milestone:</b>
+  	<%=h @playlist.milestone.name %>
+	<% end %>
 	<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
 	<%= link_to 'Back', playlists_path %>
 </p>
-
 <h2>Test Cases</h2>
+<% unless @playlist.test_cases.empty?%>
+<div style="align=right">
+<%= link_to "Show All", playlist_path(@playlist, :show_all=>true) if session[:filtering] %>
+<%= link_to "Hide cases that have been run", playlist_path(@playlist, :notrun => true) unless session[:filtering]%>
+</div>
 <table border=1 id='playlist'>
   <tr>
 		<th></th>	
 		<th>Action</th>
     <th>Category</th>
     <th>Title</th>
-    <th>Assigned To</th>
-    <th>Recent Results</th>
+    <th><%= link_to 'Assigned To', playlist_path(@playlist, :sort => :assigned)%></th>
+    <th><%= link_to 'Recent Results', playlist_path(@playlist, :sort => :count)%></th>
     <th>BugID</th>
     <th>Last Run</th>
-    <th>Pri in feature</th>
-    <th>Pri in product</th>
+    <th><%= link_to 'Pri in feature', playlist_path(@playlist, :sort => :feature)%></th>
+    <th><%= link_to 'Pri in product', playlist_path(@playlist, :sort => :product)%></th>
   </tr>
 
-	<%= render :partial => 'playlist_test_case', :collection => @playlist.playlist_test_cases %>
+	<%= render :partial => 'playlist_test_case', :collection => @playlist_test_cases %>
 </table>
+
 <div id="multi_action" style="display:none">
 	<% form_for(:playlist, :url => pass_playlist_path(@playlist), :html => {:method => :put, :style => 'float:left;'}) do |f| %>
 	  <%= hidden_field(:pass, :test_case_ids )%>
@@ -68,5 +75,8 @@
 	    &nbsp; or 
 			<input onclick="return confirm('About to remove checked test cases from this playlist. Are you sure?');" value="Remove" type="submit">
 	<% end %>
-	
 </div>
+<% else %>
+  You've created an empty playlist. It's time to fill it.
+	<%= link_to "Go find test cases", test_cases_path%>
+<% end %>

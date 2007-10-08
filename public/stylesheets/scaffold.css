@@ -6,7 +6,7 @@ body, p, ol, ul, td {
   line-height: 18px;
 }
 
-table td {padding:4px;}
+table.padded td {padding:0px 8px 0px 8px;}
 
 pre {
   background-color: #eee;

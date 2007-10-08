@@ -6,6 +6,9 @@
     <th>Parent</th>
   </tr>
 
+	<p><%= link_to 'New category', new_category_path %></p>
+	<p><%= link_to 'New root category', new_category_path(:parent_id => '') if admin? %></p>
+
 <% for category in @categories %>
   <tr>
     <td><%=h category.name %></td>
@@ -17,6 +20,4 @@
 <% end %>
 </table>
 
-<br />
 
-<%= link_to 'New category', new_category_path %>

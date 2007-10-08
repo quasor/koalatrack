@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20
+# Schema version: 26
 #
 # Table name: test_cases
 #
@@ -16,8 +16,9 @@
 #  version             :integer(11)   
 #  updated_by          :integer(11)   
 #  category_id         :integer(11)   
-#  tags_list_string    :string(255)   
+#  tag                 :string(255)   
 #  qatraq_id           :integer(11)   
+#  project_id          :string(255)   
 #
 
 class TestCase < ActiveRecord::Base

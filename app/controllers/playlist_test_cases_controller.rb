@@ -42,11 +42,12 @@ class PlaylistTestCasesController < ApplicationController
   # POST /playlist_test_cases
   # POST /playlist_test_cases.xml
   def create
+    @ids = params[:playlist_test_case].delete :ids
     @playlist_test_case = PlaylistTestCase.new(params[:playlist_test_case])
     @playlist_test_case.user_id = current_user.id
     respond_to do |format|
-      if @playlist_test_case.save
-        flash[:notice] = 'PlaylistTestCase was successfully created.'
+      if (@ids && create_multiple(@ids)) || @playlist_test_case.save
+        flash[:notice] = 'Test cases were added to playlist.'
         format.html { redirect_to(@playlist_test_case.playlist) }
         format.xml  { render :xml => @playlist_test_case, :status => :created, :location => @playlist_test_case }
       else
@@ -56,6 +57,16 @@ class PlaylistTestCasesController < ApplicationController
     end
   end
 
+  def create_multiple(ids)
+    test_case_ids = ids.split(',')
+    for id in test_case_ids
+      @playlist_test_case = PlaylistTestCase.new(params[:playlist_test_case])
+      @playlist_test_case.test_case_id = id
+      @playlist_test_case.user_id = current_user.id
+      @playlist_test_case.save      
+    end
+  end
+  
   # PUT /playlist_test_cases/1
   # PUT /playlist_test_cases/1.xml
   def update
@@ -100,7 +111,7 @@ class PlaylistTestCasesController < ApplicationController
   def process_result(result)
     @playlist_test_case = PlaylistTestCase.find(params[:id])
     @version = @playlist_test_case.test_case_version || @playlist_test_case.test_case.version
-    @tce = TestCaseExecution.create( :playlist_id => @playlist_test_case.playlist_id, 
+    @tce = TestCaseExecution.create( :playlist_test_case_id => @playlist_test_case.id, 
     :test_case_id => @playlist_test_case.test_case_id, :user_id => current_user, 
     :test_case_version => @version,:result => result)                                
     

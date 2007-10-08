@@ -22,7 +22,7 @@ class TestCasesController < ApplicationController
 
       if logged_in?
         @playlists = current_user.playlists 
-        @playlist_collection = current_user.playlists.collect {|p| [ "#{p.milestone} - #{p.title}", p.id ] }.reverse
+        @playlist_collection = current_user.playlists.collect {|p| [ "#{p.title}", p.id ] }.reverse
       end
 
     respond_to do |format|
@@ -56,6 +56,7 @@ class TestCasesController < ApplicationController
   # GET /test_cases/1/edit
   def edit
     @test_case = TestCase.find(params[:id])
+    @test_case.title = "Copy of #{@test_case.title}" if params[:clone]
     @tag_favorites = TagFavorite.find(:all)
   end
 
@@ -90,11 +91,12 @@ class TestCasesController < ApplicationController
   def update
     @uploaded_data = params[:test_case].delete :uploaded_data
     @test_case = TestCase.find(params[:id])
+    @test_case = @test_case.clone if params[:clone]
     @test_case.updated_by = current_user.id if logged_in?
     @tags = (params[:test_case][:tag_list] || "") + (params[:quick_tag_list] || "")
     @tags = @tags.split(',').collect{ |t| t.strip }.uniq.join(', ')
     params[:test_case][:tag_list] = @tags
-     
+
     @test_case.tag = params[:test_case][:tag_list]
 
     respond_to do |format|

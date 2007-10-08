@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20
+# Schema version: 26
 #
 # Table name: users
 #
@@ -14,6 +14,7 @@
 #  remember_token_expires_at :datetime      
 #  activation_code           :string(40)    
 #  activated_at              :datetime      
+#  admin                     :boolean(1)    
 #
 
 require 'digest/sha1'
@@ -39,6 +40,8 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :login, :email, :case_sensitive => false
   before_save :encrypt_password
   before_create :make_activation_code 
+  before_create { |u| u.admin = u.activated = true if User.count == 0 }
+  
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :password, :password_confirmation

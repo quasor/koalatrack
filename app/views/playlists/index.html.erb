@@ -1,40 +1,86 @@
-<h1>My Playlists</h1>
+<h1>Playlists</h1>
+<table><tr><td valign=top>
+<%= link_to 'New playlist', new_playlist_path %>
+</td><td valign="top">&nbsp; or &nbsp;</td><td>
+<% form_tag playlists_path, :method => 'get' do %>
+  Search:
+  <%= text_field_tag :q, params[:q], :id => :search_box, :type => :search %>
+<% end %>
+</td></tr></table>
+<% if params[:q] %>
+	<h3>Execution Summary</h3>
+	<table>
+	<tr>
+		<th>Status</th>
+		<th>Count</th>
+	</tr>
+	<% playlist_test_cases = @playlists.collect{|p| p.playlist_test_cases}.flatten %>
+	<% total = playlist_test_cases.size %>
+	<% playlist_test_cases.group_by(&:last_result).each do |k,v| %>
+	<tr><td><%= TestCaseExecution::RESULTS[k] %></td><td width="20" align="center"><%= v.size%></td><td><%= (v.size * 1.0 / total * 100 ).round 1%>%</td></tr>
+	<% end %>
+	</table>
+	<b>Bugs:</b><%= playlist_test_cases.collect { |p| p.test_case_executions.last }.compact.collect{ |e| "#{e.bug_url} " } %>
+<% end %>
 
-<table>
+<table cellspacing="0" class="padded">
   <tr>
     <th>Title</th>
     <th>Description</th>
     <th>User</th>
     <th>Milestone</th>
+    <th>Summary</th>
   </tr>
 
 <% for playlist in @my_playlists %>
-  <tr>
+	<tr style="background-color:<%= cycle("#fff", "#E6E6E6", :name => "colors") -%>">
     <td><%=link_to playlist.title, playlist %></td>
     <td><%=h playlist.description %></td>
     <td><%=h playlist.user.login %></td>
-    <td><%=h playlist.milestone_id %></td>
+    <td><%=h playlist.milestone.name if playlist.milestone %></td>
+		<td>
+			<!-- 
+			Counts:
+			Passed / Failed / Not Run / Blocked
+			Bugs
+			<b><%= playlist.test_cases.size %> Test cases</b>
+		  -->
+			<table cellspacing="0" cellpadding="0"><tr>
+			<% playlist.playlist_test_cases.group_by(&:last_result).each do |k,v| %>
+			<td><%= TestCaseExecution::RESULTS[k] %>: <%= v.size%></td>
+			<% end %>
+			</tr></table>
+			
+		</td>
     <td><%= link_to 'Clone', new_playlist_path(:id => playlist.id) %></td>
-    <td><%#= link_to 'Destroy', playlist, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Delete', playlist, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
-<tr>
+<% unless @my_playlists.empty?%>
+<!-- <tr>
 	<td colspan=5>
 		<h1>Other playlists</h1>
 	</td>
 </tr>
+-->
+<% end %>
 <% for playlist in @playlists %>
-  <tr>
+	<tr style="background-color:<%= cycle("#fff", "#E6E6E6", :name => "colors") -%>">
     <td><%=link_to playlist.title, playlist %></td>
     <td><%=h playlist.description %></td>
     <td><%=h playlist.user.login %></td>
-    <td><%=h playlist.milestone_id %></td>
+    <td><%=h playlist.milestone.name if playlist.milestone %></td>
+    <td>
+			<table cellspacing="0" cellpadding="0"><tr>
+			<% playlist.playlist_test_cases.group_by(&:last_result).each do |k,v| %>
+			<td><%= TestCaseExecution::RESULTS[k] %>: <%= v.size%></td>
+			<% end %>
+			</tr></table>
+			<%#="Empty" if playlist.playlist_test_cases.empty? %>
+		</td>
     <td><%= link_to 'Clone', new_playlist_path(:id => playlist.id) %></td>
-    <td><%#= link_to 'Destroy', playlist, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
 
-<br />
 
-<%= link_to 'New playlist', new_playlist_path %>

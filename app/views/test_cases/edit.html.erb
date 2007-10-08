@@ -1,10 +1,15 @@
 <%= javascript_include_tag "fckeditor/fckeditor" %>
-<h1>Editing test_case</h1>
+<% if params[:clone] %>
+<h1>Cloning test case</h1>
+<% else %>
+<h1>Editing test case</h1>
+<% end %>
 
 <%= error_messages_for :test_case %>
 
 <% form_for(@test_case, :html => { :multipart => true }) do |f| %>
 	<%= render :partial => 'form', :object => f%>
+	<%= hidden_field_tag :clone, 1 if params[:clone]%>
 	<p>
 	  <label>Attachments:</label>
 		<div>
@@ -22,7 +27,7 @@
 	</p>
   <p>
 	<label>&nbsp;</label>
-    <%= f.submit "Save test case" %>
+    <%= f.submit (params[:clone] ? "Clone test case" : "Save test case") %>
   </p>
 <% end %>
 <p>

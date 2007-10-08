@@ -30,8 +30,18 @@
 			</td>
 			<% end unless controller.controller_name == 'playlists'%>
 			<td valign="top">
+				<div style="float:right"><%= link_to "Logout #{current_user.login}", logout_path if logged_in?%></div>
+			  <div style="font-size:18px">
 				<%=	link_to_unless_current 'Test Cases', test_cases_path%> |
 				<%=	link_to_unless_current 'Playlists', playlists_path%> | 
+				<%=	link_to_unless_current 'Reporting', playlists_path%> | 
+				<% if admin? %>
+					<%=	link_to_unless_current 'Categories', categories_path%> | 
+					<%=	link_to_unless_current 'Milestones', milestones_path%> | 
+					<%=	link_to_unless_current 'Users', users_path%> | 
+					<%=	link_to_unless_current 'Quick Tags', tag_favorites_path%> 
+				<% end %>
+				</div>
 				<%#= link_to 'New test case', new_test_case_path(:category_id => params[:category_id]) %>			
 				<hr/>
 				<p style="color: green"><%= flash[:notice] %></p>

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20
+# Schema version: 26
 #
 # Table name: users
 #
@@ -14,6 +14,7 @@
 #  remember_token_expires_at :datetime      
 #  activation_code           :string(40)    
 #  activated_at              :datetime      
+#  admin                     :boolean(1)    
 #
 
 quentin:

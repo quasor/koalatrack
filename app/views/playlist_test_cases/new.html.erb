@@ -5,7 +5,7 @@
 <% form_for(@playlist_test_case) do |f| %>
   <p>
     <b>Playlist</b><br />
-    <%= f.select(:playlist_id, Playlist.find(:all).collect {|p| [ "#{p.milestone} - #{p.title}", p.id ] } ) %>
+    <%= f.select(:playlist_id, Playlist.find(:all).collect {|p| [ "#{p.title}", p.id ] } ) %>
   </p>
 
     <%= f.hidden_field(:test_case_id ) %>

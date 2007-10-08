@@ -48,7 +48,7 @@ class TestCaseExecutionsController < ApplicationController
     respond_to do |format|
       if @test_case_execution.save
         flash[:notice] = 'TestCaseExecution was successfully created.'
-        format.html { redirect_to(@test_case_execution.playlist) }
+        format.html { redirect_to(@test_case_execution.playlist_test_case.playlist) }
         format.xml  { render :xml => @test_case_execution, :status => :created, :location => @test_case_execution }
         format.js do
            render :update do |page|

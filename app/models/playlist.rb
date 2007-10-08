@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20
+# Schema version: 26
 #
 # Table name: playlists
 #
@@ -13,6 +13,13 @@
 #
 
 class Playlist < ActiveRecord::Base
+  acts_as_ferret :fields => [:title, :milestone_name, :user]
+  def milestone_name
+    self.milestone.name
+  end
+  def user
+    self.user.login
+  end
   belongs_to :milestone
   has_many :playlist_test_cases
   has_many :test_cases, :through => :playlist_test_cases, :source => :test_case

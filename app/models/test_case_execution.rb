@@ -1,31 +1,34 @@
 # == Schema Information
-# Schema version: 20
+# Schema version: 26
 #
 # Table name: test_case_executions
 #
-#  id                :integer(11)   not null, primary key
-#  playlist_id       :integer(11)   
-#  test_case_id      :integer(11)   
-#  test_case_version :integer(11)   
-#  user_id           :integer(11)   
-#  result            :integer(11)   
-#  bug_id            :string(255)   
-#  comment           :text          
-#  created_at        :datetime      
-#  updated_at        :datetime      
+#  id                    :integer(11)   not null, primary key
+#  playlist_test_case_id :integer(11)   
+#  test_case_id          :integer(11)   
+#  test_case_version     :integer(11)   
+#  user_id               :integer(11)   
+#  result                :integer(11)   
+#  bug_id                :string(255)   
+#  comment               :text          
+#  created_at            :datetime      
+#  updated_at            :datetime      
 #
 
 class TestCaseExecution < ActiveRecord::Base
+  RESULTS = ['Not Run','Passed', 'Failed', 'Blocked', 'Not implemented'] 
+
   belongs_to :test_case
   belongs_to :user
-  belongs_to :playlist
-  validates_presence_of :playlist_id, :test_case_id, :user_id, :result
+  belongs_to :playlist_test_case, :counter_cache => :test_case_executions_count
+  
+  validates_presence_of :playlist_test_case_id, :test_case_id, :user_id, :result
     
   def bug_url
     "<a href=\"http://expediaweb/test/bugs/bug.asp?BugID=#{bug_id}\">#{bug_id}</a>"
   end
   def siblings
-    TestCaseExecution.find_all_by_test_case_id_and_playlist_id(test_case_id, playlist_id)
+    TestCaseExecution.find_all_by_test_case_id_and_playlist_test_case_id(test_case_id, playlist_test_case_id)
   end
   def to_html
     (result.to_i == 1) ? "<span class='passed'>PASSED</span>" : "<span class='failed'>FAILED</span>"
@@ -42,6 +45,18 @@ class TestCaseExecution < ActiveRecord::Base
     	else
     	  ""
     	end
-    	
   end
+  
+  def after_save
+    self.update_counter_cache
+  end
+  def after_destroy
+    #self.update_counter_cache
+  end
+  
+  def update_counter_cache
+    self.playlist_test_case.last_result = self.result
+    self.playlist_test_case.save
+  end
+  
 end

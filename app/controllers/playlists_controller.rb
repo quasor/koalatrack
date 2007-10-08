@@ -4,8 +4,11 @@ class PlaylistsController < ApplicationController
   # GET /playlists
   # GET /playlists.xml
   def index
-    if logged_in?
-      @my_playlists =  Playlist.find_all_by_user_id(current_user.id) 
+    if params[:q] && !params[:q].blank?
+      @playlists = Playlist.find_by_contents( params[:q], :limit => 100 )
+      @my_playlists =  []
+    elsif logged_in?
+      @my_playlists = Playlist.find_all_by_user_id(current_user.id) 
       @playlists = Playlist.find(:all, :conditions => ["user_id != ?", current_user.id])
     else
       @playlists = Playlist.find(:all)
@@ -22,7 +25,29 @@ class PlaylistsController < ApplicationController
   # GET /playlists/1.xml
   def show
     @playlist = Playlist.find(params[:id])
-
+    if params[:notrun]
+       session[:filtering] = true
+    end
+    if params[:show_all]
+      session[:filtering] = false
+    end
+    sort = case params[:sort]
+               when "feature"  then "priority_in_feature"
+               when "product"  then "priority_in_product"
+               when "title"   then "title"
+               when "assigned" then "login"
+               when "count" then "playlist_test_cases.test_case_executions_count"
+               end
+    if !session[:sort].blank? && session[:sort] == sort
+      session[:sort_asc] = !session[:sort_asc] 
+    else
+      session[:sort_asc] = false
+    end
+    session[:sort] = sort
+    sort += " DESC" unless sort.blank? || session[:sort_asc]
+    @conditions = session[:filtering] ? { :test_case_executions_count => 0 } : nil
+    @playlist_test_cases = @playlist.playlist_test_cases.find(:all, :order => sort, :conditions=> @conditions)
+    #, :include => [:test_case, :user]
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @playlist }
@@ -33,7 +58,12 @@ class PlaylistsController < ApplicationController
   # GET /playlists/new.xml
   def new
     @playlist_copy = Playlist.find(params[:id]) if params[:id]
-    @playlist = Playlist.new(:title => "Copy of #{@playlist_copy.title}")
+    if @playlist_copy
+      @playlist = Playlist.new(:title => "Copy of #{@playlist_copy.title}") 
+    else
+      @playlist = Playlist.new 
+    end
+    
     @playlist.user_id = current_user.id
 
     respond_to do |format|
@@ -54,7 +84,7 @@ class PlaylistsController < ApplicationController
 
     respond_to do |format|
       if @playlist.save
-        if params[:clone_id]
+        if !params[:clone_id].blank?
           @playlist_test_cases = Playlist.find(params[:clone_id]).playlist_test_cases.collect(&:clone)
           @playlist.playlist_test_cases << @playlist_test_cases
         end

@@ -6,6 +6,10 @@ module AuthenticatedSystem
       current_user != :false
     end
     
+    def admin?
+      logged_in? && current_user.admin?
+    end
+    
     # Accesses the current user from the session.  Set it to :false if login fails
     # so that future calls do not hit the database.
     def current_user
@@ -31,7 +35,7 @@ module AuthenticatedSystem
     #    current_user.login != "bob"
     #  end
     def authorized?
-      logged_in?
+      logged_in? 
     end
 
     # Filter method to enforce a login requirement.
@@ -92,7 +96,7 @@ module AuthenticatedSystem
     # Inclusion hook to make #current_user and #logged_in?
     # available as ActionView helper methods.
     def self.included(base)
-      base.send :helper_method, :current_user, :logged_in?
+      base.send :helper_method, :current_user, :logged_in?, :admin?
     end
 
     # Called from #current_user.  First attempt to login by the user id stored in the session.

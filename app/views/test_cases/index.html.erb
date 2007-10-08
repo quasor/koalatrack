@@ -6,19 +6,19 @@
 
 <% end %>
 <% if @test_cases.empty?%>
-<< Select a category or search
-<% form_tag test_cases_path, :method => 'get' do %>
-  <%= hidden_field_tag :category_id, @category.id unless @category.nil?%>
-  <%= text_field_tag :q, params[:q], :size => 55, :id => :search_box_big, :type => :search, :style => 'font-size:22px; padding:4px' %>
-<% end %>
-<p><span style='font-size:10px'>
-<b>Example:</b> reporting AND payment NOT deferred <br/>
-<%= link_to 'Query Syntax', 'http://lucene.apache.org/java/docs/queryparsersyntax.html' %>
-</span></p>
-
+	<< Select a category or search
+	<% form_tag test_cases_path, :method => 'get' do %>
+	  <%= hidden_field_tag :category_id, @category.id unless @category.nil?%>
+	  <%= text_field_tag :q, params[:q], :size => 55, :id => :search_box_big, :type => :search, :style => 'font-size:22px; padding:4px' %>
+	<% end %>
+	<p><span style='font-size:10px'>
+	<b>Example:</b> reporting AND payment NOT deferred <br/>
+	<%= link_to 'Query Syntax', 'http://lucene.apache.org/java/docs/queryparsersyntax.html' %>
+	</span></p>
 <% else %>
-<table border=1>
+<table class="padded" cellspacing="0">
   <tr>
+	  <% if logged_in? %><th></th><% end %>
     <% if @category.nil? %><th>Category</th><% end %>
     <th>Title</th>
     <th>Owner</th>
@@ -29,7 +29,12 @@
   </tr>
 
 <% for test_case in @test_cases %>
-  <tr>
+	<tr style="background-color:<%= cycle("#fff", "#E6E6E6", :name => "colors") -%>">
+	<% if logged_in? %>
+		<td>
+				<%= check_box_tag 'pickme', test_case.id, false, :onClick => 'pick(this)'%>
+		</td>
+	<%end %>
 	<% if test_case.category && @category.nil? %>
     <td><%= (test_case.category.ancestors + [test_case.category]).collect(&:name).join(' \ ') %></td> 
 	<% end %>
@@ -40,6 +45,8 @@
 	<td><%= test_case.ferret_score%></td>
 	<% end %>
 	<td><%= link_to 'Edit', edit_test_case_path(test_case) %></td>
+	<td><%= link_to 'Clone', edit_test_case_path(test_case, :clone => true ) %></td>
+
 	<td>
 		<% remote_form_for(@playlist_test_case || PlaylistTestCase.new(:test_case_id => test_case.id), :loading=>"Element.toggle('spinner_#{test_case.id}')",:complete => "Element.toggle('spinner_#{test_case.id}')") do |f| %>
 		    <%= f.select(:playlist_id, @playlist_collection ) %>
@@ -52,4 +59,33 @@
 </table>
 
 <br />
+<% end %>
+
+<div id="multi_action" style="display:none">
+	<% form_for(PlaylistTestCase.new, :loading=>"Element.toggle('spinner_multi')",:complete => "Element.toggle('spinner_multi')") do |f| %>
+	    Add selected test cases to playlist:
+	    <%= f.select(:playlist_id, @playlist_collection ) %>
+	    <%= hidden_field( :playlist_test_case, :ids ) %><%= f.submit "Add to playlist" %>
+		<%=image_tag 'spinner.gif', :id => "spinner_multi", :style => "display:none"%>	
+	<% end if logged_in?%>
+</div>
+
+<% javascript_tag do %>
+  var multiple_ids = new Array();
+	function pick(o)
+	{
+		if (o.checked)
+		{
+			multiple_ids.push(o.value);
+		}
+		else
+		{
+			multiple_ids = multiple_ids.without(o.value);
+		}
+		$('playlist_test_case_ids').value = multiple_ids;
+		if (multiple_ids != '')
+			$('multi_action').show();
+		else
+			$('multi_action').hide();
+	}
 <% end %>

@@ -1,5 +1,6 @@
 class MilestonesController < ApplicationController
-  before_filter :login_required, :except => [:index, :show]
+  before_filter :login_required
+  alias authorized? admin?
 
   # GET /milestones
   # GET /milestones.xml
