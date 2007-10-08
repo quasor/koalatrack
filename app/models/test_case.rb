@@ -24,8 +24,10 @@
 class TestCase < ActiveRecord::Base
   acts_as_taggable
   acts_as_versioned
-  acts_as_ferret :fields => [:title, :body, :tag]
-  
+  acts_as_ferret :fields => [:title, :body, :tag, :owner]
+  def owner
+    user.login
+  end
   belongs_to :user
   belongs_to :category
   belongs_to :updater,  :class_name => 'User', :foreign_key => "updated_by"  

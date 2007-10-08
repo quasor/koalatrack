@@ -23,7 +23,7 @@
 				  <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box, :type => :search %>
 				<% end %>
 				<p><span style='font-size:10px'>
-				<b>Example:</b> reporting AND payment NOT deferred <br/>
+				<b>Example:</b><br/>tag:BVT AND reporting OR owner:squick <br/>
 				<%= link_to 'Query Syntax', 'http://lucene.apache.org/java/docs/queryparsersyntax.html' %>
 				</span></p>
 				<%= renderCategoryTree%>
@@ -43,7 +43,7 @@
 				<% end %>
 				</div>
 				<%#= link_to 'New test case', new_test_case_path(:category_id => params[:category_id]) %>			
-				<hr/>
+				<hr style="min-width:600px"/>
 				<p style="color: green"><%= flash[:notice] %></p>
 				<%= yield  %>		
 			</td>
