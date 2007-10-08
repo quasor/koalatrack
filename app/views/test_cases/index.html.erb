@@ -11,10 +11,6 @@
 	  <%= hidden_field_tag :category_id, @category.id unless @category.nil?%>
 	  <%= text_field_tag :q, params[:q], :size => 55, :id => :search_box_big, :type => :search, :style => 'font-size:22px; padding:4px' %>
 	<% end %>
-	<p><span style='font-size:10px'>
-	<b>Example:</b> reporting AND payment NOT deferred <br/>
-	<%= link_to 'Query Syntax', 'http://lucene.apache.org/java/docs/queryparsersyntax.html' %>
-	</span></p>
 <% else %>
 <table class="padded" cellspacing="0">
   <tr>
