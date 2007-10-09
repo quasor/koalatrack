@@ -67,7 +67,7 @@
 <% for playlist in @playlists %>
 	<tr style="background-color:<%= cycle("#fff", "#E6E6E6", :name => "colors") -%>">
     <td><%=link_to playlist.title, playlist %></td>
-    <td><%=h playlist.description %></td>
+    <td><%=truncate (h playlist.description), 75 %></td>
     <td><%=h playlist.user.login %></td>
     <td><%=h playlist.milestone.name if playlist.milestone %></td>
     <td>
