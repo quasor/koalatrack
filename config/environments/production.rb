@@ -16,3 +16,6 @@ config.action_controller.perform_caching             = true
 
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
+CACHE = MemCache.new 'localhost:11211', :namespace => 'my_rails_app'
+config.action_controller.session_store = :mem_cache_store
+config.action_controller.fragment_cache_store = :mem_cache_store
