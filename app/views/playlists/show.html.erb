@@ -37,7 +37,7 @@
 	<%= link_to 'Back', playlists_path %>
 </p>
 <h2>Test Cases</h2>
-<% unless @playlist.test_cases.empty?%>
+<% unless @playlist.playlist_test_cases.empty?%>
 <div style="align=right">
 <%= link_to "Show All", playlist_path(@playlist, :show_all=>true) if session[:filtering] %>
 <%= link_to "Hide cases that have been run", playlist_path(@playlist, :notrun => true) unless session[:filtering]%>
@@ -56,9 +56,12 @@
     <th><%= link_to 'Pri in product', playlist_path(@playlist, :sort => :product)%></th>
   </tr>
 
-	<%= render :partial => 'playlist_test_case', :collection => @playlist_test_cases %>
+	<%= render :partial => 'playlist_test_case', :collection => @playlist.playlist_test_cases %>
 </table>
 
+<% for p in  @playlist.playlist_test_cases %>
+<%#= debug p.test_case_executions%>
+<% end %>
 <div id="multi_action" style="display:none">
 	<% form_for(:playlist, :url => pass_playlist_path(@playlist), :html => {:method => :put, :style => 'float:left;'}) do |f| %>
 	  <%= hidden_field(:pass, :test_case_ids )%>

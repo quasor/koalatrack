@@ -1,11 +1,11 @@
-<% test_case = playlist_test_case.test_case%>
+<%# test_case = playlist_test_case.test_case%>
 <tr id="playlist_test_case_<%=playlist_test_case.id%>">
 <td>
 		<%= check_box_tag 'pickme', playlist_test_case.id, false, :onClick => 'pick(this)' %>
 </td>
 <td>
 	<%#= link_to_remote 'Fail', :url => fail_playlist_test_case_path(:id => playlist_test_case), :method => :put %>
-	<% form_for(TestCaseExecution.new(:playlist_test_case_id => playlist_test_case.id, :test_case_id => test_case.id) ) do |f| %><%= f.select :result, [['Execute...',''], ['Pass',1], ['Fail',2], ['Blocked',3],['Not Implemented',4]], {}, {:onChange => "this.value ? $('playlist_test_case_oid_#{playlist_test_case.object_id}').show() : $('playlist_test_case_oid_#{playlist_test_case.object_id}').hide();"} %>
+	<% form_for(TestCaseExecution.new(:playlist_test_case_id => playlist_test_case.id, :test_case_id => playlist_test_case.test_case.id) ) do |f| %><%= f.select :result, [['Execute...',''], ['Pass',1], ['Fail',2], ['Blocked',3],['Not Implemented',4]], {}, {:onChange => "this.value ? $('playlist_test_case_oid_#{playlist_test_case.object_id}').show() : $('playlist_test_case_oid_#{playlist_test_case.object_id}').hide();"} %>
 	  <div id="playlist_test_case_oid_<%=playlist_test_case.object_id%>" style="display:none">
 	    <b>Bug</b><br />
 	    <%= f.text_field :bug_id %>
@@ -26,7 +26,7 @@
 	<% end %>
 </td>
   <td><%=h playlist_test_case.test_case.category.name if playlist_test_case.test_case.category %></td>
-  <td><%=link_to test_case.title, test_case %></td>
+  <td><%=link_to playlist_test_case.test_case.title, playlist_test_case.test_case %></td>
   <td><%=h playlist_test_case.user.login if playlist_test_case.user_id %></td>
 <td id="playlist_test_case_<%=playlist_test_case.id%>_results">
 	<%= playlist_test_case.test_case_executions.last.to_html unless playlist_test_case.test_case_executions.empty? || playlist_test_case.test_case_executions.last.nil? %>
@@ -35,12 +35,12 @@
 	<% else %>
 	<%= link_to_function 'History', "$('playlist').getElementsByClassName('playlist_test_case_#{playlist_test_case.id}').invoke('toggle');"%>
 	<% end %>
-	<%#= debug test_case.test_case_executions%>
+	<%#= debug playlist_test_case.test_case_executions%>
 </td>
 	<td><%=playlist_test_case.test_case_executions.last.bug_url if !playlist_test_case.test_case_executions.empty? && playlist_test_case.test_case_executions.last%></td>
 	<td nowrap><%=h playlist_test_case.test_case_executions.last.created_at if !playlist_test_case.test_case_executions.empty? %></td>
-  <td><%=h test_case.priority_in_feature %></td>
-  <td><%=h test_case.priority_in_product %></td>
+  <td><%=h playlist_test_case.test_case.priority_in_feature %></td>
+  <td><%=h playlist_test_case.test_case.priority_in_product %></td>
   <td><%= link_to 'Remove', playlist_test_case, :confirm => 'Are you sure?', :method => :delete %></td>
 </tr>
 	<%= render :partial => 'playlist_test_cases/results', :collection => playlist_test_case.test_case_executions, :locals => {:class_name => "playlist_test_case_#{playlist_test_case.id}"} %>

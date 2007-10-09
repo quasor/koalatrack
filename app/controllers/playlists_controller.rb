@@ -24,7 +24,7 @@ class PlaylistsController < ApplicationController
   # GET /playlists/1
   # GET /playlists/1.xml
   def show
-    @playlist = Playlist.find(params[:id])
+    @playlist = Playlist.find(params[:id], :include => [{:playlist_test_cases => :test_case_executions}])
     if params[:notrun]
        session[:filtering] = true
     end
