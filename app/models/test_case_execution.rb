@@ -20,12 +20,12 @@ class TestCaseExecution < ActiveRecord::Base
 
   belongs_to :test_case
   belongs_to :user
-  belongs_to :playlist_test_case, :counter_cache => :test_case_executions_count
+  belongs_to :playlist_test_case#, :counter_cache => :test_case_executions_count
   
   validates_presence_of :playlist_test_case_id, :test_case_id, :user_id, :result
     
   def bug_url
-    "<a href=\"http://expediaweb/test/bugs/bug.asp?BugID=#{bug_id}\">#{bug_id}</a>"
+    "<a target=\"_top\" href=\"http://expediaweb/test/bugs/bug.asp?BugID=#{bug_id}\">#{bug_id}</a>"
   end
   def siblings
     TestCaseExecution.find_all_by_test_case_id_and_playlist_test_case_id(test_case_id, playlist_test_case_id)
@@ -49,6 +49,7 @@ class TestCaseExecution < ActiveRecord::Base
   
   def after_save
     self.update_counter_cache
+    super
   end
   def after_destroy
     #self.update_counter_cache

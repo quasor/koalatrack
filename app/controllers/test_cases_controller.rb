@@ -67,10 +67,9 @@ class TestCasesController < ApplicationController
     @uploaded_data = params[:test_case].delete :uploaded_data
     @test_case = TestCase.new(params[:test_case])
     @test_case.updated_by = current_user.id if logged_in?
-    @tags = (params[:test_case][:tag_list] || "") + (params[:quick_tag_list] || "")
-    @tags = @tags.split(',').collect{ |t| t.strip }.uniq.join(', ')
-    params[:test_case][:tag_list] = @tags
-
+    
+    update_tags
+    
     respond_to do |format|
       if @test_case.save
         unless @uploaded_data.blank?
@@ -87,6 +86,13 @@ class TestCasesController < ApplicationController
     end
   end
 
+  def update_tags
+    @tags = (params[:test_case][:tag_list] || "") + (params[:quick_tag_list] || "")
+    @tags = @tags.split(',').collect{ |t| t.strip }.uniq.join(', ')
+    params[:test_case][:tag_list] = @tags
+    @test_case.tag = params[:test_case][:tag_list]
+  end
+
   # PUT /test_cases/1
   # PUT /test_cases/1.xml
   def update
@@ -94,12 +100,9 @@ class TestCasesController < ApplicationController
     @test_case = TestCase.find(params[:id])
     @test_case = @test_case.clone if params[:clone]
     @test_case.updated_by = current_user.id if logged_in?
-    @tags = (params[:test_case][:tag_list] || "") + (params[:quick_tag_list] || "")
-    @tags = @tags.split(',').collect{ |t| t.strip }.uniq.join(', ')
-    params[:test_case][:tag_list] = @tags
-
-    @test_case.tag = params[:test_case][:tag_list]
-
+    
+    update_tags
+    
     respond_to do |format|
       if @test_case.update_attributes(params[:test_case])
         unless @uploaded_data.blank?

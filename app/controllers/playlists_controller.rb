@@ -45,9 +45,8 @@ class PlaylistsController < ApplicationController
     end
     session[:sort] = sort
     sort += " DESC" unless sort.blank? || session[:sort_asc]
-    @conditions = session[:filtering] ? { :test_case_executions_count => 0 } : nil
+    @conditions = session[:filtering] ? "test_case_executions.updated_at IS NULL" : nil
     @playlist_test_cases = @playlist.playlist_test_cases.find(:all, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions=> @conditions)
-    #, :include => [:test_case, :user]
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @playlist }

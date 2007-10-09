@@ -19,7 +19,7 @@
 
 <p>
   <label>Owner:</label>
-	<%= form.select(:user_id, User.find(:all).collect {|p| [ p.login, p.id ] } ) %>
+	<%= form.select(:user_id, User.find(:all, :order => 'login').collect {|p| [ p.login, p.id ] } ) %>
 </p>
 
 <p>
