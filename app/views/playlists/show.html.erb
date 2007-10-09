@@ -70,7 +70,7 @@
 	<% form_for(:playlist, :url => assign_playlist_path(@playlist), :html => {:method => :put, :style => 'float:left;'}) do |f| %>
 	  <%= hidden_field(:assign, :test_case_ids )%>
 	    &nbsp; or <b>Assign Selected To:</b>
-	    <%= f.select(:user_id, User.find(:all).collect {|p| [ p.login, p.id ] } ) %>
+	    <%= f.select(:user_id, User.find(:all, :order => :login).collect {|p| [ p.login, p.id ] } ) %>
 	    <%= f.submit "Assign" %>
 	<% end %>
 	<% form_for(:playlist, :url => remove_playlist_path(@playlist), :html => {:method => :delete}) do |f| %>

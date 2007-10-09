@@ -12,7 +12,7 @@
 
   <p>
     <b>User</b><br />
-    <%= f.select(:user_id, User.find(:all).collect {|p| [ p.login, p.id ] } ) %>
+    <%= f.select(:user_id, User.find(:all, :order => :login).collect {|p| [ p.login, p.id ] } ) %>
   </p>
 
   <p>

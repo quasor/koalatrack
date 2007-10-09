@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   alias authorized? admin?
   
   def index
-    @users = User.find(:all)
+    @users = User.find(:all, :order => :login)
   end
 
   # render new.rhtml
