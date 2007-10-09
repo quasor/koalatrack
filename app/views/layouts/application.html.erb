@@ -21,11 +21,10 @@
 					<%= hidden_field_tag :category_id, @category.id unless @category.nil?%>
 				  Search:
 				  <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box, :type => :search %>
-				<% end %>
-				<p><span style='font-size:10px'>
-				<b>Example:</b><br/>tag:BVT AND reporting OR owner:squick <br/>
-				<%= link_to 'Query Syntax', 'http://lucene.apache.org/java/docs/queryparsersyntax.html' %>
-				</span></p>
+				  <br/><span style='font-size:10px;margin-left:60px'>
+					<%= link_to 'Query Syntax Help', "query.html", :target => '_blank' %>
+					</span>					
+				<% end %><br/>
 				<%= renderCategoryTree%>
 			</td>
 			<% end unless controller.controller_name == 'playlists'%>
