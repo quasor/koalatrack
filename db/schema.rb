@@ -9,6 +9,7 @@ ActiveRecord::Schema.define(:version => 29) do
     t.integer  "parent_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "children_count", :default => 0
   end
 
   create_table "file_attachments", :force => true do |t|

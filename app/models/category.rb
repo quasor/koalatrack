@@ -11,7 +11,7 @@
 #
 
 class Category < ActiveRecord::Base
-  acts_as_tree
+  acts_as_tree :counter_cache => true
   has_many :test_cases
   
   validates_presence_of :name

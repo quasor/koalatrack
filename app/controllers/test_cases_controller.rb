@@ -10,12 +10,13 @@ class TestCasesController < ApplicationController
       elsif params[:q]
         @category = Category.find(params[:category_id]) if params[:category_id]
         #if @category.nil?
-          @test_cases = TestCase.find_by_contents( params[:q], :limit => 100 )
+          #@total_hits, @test_cases = TestCase.find_id_by_contents( params[:q], :limit => 100, :include => :categories )
+          @test_cases = TestCase.find_by_contents( params[:q], :limit => 200, :include => :categories )
+          @total_hits = @test_cases.total_hits
         #else
           #@test_cases = @category.test_cases.find_by_contents( params[:q], :limit => 100 )
         #  @test_cases = @category.test_cases.find_by_contents( params[:q], :limit => 100, :conditions => {:category_id => 192})
         #end
-        @total_hits = @test_cases.total_hits
       else
         @test_cases = []
       end

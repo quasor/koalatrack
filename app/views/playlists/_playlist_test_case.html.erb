@@ -29,18 +29,18 @@
   <td><%=link_to test_case.title, test_case %></td>
   <td><%=h playlist_test_case.user.login if playlist_test_case.user_id %></td>
 <td id="playlist_test_case_<%=playlist_test_case.id%>_results">
-	<%= test_case.test_case_executions.last.to_html unless test_case.test_case_executions.empty? || test_case.test_case_executions.last.nil? %>
-	<% if test_case.test_case_executions.empty? %>
+	<%= playlist_test_case.test_case_executions.last.to_html unless playlist_test_case.test_case_executions.empty? || playlist_test_case.test_case_executions.last.nil? %>
+	<% if playlist_test_case.test_case_executions.empty? %>
 		Not Run
 	<% else %>
 	<%= link_to_function 'History', "$('playlist').getElementsByClassName('playlist_test_case_#{playlist_test_case.id}').invoke('toggle');"%>
 	<% end %>
 	<%#= debug test_case.test_case_executions%>
 </td>
-	<td><%=test_case.test_case_executions.last.bug_url if !test_case.test_case_executions.empty? && test_case.test_case_executions.last%></td>
-	<td nowrap><%=h test_case.test_case_executions.last.created_at if !test_case.test_case_executions.empty? %></td>
+	<td><%=playlist_test_case.test_case_executions.last.bug_url if !playlist_test_case.test_case_executions.empty? && playlist_test_case.test_case_executions.last%></td>
+	<td nowrap><%=h playlist_test_case.test_case_executions.last.created_at if !playlist_test_case.test_case_executions.empty? %></td>
   <td><%=h test_case.priority_in_feature %></td>
   <td><%=h test_case.priority_in_product %></td>
   <td><%= link_to 'Remove', playlist_test_case, :confirm => 'Are you sure?', :method => :delete %></td>
 </tr>
-	<%= render :partial => 'playlist_test_cases/results', :collection => test_case.test_case_executions, :locals => {:class_name => "playlist_test_case_#{playlist_test_case.id}"} %>
+	<%= render :partial => 'playlist_test_cases/results', :collection => playlist_test_case.test_case_executions, :locals => {:class_name => "playlist_test_case_#{playlist_test_case.id}"} %>

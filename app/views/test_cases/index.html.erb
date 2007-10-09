@@ -36,9 +36,13 @@
 	<% end %>
     <td><%=link_to (h test_case.title), test_case %></td>
     <td><%=h test_case.user.login if test_case.user_id %></td>
-    <td><%=h test_case.tags %></td>
+    <td><%=h test_case.tag %></td>
 	<% if @total_hits %>
-	<td><%= test_case.ferret_score%></td>
+	<td>
+		<div style="width:52px;border:1px solid black">
+		<div style="height:8px;background-color:#8888ff;width:<%=(test_case.ferret_score*50).round%>px;border:1px solid #6666FF"></div>
+		</div>
+	</td>
 	<% end %>
 	<td><%= link_to 'Edit', edit_test_case_path(test_case) %></td>
 	<td><%= link_to 'Clone', edit_test_case_path(test_case, :clone => true ) %></td>
