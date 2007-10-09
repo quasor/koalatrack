@@ -32,11 +32,11 @@ class PlaylistsController < ApplicationController
       session[:filtering] = false
     end
     sort = case params[:sort]
-               when "feature"  then "priority_in_feature"
+               when "feature"  then "test_cases.priority_in_feature"
                when "product"  then "priority_in_product"
                when "title"   then "title"
                when "assigned" then "login"
-               when "count" then "playlist_test_cases.test_case_executions_count"
+               when "count" then "test_case_executions.updated_at"
                end
     if !session[:sort].blank? && session[:sort] == sort
       session[:sort_asc] = !session[:sort_asc] 
@@ -46,7 +46,7 @@ class PlaylistsController < ApplicationController
     session[:sort] = sort
     sort += " DESC" unless sort.blank? || session[:sort_asc]
     @conditions = session[:filtering] ? { :test_case_executions_count => 0 } : nil
-    @playlist_test_cases = @playlist.playlist_test_cases.find(:all, :order => sort, :conditions=> @conditions)
+    @playlist_test_cases = @playlist.playlist_test_cases.find(:all, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions=> @conditions)
     #, :include => [:test_case, :user]
     respond_to do |format|
       format.html # show.html.erb

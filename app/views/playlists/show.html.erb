@@ -56,7 +56,7 @@
     <th><%= link_to 'Pri in product', playlist_path(@playlist, :sort => :product)%></th>
   </tr>
 
-	<%= render :partial => 'playlist_test_case', :collection => @playlist.playlist_test_cases %>
+	<%= render :partial => 'playlist_test_case', :collection => @playlist_test_cases %>
 </table>
 
 <% for p in  @playlist.playlist_test_cases %>

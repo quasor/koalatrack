@@ -1,15 +1,17 @@
 # == Schema Information
-# Schema version: 26
+# Schema version: 29
 #
 # Table name: playlist_test_cases
 #
-#  id                :integer(11)   not null, primary key
-#  playlist_id       :integer(11)   
-#  test_case_id      :integer(11)   
-#  test_case_version :integer(11)   
-#  user_id           :integer(11)   
-#  created_at        :datetime      
-#  updated_at        :datetime      
+#  id                         :integer(11)   not null, primary key
+#  playlist_id                :integer(11)   
+#  test_case_id               :integer(11)   
+#  test_case_version          :integer(11)   
+#  user_id                    :integer(11)   
+#  created_at                 :datetime      
+#  updated_at                 :datetime      
+#  test_case_executions_count :integer(11)   default(0)
+#  last_result                :integer(11)   default(0)
 #
 
 class PlaylistTestCase < ActiveRecord::Base
@@ -18,9 +20,6 @@ class PlaylistTestCase < ActiveRecord::Base
   belongs_to :test_case
   has_many :test_case_executions
     
-  #def test_case_executions
-  #  TestCaseExecution.find_all_by_test_case_id_and_playlist_id(test_case_id, playlist_id)
-  #end
   validates_uniqueness_of :test_case_id, :scope => :playlist_id
   validates_presence_of :playlist_id, :test_case_id, :user_id
   
