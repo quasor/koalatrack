@@ -36,8 +36,9 @@ class PlaylistsController < ApplicationController
                when "product"  then "priority_in_product"
                when "title"   then "title"
                when "assigned" then "login"
-               when "count" then "test_case_executions.updated_at"
+               when "count" then "playlist_test_cases.last_result"
                end
+#               when "count" then "test_case_executions.updated_at"
     if !session[:sort].blank? && session[:sort] == sort
       session[:sort_asc] = !session[:sort_asc] 
     else

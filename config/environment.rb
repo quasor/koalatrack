@@ -58,6 +58,8 @@ Rails::Initializer.run do |config|
   # -- all .rb files in that directory is automatically loaded
 end
 
+require 'memcache'
+
 WhiteListHelper.tags.merge %w(table td th tr tbody span)
 
 # 
