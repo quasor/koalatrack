@@ -31,12 +31,14 @@ class PlaylistsController < ApplicationController
     if params[:show_all]
       session[:filtering] = false
     end
+    @playlist.playlist_test_cases.collect { |p| p.insert_at unless p.in_list? }
     sort = case params[:sort]
                when "feature"  then "test_cases.priority_in_feature"
                when "product"  then "priority_in_product"
                when "title"   then "title"
                when "assigned" then "login"
-               when "count" then "playlist_test_cases.last_result"
+               when "results" then "last_result"
+               when "category" then "category_id"
                end
 #               when "count" then "test_case_executions.updated_at"
     if !session[:sort].blank? && session[:sort] == sort
@@ -50,6 +52,7 @@ class PlaylistsController < ApplicationController
     @playlist_test_cases = @playlist.playlist_test_cases.find(:all, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions=> @conditions)
     respond_to do |format|
       format.html # show.html.erb
+      format.doc
       format.xml  { render :xml => @playlist }
     end
   end
@@ -181,6 +184,14 @@ class PlaylistsController < ApplicationController
         format.xml  { render :xml => @playlist.errors, :status => :unprocessable_entity }
       end    
     end
+  end
+
+  # PUT /playlists/1/sequence
+  def sequence
+    @playlist = Playlist.find(params[:id])
+    @pairs = params[:sequence][:id_value_pairs].split(',').collect { |p| p.split '=' }
+    @pairs.collect { |p| @playlist.playlist_test_cases.find(p[0]).insert_at(p[1]) }
+    redirect_to(@playlist)
   end
 
   # DELETE /playlists/1

@@ -84,12 +84,32 @@ class PlaylistTestCasesController < ApplicationController
     end
   end
   
-  def pass
-    process_result(1)
+  def up
+    @playlist_test_case = PlaylistTestCase.find(params[:id])
+    respond_to do |format|
+       if @playlist_test_case.move_higher
+         flash[:notice] = 'PlaylistTestCase was successfully updated.'
+         format.html { redirect_to(@playlist_test_case.playlist) }
+         format.xml  { head :ok }
+       else
+         format.html { render :action => "edit" }
+         format.xml  { render :xml => @playlist_test_case.errors, :status => :unprocessable_entity }
+       end
+     end        
   end
   
-  def fail
-    process_result(0)
+  def down
+    @playlist_test_case = PlaylistTestCase.find(params[:id])
+    respond_to do |format|
+       if @playlist_test_case.move_lower
+         flash[:notice] = 'PlaylistTestCase was successfully updated.'
+         format.html { redirect_to(@playlist_test_case.playlist) }
+         format.xml  { head :ok }
+       else
+         format.html { render :action => "edit" }
+         format.xml  { render :xml => @playlist_test_case.errors, :status => :unprocessable_entity }
+       end
+     end        
   end
 
 

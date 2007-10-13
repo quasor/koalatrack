@@ -16,6 +16,8 @@
 
 class PlaylistTestCase < ActiveRecord::Base
   belongs_to :playlist
+  acts_as_list :scope => :playlist
+
   belongs_to :user
   belongs_to :test_case
   has_many :test_case_executions

@@ -9,9 +9,9 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :test_case_executions
 
-  map.resources :playlist_test_cases, :member => { :pass => :put, :fail => :put }
+  map.resources :playlist_test_cases, :member => { :up => :put, :down => :put }
 
-  map.resources :playlists, :member => {:assign => :put, :pass => :put, :remove => :delete}
+  map.resources :playlists, :member => {:assign => :put, :pass => :put, :remove => :delete, :sequence => :put}
 
   map.resources :categories
 

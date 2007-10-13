@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title>TestCases: <%= controller.action_name %></title>
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+  <title>KoalaTrack: <%= controller.controller_name %></title>
   <%= stylesheet_link_tag 'scaffold' %>
   <%= javascript_include_tag "prototype", "effects", "application", "controls" %>
 </head>
@@ -29,7 +30,11 @@
 			</td>
 			<% end unless controller.controller_name == 'playlists'%>
 			<td valign="top">
-				<div style="float:right"><%= link_to "Logout #{current_user.login}", logout_path if logged_in?%></div>
+				<div style="float:right">
+					<%= link_to "Logout #{current_user.login}", logout_path if logged_in?%>
+					<%= link_to "Login", login_path unless logged_in?%>
+					<%= link_to "Create Account", signup_path unless logged_in?%>
+				</div>
 			  <div style="font-size:18px">
 				<%=	link_to_unless_current 'Test Cases', test_cases_path%> |
 				<%=	link_to_unless_current 'Playlists', playlists_path%> | 

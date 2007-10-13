@@ -21,8 +21,15 @@ class Playlist < ActiveRecord::Base
     self.user.login
   end
   belongs_to :milestone
-  has_many :playlist_test_cases
+  
+  has_many :playlist_test_cases, :order => :position
+  
   has_many :test_cases, :through => :playlist_test_cases, :source => :test_case
   belongs_to :user
   validates_presence_of :title
+  
+  def to_param
+    "#{id}-#{title.downcase.gsub(/[^[:alnum:]\'\,\.'\ ]/,'')}".gsub(/-{2,}/,' ')
+  end
+  
 end

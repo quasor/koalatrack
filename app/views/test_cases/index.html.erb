@@ -18,7 +18,7 @@
 <% else %>
 <table class="padded" cellspacing="0">
   <tr>
-	  <% if logged_in? %><th></th><% end %>
+	  <% if logged_in? %><th><%=check_box_tag :select_all, 1, false, :onClick => 'selectAll(this.checked)'%></th><% end # space for checkboxes %>
     <% if @category.nil? %><th>Category</th><% end %>
     <th>Title</th>
     <th>Owner</th>
@@ -32,7 +32,7 @@
 	<tr style="background-color:<%= cycle("#fff", "#E6E6E6", :name => "colors") -%>">
 	<% if logged_in? %>
 		<td>
-				<%= check_box_tag 'pickme', test_case.id, false, :onClick => 'pick(this)'%>
+				<%= check_box_tag 'pickme', test_case.id, false, :onClick => 'pick(this)', :class=>'cbTestCase'%>
 		</td>
 	<%end %>
 	<% if test_case.category && @category.nil? %>
@@ -91,5 +91,15 @@
 			$('multi_action').show();
 		else
 			$('multi_action').hide();
+	}
+	function selectAll(f)
+	{
+		ar = document.getElementsByClassName("cbTestCase");
+		for (i=0;i<ar.length;i++)
+		{
+			ar[i].checked = f;
+			pick(ar[i]);
+		}
+			
 	}
 <% end %>

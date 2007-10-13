@@ -1,5 +1,6 @@
 <% javascript_tag do %>
   var multiple_ids = new Array();
+  var sequence_tuples = new Array()
 	function pick(o)
 	{
 		if (o.checked)
@@ -18,10 +19,25 @@
 		else
 			$('multi_action').hide();
 	}
+	function sequence(k,v)
+	{
+		sequence_tuples.push(k + "=" + v);
+		$('sequence_id_value_pairs').value = sequence_tuples;
+		$('save_ordering').show();
+	}
+	function selectAll(f)
+	{
+		ar = document.getElementsByClassName("cbTestCase");
+		for (i=0;i<ar.length;i++)
+		{
+			ar[i].checked = f;
+			pick(ar[i]);
+		}
+			
+	}	
 <% end %>
 
-<h1><%=h @playlist.title %></h1>
-
+<h1><%=h @playlist.title %> <span style="font-size:12px"><%= link_to ("Save as .doc", :format => :doc)%></span></h1>
 <p>
   <%=h @playlist.description %>
 </p>
@@ -44,12 +60,13 @@
 </div>
 <table border=1 id='playlist'>
   <tr>
-		<th></th>	
-		<th>Action</th>
-    <th>Category</th>
+	  <% if logged_in? %><th><%=check_box_tag :select_all, 1, false, :onClick => 'selectAll(this.checked)'%></th><% end # space for checkboxes %>
+    <th><%= link_to '#', playlist_path(@playlist)%></th>
+    <th><%= link_to 'Category', playlist_path(@playlist, :sort => :category)%></th>
     <th>Title</th>
     <th><%= link_to 'Assigned To', playlist_path(@playlist, :sort => :assigned)%></th>
-    <th><%= link_to 'Recent Results', playlist_path(@playlist, :sort => :count)%></th>
+		<th>Action</th>
+    <th><%= link_to 'Recent Results', playlist_path(@playlist, :sort => :results)%></th>
     <th>BugID</th>
     <th>Last Run</th>
     <th><%= link_to 'Pri in feature', playlist_path(@playlist, :sort => :feature)%></th>
@@ -59,9 +76,6 @@
 	<%= render :partial => 'playlist_test_case', :collection => @playlist_test_cases %>
 </table>
 
-<% for p in  @playlist.playlist_test_cases %>
-<%#= debug p.test_case_executions%>
-<% end %>
 <div id="multi_action" style="display:none">
 	<% form_for(:playlist, :url => pass_playlist_path(@playlist), :html => {:method => :put, :style => 'float:left;'}) do |f| %>
 	  <%= hidden_field(:pass, :test_case_ids )%>
@@ -78,6 +92,12 @@
 	    &nbsp; or 
 			<input onclick="return confirm('About to remove checked test cases from this playlist. Are you sure?');" value="Remove" type="submit">
 	<% end %>
+</div>
+<div id="save_ordering" style="display:none">
+<% form_for(:playlist, :url => sequence_playlist_path(@playlist), :html => {:method => :put}) do |f| %>
+  <%= hidden_field(:sequence, :id_value_pairs )%>
+		<input value="Save Ordering" type="submit" tabindex="2">
+<% end %>
 </div>
 <% else %>
   You've created an empty playlist. It's time to fill it.
