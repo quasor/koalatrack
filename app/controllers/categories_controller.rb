@@ -1,5 +1,6 @@
 class CategoriesController < ApplicationController
   before_filter :login_required, :except => [:index, :show]
+  alias authorized? admin?
 
   # GET /categories
   # GET /categories.xml
