@@ -37,20 +37,21 @@
 	}	
 <% end %>
 
-<h1><%=h @playlist.title %> <span style="font-size:12px"><%= link_to ("Save as .doc", :format => :doc)%></span></h1>
+<h1><%=h @playlist.title %> <span style="font-size:12px">
+	<span>
+	  <b>Owner:</b>
+	  <%=h @playlist.user.login %>
+		<% if @playlist.milestone %>
+	  	<b>Milestone:</b>
+	  	<%=h @playlist.milestone.name %>
+		<% end %>
+		|
+		<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
+		<%= link_to 'Back', playlists_path %> |
+	</span>
+<%= link_to ("Save as .doc", :format => :doc)%></span></h1>
 <p>
   <%=h @playlist.description %>
-</p>
-
-<p>
-  <b>Owner:</b>
-  <%=h @playlist.user.login %>
-	<% if @playlist.milestone %>
-  	<b>Milestone:</b>
-  	<%=h @playlist.milestone.name %>
-	<% end %>
-	<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
-	<%= link_to 'Back', playlists_path %>
 </p>
 
 <table border="0" class="padded" cellspacing="0">
@@ -71,12 +72,12 @@
 </tr>
 </table>
 
-<h2>Test Cases</h2>
-<% unless @playlist.playlist_test_cases.empty?%>
-<div style="align=right">
+<h2>Test Cases <span style="font-size:11px">
 <%= link_to "Show All", playlist_path(@playlist, :show_all=>true) if session[:filtering] %>
 <%= link_to "Hide cases that have been run", playlist_path(@playlist, :notrun => true) unless session[:filtering]%>
-</div>
+</span>
+</h2>
+<% unless @playlist.playlist_test_cases.empty?%>
 <table border="0" cellspacing="0" class="padded" id='playlist'>
   <tr>
 	  <% if logged_in? %><th><%=check_box_tag :select_all, 1, false, :onClick => 'selectAll(this.checked)'%></th><% end # space for checkboxes %>
