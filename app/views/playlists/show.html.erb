@@ -37,7 +37,7 @@
 	}	
 <% end %>
 
-<h1><%=h @playlist.title %> <span style="font-size:12px">
+<span style="font-size:12px;float:right;">
 	<span>
 	  <b>Owner:</b>
 	  <%=h @playlist.user.login %>
@@ -47,9 +47,10 @@
 		<% end %>
 		|
 		<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
-		<%= link_to 'Back', playlists_path %> |
 	</span>
-<%= link_to ("Save as .doc", :format => :doc)%></span></h1>
+<%= link_to ("Save as .doc", :format => :doc)%></span>
+
+<h1><%=h @playlist.title %></h1>
 <p>
   <%=h @playlist.description %>
 </p>
