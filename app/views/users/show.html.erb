@@ -1,0 +1,20 @@
+<h2><%=@user.login.capitalize %>'s Dashboard</h2>		
+
+<table border="0" class="padded" cellspacing="0">
+	<caption><b><%=@user.login.capitalize %>'s Execution Summary</b></caption>
+	<tr>
+		<th>Playlist</th>
+		<th>Status of test cases assigned to <%=@user.login.capitalize%></th>
+	</tr>
+<% for playlist in @user.associated_playlists%>
+	<% playlist_test_cases = playlist.playlist_test_cases.find_all_by_user_id(@user.id) %>
+	<tr>
+		<td><%= link_to playlist.title, playlist%></td>
+		<td>
+		<% playlist_test_cases.group_by(&:last_result).each do |k,v| %>
+			<%= TestCaseExecution::RESULTS[k] %>:<%= v.size%>
+		<% end %>
+		</td>
+	</tr>
+<%end %>
+</table>
