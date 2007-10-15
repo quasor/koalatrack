@@ -3,7 +3,7 @@
 <%= link_to 'New playlist', new_playlist_path %>
 </td><td valign="top">&nbsp; or &nbsp;</td><td>
 <% form_tag playlists_path, :method => 'get' do %>
-  Search:
+  Search in playlists:
   <%= text_field_tag :q, params[:q], :id => :search_box, :type => :search %>
   <span style='font-size:10px;margin-left:10px'>
 	<%= link_to 'Query Syntax Help', "query.html", :target => '_blank' %>
@@ -11,7 +11,7 @@
 
 <% end %>
 </td></tr></table>
-<% if params[:q] %>
+<% if params[:q] && !@playlists.empty?%>
 	<table border="1">
 		<caption><b>Execution Summary</b></caption>
 	<tr>
@@ -29,7 +29,7 @@
 			</td>
 	</tr>
 	</table>
-
+	<br/>
 <% end %>
 
 <table cellspacing="0" class="padded">
@@ -38,6 +38,8 @@
     <th>Description</th>
     <th>User</th>
     <th>Milestone</th>
+		<th></th>
+		<th></th>
   </tr>
 
 <% for playlist in @my_playlists %>

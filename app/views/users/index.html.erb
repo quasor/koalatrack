@@ -1,10 +1,7 @@
 <h1>Users</h1>
 
-<br />
 
-<%= link_to 'New user', new_user_path %>
-<br />
-<br />
+<% if admin? %>    
 <table>
   <tr>
     <th>Name</th>
@@ -16,10 +13,12 @@
     <td><%=h user.login %></td>
     <td><%= "Administrator" if user.admin? %></td>
     <td><%= "Email: #{activate_path(:activation_code => user.activation_code)}" unless user.activated? or !admin? %></td>
-    <td><%= link_to 'Show', user %></td>
-    <td><%= link_to 'Edit', edit_user_path(user) %></td>
+		<td><%= link_to 'Edit', edit_user_path(user) %></td>
     <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
+<% else %>
+	<%= @users.collect { |u| "#{link_to u.login.capitalize, u} " }.flatten %>
+<% end %>
 

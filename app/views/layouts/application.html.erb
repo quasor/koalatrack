@@ -28,7 +28,7 @@
 				<% end %><br/>
 				<%= renderCategoryTree%>
 			</td>
-			<% end unless controller.controller_name == 'playlists'%>
+			<% end unless controller.controller_name == 'playlists' && params[:id]%>
 			<td valign="top">
 				<div style="float:right">
 					<%= link_to "Logout #{current_user.login}", logout_path if logged_in?%>
@@ -36,12 +36,15 @@
 					<%= link_to "Create Account", signup_path unless logged_in?%>
 				</div>
 			  <div style="font-size:18px">
+				<% if logged_in? %>
+					<%= link_to_unless_current "Home", current_user %> |
+				<% end %>
 				<%=	link_to_unless_current 'Test Cases', test_cases_path%> |
 				<%=	link_to_unless_current 'Playlists', playlists_path%> | 
 				<% if admin? %>
+					<%=	link_to_unless_current 'Users', users_path%> | 
 					<%=	link_to_unless_current 'Categories', categories_path%> | 
 					<%=	link_to_unless_current 'Milestones', milestones_path%> | 
-					<%=	link_to_unless_current 'Users', users_path%> | 
 					<%=	link_to_unless_current 'Quick Tags', tag_favorites_path%> 
 				<% end %>
 				</div>

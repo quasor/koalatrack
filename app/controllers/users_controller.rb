@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
   include AuthenticatedSystem
-  before_filter :login_required, :only => [:index]
+  #before_filter :login_required, :only => [:index]
   alias authorized? admin?
   
   def index
@@ -10,6 +10,10 @@ class UsersController < ApplicationController
 
   # render new.rhtml
   def new
+  end
+  
+  def show
+    @user = User.find params[:id]
   end
 
   def create

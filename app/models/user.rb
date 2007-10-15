@@ -23,6 +23,9 @@ class User < ActiveRecord::Base
   has_many :test_cases
   has_many :edited_test_cases, :class_name => "TestCase" 
   has_many :playlists
+  has_many :playlist_test_cases  
+  has_many :associated_playlists, :class_name => "Playlist", :through => :playlist_test_cases, :source => :playlist, :select => "DISTINCT playlists.*"
+  
   def to_s
     login
   end  

@@ -23,6 +23,7 @@ class TestCaseExecution < ActiveRecord::Base
   belongs_to :playlist_test_case#, :counter_cache => :test_case_executions_count
   
   validates_presence_of :playlist_test_case_id, :test_case_id, :user_id, :result
+#TODO  validates_presence_of :bug_id
     
   def bug_url
     (bug_id.split(',').collect { |bug| "<a target=\"_blank\" href=\"http://expediaweb/test/bugs/bug.asp?BugID=#{bug.strip}\">#{bug.strip}</a>"}.join ' ') unless bug_id.nil? || bug_id.blank?
