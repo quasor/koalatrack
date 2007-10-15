@@ -1,4 +1,4 @@
-<tr id="playlist_test_case_<%=playlist_test_case.id%>" style="background-color:<%= cycle("#fff", "#E6E6E6", :name => "colors") %>">
+<tr id="playlist_test_case_<%=playlist_test_case.id%>" style="background-color:<%= background_color = cycle("#fff", "#E6E6E6", :name => "colors") %>">
 	<td>
 		<%#= link_to( "down", down_playlist_test_case_path(playlist_test_case), :method => :put) unless playlist_test_case.last? %>
 		<%#= link_to( "up", up_playlist_test_case_path(playlist_test_case), :method => :put) unless playlist_test_case.first?%>
@@ -55,4 +55,4 @@
 	<td style="font-size:10px;line-height:9px;"><%= playlist_test_case.test_case.tag %></td>
   <td><%= link_to 'X', playlist_test_case, :confirm => 'Removing test case from playlist. Are you sure?', :method => :delete %></td>
 </tr>
-	<%= render :partial => 'playlist_test_cases/results', :collection => playlist_test_case.test_case_executions, :locals => {:class_name => "playlist_test_case_#{playlist_test_case.id}"} %>
+	<%= render :partial => 'playlist_test_cases/results', :collection => playlist_test_case.test_case_executions, :locals => {:class_name => "playlist_test_case_#{playlist_test_case.id}", :background_color => background_color} %>

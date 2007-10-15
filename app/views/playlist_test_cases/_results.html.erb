@@ -1,12 +1,14 @@
 <%#= link_to_function str, "$('test_case_execution_#{results.id}').toggle()"%>
 <!-- <tr id="test_case_execution_<%= results.id%>"> -->
-	<tr class='<%=class_name%>' style='display:none'>
+	<tr class='<%=class_name%>' style='display:none;background-color:<%=background_color%>'>
 		<td colspan=4><%= results.comment%></td>
 		<td><%= results.user%></td>
 		<td></td>
 		<td><%= results.to_html%></td>
 		<td><%= results.bug_url%></td>
 		<td><%= results.created_at%></td>
+		<td></td>
+		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
