@@ -9,7 +9,8 @@
   	<%=h @playlist.milestone.name %>
 	<% end %>
 </div>
-<% for playlist_test_case in @playlist.playlist_test_cases %>
+<% @playlist_test_cases =  @playlist.playlist_test_cases.sort_by(&:position) %>
+<% for playlist_test_case in @playlist_test_cases %>
 <h3 style="color:white;background-color:#666;font-family:'Lucida Grande', Tahoma, Arial;margin-top:8px"><%= playlist_test_case.test_case.title %> (Pri <%= playlist_test_case.test_case.priority_in_feature %>)</h3>
 <%= playlist_test_case.test_case.body %>
 <% end %>

@@ -39,15 +39,16 @@ class PlaylistsController < ApplicationController
                when "assigned" then "login"
                when "results" then "last_result"
                when "category" then "category_id"
+               else
+                 "playlist_test_cases.position"
                end
-#               when "count" then "test_case_executions.updated_at"
     if !session[:sort].blank? && session[:sort] == sort
-      session[:sort_asc] = !session[:sort_asc] 
+      session[:sort_desc] = params[:sort_desc]
     else
-      session[:sort_asc] = false
+      session[:sort_desc] = false
     end
     session[:sort] = sort
-    sort += " DESC" unless sort.blank? || session[:sort_asc]
+    sort += " DESC" unless sort.blank? || !session[:sort_desc]
     @conditions = session[:filtering] ? "test_case_executions.updated_at IS NULL" : nil
     @playlist_test_cases = @playlist.playlist_test_cases.find(:all, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions=> @conditions)
     respond_to do |format|
@@ -89,6 +90,7 @@ class PlaylistsController < ApplicationController
       if @playlist.save
         if !params[:clone_id].blank?
           @playlist_test_cases = Playlist.find(params[:clone_id]).playlist_test_cases.collect(&:clone)
+          @playlist_test_cases.collect {|p| p.test_case_executions_count = p.last_result = 0 }
           @playlist.playlist_test_cases << @playlist_test_cases
         end
         flash[:notice] = 'Playlist was successfully created.'
