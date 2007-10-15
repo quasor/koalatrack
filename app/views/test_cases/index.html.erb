@@ -6,7 +6,7 @@
 
 <% end %>
 <% if @test_cases.empty?%>
-	&lArr; Select a category or search
+	<< Select a category or search
 	<% form_tag test_cases_path, :method => 'get' do %>
 	  <%= hidden_field_tag :category_id, @category.id unless @category.nil?%>
 	  <%= text_field_tag :q, params[:q], :size => 55, :id => :search_box_big, :type => :search, :style => 'font-size:22px; padding:4px' %>
