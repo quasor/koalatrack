@@ -52,13 +52,32 @@
 	<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
 	<%= link_to 'Back', playlists_path %>
 </p>
+
+<table border="0" class="padded" cellspacing="0">
+	<caption><b>Execution Summary</b></caption>
+<tr>
+	<th>Status</th>
+	<th>Count</th>
+	<th>%</th>
+</tr>
+<% total = @playlist.playlist_test_cases.size %>
+<% @playlist.playlist_test_cases.group_by(&:last_result).each do |k,v| %>
+<tr><td><%= TestCaseExecution::RESULTS[k] %></td><td width="20" align="center"><%= v.size%></td><td><%= (v.size * 1.0 / total * 100 ).round 1%>%</td></tr>
+<% end %>
+<tr>
+	<td colspan=3>
+		<b>Bugs:</b><%= @playlist.playlist_test_cases.collect { |p| p.test_case_executions }.flatten.collect{ |e| "#{e.bug_url} " } %>
+		</td>
+</tr>
+</table>
+
 <h2>Test Cases</h2>
 <% unless @playlist.playlist_test_cases.empty?%>
 <div style="align=right">
 <%= link_to "Show All", playlist_path(@playlist, :show_all=>true) if session[:filtering] %>
 <%= link_to "Hide cases that have been run", playlist_path(@playlist, :notrun => true) unless session[:filtering]%>
 </div>
-<table border=1 id='playlist'>
+<table border="0" cellspacing="0" class="padded" id='playlist'>
   <tr>
 	  <% if logged_in? %><th><%=check_box_tag :select_all, 1, false, :onClick => 'selectAll(this.checked)'%></th><% end # space for checkboxes %>
     <th><%= link_to '#', playlist_path(@playlist)%></th>
@@ -66,11 +85,12 @@
     <th>Title</th>
     <th><%= link_to 'Assigned To', playlist_path(@playlist, :sort => :assigned)%></th>
 		<th>Action</th>
-    <th><%= link_to 'Recent Results', playlist_path(@playlist, :sort => :results)%></th>
-    <th>BugID</th>
-    <th>Last Run</th>
+    <th><%= link_to 'Recent Results', playlist_path(@playlist, :sort => :results) %></th>
+    <th><%= "BugID" unless params[:notrun] %></th>
+    <th><%= "Last Run" unless params[:notrun] %></th>
     <th><%= link_to 'Pri in feature', playlist_path(@playlist, :sort => :feature)%></th>
     <th><%= link_to 'Pri in product', playlist_path(@playlist, :sort => :product)%></th>
+		<th></th>
   </tr>
 
 	<%= render :partial => 'playlist_test_case', :collection => @playlist_test_cases %>

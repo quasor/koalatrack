@@ -3,11 +3,10 @@ body { background-color: #fff; color: #333; padding:0px;margin:0px;}
 body, p, ol, ul, td {
   font-family: 'lucida grande', arial, helvetica, sans-serif;
   font-size:   13px;
-  line-height: 18px;
 }
 
-table.padded td {padding:0px 8px 0px 8px;}
-
+table.padded td {padding:2px 8px 2px 8px;font-size:12px;}
+table.padded th {padding:2px 8px 2px 8px;}
 pre {
   background-color: #eee;
   padding: 10px;
@@ -115,3 +114,6 @@ ul#category_tree li.has_children_true {
 /* End hide from IE Mac */
 
 p label {float:left; width:150px; text-align:right;}
+
+th {background-color:#666;color:white;}
+th a {color:white}

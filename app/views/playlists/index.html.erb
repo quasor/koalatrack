@@ -12,8 +12,8 @@
 <% end %>
 </td></tr></table>
 <% if params[:q] %>
-	<h3>Execution Summary</h3>
-	<table>
+	<table border="1">
+		<caption><b>Execution Summary</b></caption>
 	<tr>
 		<th>Status</th>
 		<th>Count</th>
@@ -23,8 +23,13 @@
 	<% playlist_test_cases.group_by(&:last_result).each do |k,v| %>
 	<tr><td><%= TestCaseExecution::RESULTS[k] %></td><td width="20" align="center"><%= v.size%></td><td><%= (v.size * 1.0 / total * 100 ).round 1%>%</td></tr>
 	<% end %>
+	<tr>
+		<td colspan=3>
+			<b>Bugs:</b><%= playlist_test_cases.collect { |p| p.test_case_executions }.flatten.collect{ |e| "#{e.bug_url} " } %>
+			</td>
+	</tr>
 	</table>
-	<b>Bugs:</b><%= playlist_test_cases.collect { |p| p.test_case_executions.last }.compact.collect{ |e| "#{e.bug_url} " } %>
+
 <% end %>
 
 <table cellspacing="0" class="padded">
@@ -33,7 +38,6 @@
     <th>Description</th>
     <th>User</th>
     <th>Milestone</th>
-    <th>Summary</th>
   </tr>
 
 <% for playlist in @my_playlists %>
@@ -42,20 +46,6 @@
     <td><%=truncate (h playlist.description), 75 %></td>
     <td><%=h playlist.user.login %></td>
     <td><%=h playlist.milestone.name if playlist.milestone %></td>
-		<td>
-			<!-- 
-			Counts:
-			Passed / Failed / Not Run / Blocked
-			Bugs
-			<b><%= playlist.test_cases.size %> Test cases</b>
-		  -->
-			<table cellspacing="0" cellpadding="0"><tr>
-			<% playlist.playlist_test_cases.group_by(&:last_result).each do |k,v| %>
-			<td><%= TestCaseExecution::RESULTS[k] %>: <%= v.size%></td>
-			<% end %>
-			</tr></table>
-			
-		</td>
     <td><%= link_to 'Clone', new_playlist_path(:id => playlist.id) %></td>
     <td><%= link_to 'Delete', playlist, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
@@ -74,14 +64,6 @@
     <td><%=truncate (h playlist.description), 75 %></td>
     <td><%=h playlist.user.login %></td>
     <td><%=h playlist.milestone.name if playlist.milestone %></td>
-    <td>
-			<table cellspacing="0" cellpadding="0"><tr>
-			<% playlist.playlist_test_cases.group_by(&:last_result).each do |k,v| %>
-			<td><%= TestCaseExecution::RESULTS[k] %>: <%= v.size%></td>
-			<% end %>
-			</tr></table>
-			<%#="Empty" if playlist.playlist_test_cases.empty? %>
-		</td>
     <td><%= link_to 'Clone', new_playlist_path(:id => playlist.id) %></td>
   </tr>
 <% end %>
