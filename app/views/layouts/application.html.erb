@@ -30,27 +30,29 @@
 			</td>
 			<% end unless controller.controller_name == 'playlists' && params[:id]%>
 			<td valign="top">
-				<div style="float:right">
-					<%= link_to "Logout #{current_user.login}", logout_path if logged_in?%>
-					<%= link_to "Login", login_path unless logged_in?%>
-					<%= link_to "Create Account", signup_path unless logged_in?%>
-				</div>
-			  <div style="font-size:18px">
+			  <div class="clearfix" style="border-bottom: 1px solid #333;min-width:600px">
+				<ul id="nav">
 				<% if logged_in? %>
-					<%= link_to_unless_current "Home", current_user %> |
+					<%= li_link_to_unless_current "Home", current_user %>
 				<% end %>
-				<%=	link_to_unless_current 'Test Cases', test_cases_path%> |
-				<%=	link_to_unless_current 'Playlists', playlists_path%> | 
+				<%=	li_link_to_unless controller.controller_name == 'test_cases', 'Test Cases', test_cases_path%>
+				<%=	li_link_to_unless_current 'Playlists', playlists_path%>
 				<% if admin? %>
-					<%=	link_to_unless_current 'Users', users_path%> | 
-					<%=	link_to_unless_current 'Categories', categories_path%> | 
-					<%=	link_to_unless_current 'Milestones', milestones_path%> | 
-					<%=	link_to_unless_current 'Quick Tags', tag_favorites_path%> 
+					<%=	li_link_to_unless_current 'Users', users_path%>
+					<%=	li_link_to_unless_current 'Categories', categories_path%>
+					<%=	li_link_to_unless_current 'Milestones', milestones_path%>
+					<%=	li_link_to_unless_current 'Quick Tags', tag_favorites_path%> 
 				<% end %>
+				<%= li_link_to_unless_current "Logout #{current_user.login}", logout_path if logged_in?%>
+				<%= li_link_to_unless_current "Login", login_path unless logged_in?%>
+				<%= li_link_to_unless_current "Create Account", signup_path unless logged_in?%>
+				</ul>
 				</div>
+
 				<%#= link_to 'New test case', new_test_case_path(:category_id => params[:category_id]) %>			
-				<hr style="min-width:600px"/>
+				<div class="clearfix"></div>
 				<p style="color: green"><%= flash[:notice] %></p>
+				<p style="color: red"><%= flash[:warning] %></p>
 				<%= yield  %>		
 			</td>
 		</tr>

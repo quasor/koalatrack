@@ -1,5 +1,5 @@
-<h1><%= (@category.ancestors + [@category]).collect(&:name).join(' \ ') if @category%> Test Cases</h1>
 <% if @category %>
+<h3><%= (@category.ancestors + [@category]).collect(&:name).join(' \ ') %></h3>
 
 <p>	<%= link_to 'New test case', new_test_case_path(:category_id => params[:category_id])  %> |
 	<%= link_to "New sub-category of #{@category.name}", new_category_path(:parent_id => params[:category_id])  %></p>
@@ -16,6 +16,8 @@
 	<% end %>
 	
 <% else %>
+<%= will_paginate @test_cases %>
+<div id="multi2"></div>
 <table class="padded" cellspacing="0">
   <tr>
 	  <% if logged_in? %><th><%=check_box_tag :select_all, 1, false, :onClick => 'selectAll(this.checked)'%></th><% end # space for checkboxes %>
@@ -23,12 +25,18 @@
     <th>Title</th>
     <th>Owner</th>
     <th>Tags</th>
-	<% if @total_hits %>
+	<% if params[:q] %>
 	<th>Score</th>
 	<% end %>
+  <th></th>
+  <th></th>
+  <th></th>
   </tr>
 
+<% pte = PlaylistTestCase.new %>
+<% @has_playlists = logged_in? && !@playlists.empty?%>
 <% for test_case in @test_cases %>
+  <% pte.test_case_id = test_case.id%>
 	<tr style="background-color:<%= cycle("#fff", "#E6E6E6", :name => "colors") -%>">
 	<% if logged_in? %>
 		<td>
@@ -41,7 +49,7 @@
     <td><%=link_to (h test_case.title), test_case %></td>
     <td><%=h test_case.user.login if test_case.user_id %></td>
     <td><%=h test_case.tag %></td>
-	<% if @total_hits %>
+	<% if params[:q] %>
 	<td>
 		<div style="width:52px;border:1px solid black">
 		<div style="height:8px;background-color:#8888ff;width:<%=(test_case.ferret_score*50).round%>px;border:1px solid #6666FF"></div>
@@ -52,11 +60,11 @@
 	<td><%= link_to 'Clone', edit_test_case_path(test_case, :clone => true ) %></td>
 
 	<td>
-		<% remote_form_for(@playlist_test_case || PlaylistTestCase.new(:test_case_id => test_case.id), :loading=>"Element.toggle('spinner_#{test_case.id}')",:complete => "Element.toggle('spinner_#{test_case.id}')") do |f| %>
+		<% remote_form_for(pte, :loading=>"Element.toggle('spinner_#{test_case.id}')",:complete => "Element.toggle('spinner_#{test_case.id}')") do |f| %>
 		    <%= f.select(:playlist_id, @playlist_collection ) %>
 		    <%= f.hidden_field(:test_case_id ) %><%= f.submit "Add to playlist" %>
 			<%=image_tag 'spinner.gif', :id => "spinner_#{test_case.id}", :style => "display:none"%>
-		<% end if logged_in? && !@playlists.empty?%>
+		<% end if logged_in? && @has_playlists %>
 	</td>
   </tr>
 <% end %>
@@ -88,9 +96,15 @@
 		}
 		$('playlist_test_case_ids').value = multiple_ids;
 		if (multiple_ids != '')
+		{
 			$('multi_action').show();
+			$('multi2').innerHTML = $('multi_action').innerHTML;
+		}
 		else
+		{
 			$('multi_action').hide();
+			$('multi2').innerHTML = '';
+		}
 	}
 	function selectAll(f)
 	{

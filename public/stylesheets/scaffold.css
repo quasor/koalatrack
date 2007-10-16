@@ -13,9 +13,9 @@ pre {
   font-size: 11px;
 }
 
-a { }
+a { color: #38649F; }
 a:visited {  }
-a:hover { color: #800000; }
+a:hover { color: rgb(204, 102, 0); }
 
 .fieldWithErrors {
   padding: 2px;
@@ -100,6 +100,49 @@ ul#category_tree li.has_children_true {
 	margin:0px 0px 0px -20px;
 }
 
+ul#nav {
+list-style-type: none;
+padding: 0px;
+margin: 0px;
+}
+
+.current {
+	color:white;
+	background-color: #0F5080;
+	padding: 0px 7px 0px 7px;
+	
+}
+ul#nav li.current a {
+	color:white;
+	background-color: #0F5080;
+	padding: 0px 7px 0px 7px;
+}
+
+ul#nav li {
+	color:#FFF;
+	font-weight: bold;
+	float: left;
+	line-height: 30px;
+	text-align: center;
+	font-size: 12px;
+	text-decoration: none;
+}
+ul#nav li a {
+	padding: 0px 7px 0px 7px;
+	color:white;
+	font-weight: bold;
+	float: left;
+	line-height:30px;
+	text-align: center;
+	font-size: 12px;
+	text-decoration: none;
+	color: #0F5080;
+	border-right:1px solid #88a6c1;
+}
+ul#nav li a:hover {
+background-color:#FC6;
+}
+
 .test_case_body { padding:4px; border: 1px solid #CCC;}
 .clearfix:after {
   content:".";
@@ -117,3 +160,33 @@ p label {float:left; width:150px; text-align:right;}
 
 th {background-color:#666;color:white;}
 th a {color:white}
+
+.pagination {
+    padding: 3px;
+    margin: 3px;
+  }
+  .pagination a {
+    padding: 2px 5px 2px 5px;
+    margin: 2px;
+    border: 1px solid #aaaadd;
+    text-decoration: none;
+    color: #38649F;
+  }
+  .pagination a:hover, .pagination a:active {
+    border: 1px solid #38649F;
+    color: #000;
+  }
+  .pagination span.current {
+    padding: 2px 5px 2px 5px;
+    margin: 2px;
+    border: 1px solid #1A4698;
+    font-weight: bold;
+    background-color: #38649F;
+    color: #FFF;
+  }
+  .pagination span.disabled {
+    padding: 2px 5px 2px 5px;
+    margin: 2px;
+    border: 1px solid #eee;
+    color: #ddd;
+  }

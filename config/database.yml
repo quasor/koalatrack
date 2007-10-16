@@ -17,7 +17,7 @@ development:
   database: tcm_development
   username: root
   password:
-  host: 127.0.0.1
+  host: localhost
 
 qatraq:
     adapter: mysql
@@ -25,7 +25,7 @@ qatraq:
     database: qatraq
     username: root
     password:
-    host: 127.0.0.1
+    host: fisharc.local
 #    host: localhost
     
 # Warning: The database defined as 'test' will be erased and
@@ -42,8 +42,7 @@ test:
 production:
   adapter: mysql
   encoding: utf8
-  database: tcm_production
+  database: tcm_development
   username: root
   password: 
-  host: 127.0.0.1
-#  host: localhost
+  host: localhost

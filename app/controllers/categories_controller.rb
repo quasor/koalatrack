@@ -1,6 +1,5 @@
 class CategoriesController < ApplicationController
   before_filter :login_required, :except => [:index, :show]
-  alias authorized? admin?
 
   # GET /categories
   # GET /categories.xml
@@ -45,7 +44,10 @@ class CategoriesController < ApplicationController
   # POST /categories.xml
   def create
     @category = Category.new(params[:category])
-
+    if @category.parent_id.nil? && !admin?
+       flash[:warning] = 'You cannot create a root category unless you are an admin.'
+       return render :action => "new"
+    end
     respond_to do |format|
       if @category.save
         flash[:notice] = 'Category was successfully created.'

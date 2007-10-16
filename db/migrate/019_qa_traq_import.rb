@@ -67,7 +67,7 @@ class QaTraqImport < ActiveRecord::Migration
       category = Category.find_or_create_by_name(:name => row['ProductName']).children.find_or_create_by_name(:name => row['ProductComponentName'])
       test_case = TestCase.find_or_create_by_qatraq_id(:qatraq_id => row['TestCaseID'], :user_id => user.id, :category_id => category.id, :title => row['Title'], :body => row['Content'].gsub(/\n/,'<br>').gsub(/\s{4}/,'&nbsp;&nbsp;&nbsp;&nbsp;') )
     end
-
+    
     #return false
   end
 

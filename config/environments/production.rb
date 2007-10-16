@@ -3,7 +3,7 @@
 # The production environment is meant for finished, "live" apps.
 # Code is not reloaded between requests
 config.cache_classes = true
-
+config.action_view.cache_template_loading = true
 # Use a different logger for distributed setups
 # config.logger = SyslogLogger.new
 
@@ -16,6 +16,6 @@ config.action_controller.perform_caching             = true
 
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
-CACHE = MemCache.new 'localhost:11211', :namespace => 'my_rails_app'
+CACHE = MemCache.new 'localhost:11211', :namespace => 'koala_track'
 config.action_controller.session_store = :mem_cache_store
 config.action_controller.fragment_cache_store = :mem_cache_store

@@ -1,14 +1,12 @@
 <tr id="playlist_test_case_<%=playlist_test_case.id%>" style="background-color:<%= background_color = cycle("#fff", "#E6E6E6", :name => "colors") %>">
 	<td>
-		<%#= link_to( "down", down_playlist_test_case_path(playlist_test_case), :method => :put) unless playlist_test_case.last? %>
-		<%#= link_to( "up", up_playlist_test_case_path(playlist_test_case), :method => :put) unless playlist_test_case.first?%>
 		<%= check_box_tag 'pickme', playlist_test_case.id, false, :onClick => 'pick(this)', :class => 'cbTestCase'%>
 	</td>
 	<td>
 		<%= text_field_tag :playlist_test_case, playlist_test_case.position, :size => 4, :tabindex=>2, :onChange => "sequence(#{playlist_test_case.id},this.value)" %>
 	</td>
   <td>
-		<%=h playlist_test_case.test_case.category.name if playlist_test_case.test_case.category %>
+		<%#=h playlist_test_case.test_case.category.name if playlist_test_case.test_case.category %>
 	</td>
   <td>
 		<%=link_to playlist_test_case.test_case.title, playlist_test_case.test_case %>

@@ -16,4 +16,12 @@ module ApplicationHelper
     ret << display_categories(category.children, category.id) if category.children.any?
     ret << "</li>" 
   end
+  
+  def li_link_to_unless_current(name, options)
+    "<li#{" class='current'" if current_page? options}>#{link_to_unless_current name, options}"
+  end
+  def li_link_to_unless(cond, name, options)
+    "<li#{" class='current'" if cond}>#{link_to_unless_current name, options}"
+  end
+  	
 end
