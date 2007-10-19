@@ -1,8 +1,10 @@
 <% if @category %>
 <h3><%= (@category.ancestors + [@category]).collect(&:name).join(' \ ') %></h3>
 
-<p>	<%= link_to 'New test case', new_test_case_path(:category_id => params[:category_id])  %> |
-	<%= link_to "New sub-category of #{@category.name}", new_category_path(:parent_id => params[:category_id])  %></p>
+<p>	
+	<%= link_to 'New test case', new_test_case_path(:category_id => params[:category_id])  %> |
+	<%= link_to "New sub-category of #{@category.name}", new_category_path(:parent_id => params[:category_id]) if admin? or (@category.ancestors.size > 0 )  %>
+</p>
 
 <% end %>
 <% if @test_cases.empty?%>

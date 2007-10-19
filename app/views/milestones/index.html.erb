@@ -1,11 +1,6 @@
 <h1>Milestones</h1>
 
-
-<br />
-
 <%= link_to 'New milestone', new_milestone_path %>
-<br />
-<br />
 
 <table>
   <tr>
@@ -24,3 +19,4 @@
 <% end %>
 </table>
 
+<%= debug current_user.group.milestones%>

@@ -5,12 +5,14 @@
 <table>
   <tr>
     <th>Name</th>
+    <th>Group</th>
     <th>Role</th>
   </tr>
 
 <% for user in @users %>
   <tr>
     <td><%=h user.login %></td>
+    <td><%= user.group.name if user.group %></td>
     <td><%= "Administrator" if user.admin? %></td>
     <td><%= "Email: #{activate_path(:activation_code => user.activation_code)}" unless user.activated? or !admin? %></td>
 		<td><%= link_to 'Edit', edit_user_path(user) %></td>

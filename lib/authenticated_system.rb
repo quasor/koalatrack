@@ -7,7 +7,11 @@ module AuthenticatedSystem
     end
     
     def admin?
-      logged_in? && current_user.admin?
+      logged_in? && current_user.admin? #&& current_user.group.nil?
+    end
+
+    def group_admin?
+      logged_in? && current_user.admin? && current_user.group
     end
     
     # Accesses the current user from the session.  Set it to :false if login fails

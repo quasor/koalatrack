@@ -23,5 +23,4 @@ module ApplicationHelper
   def li_link_to_unless(cond, name, options)
     "<li#{" class='current'" if cond}>#{link_to_unless_current name, options}"
   end
-  	
 end

@@ -25,6 +25,7 @@ class User < ActiveRecord::Base
   has_many :playlists
   has_many :playlist_test_cases  
   has_many :associated_playlists, :class_name => "Playlist", :through => :playlist_test_cases, :source => :playlist, :select => "DISTINCT playlists.*"
+  belongs_to :group
   
   def to_s
     login
@@ -41,13 +42,15 @@ class User < ActiveRecord::Base
   validates_length_of       :login,    :within => 3..40
   validates_length_of       :email,    :within => 3..100
   validates_uniqueness_of   :login, :email, :case_sensitive => false
+  validates_presence_of     :group
+  
   before_save :encrypt_password
   before_create :make_activation_code 
   # before_create { |u| u.admin = true if User.count == 0 }
   
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :password, :password_confirmation
+  attr_accessible :login, :email, :password, :password_confirmation, :group_id
   
   # Activates the user in the database.
   def activate

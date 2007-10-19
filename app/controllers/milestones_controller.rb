@@ -16,12 +16,7 @@ class MilestonesController < ApplicationController
   # GET /milestones/1
   # GET /milestones/1.xml
   def show
-    @milestone = Milestone.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @milestone }
-    end
+    redirect_to(milestones_path)
   end
 
   # GET /milestones/new
@@ -48,7 +43,7 @@ class MilestonesController < ApplicationController
     respond_to do |format|
       if @milestone.save
         flash[:notice] = 'Milestone was successfully created.'
-        format.html { redirect_to(@milestone) }
+        format.html { redirect_to(milestones_path) }
         format.xml  { render :xml => @milestone, :status => :created, :location => @milestone }
       else
         format.html { render :action => "new" }

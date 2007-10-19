@@ -13,6 +13,11 @@ class UsersController < ApplicationController
   # render new.rhtml
   def new
   end
+
+  # render new.rhtml
+  def edit
+    @user = User.find params[:id]
+  end
   
   def show
     @user = User.find params[:id]
@@ -26,6 +31,23 @@ class UsersController < ApplicationController
     flash[:notice] = "Thanks for signing up!"
   rescue ActiveRecord::RecordInvalid
     render :action => 'new'
+  end
+
+  # PUT /users/1
+  # PUT /users/1.xml
+  def update
+    @user = User.find(params[:id])
+    logger.info params[:user][:group_id]
+    respond_to do |format|
+      if @user.update_attributes(params[:user])
+        flash[:notice] = 'User was successfully updated.'
+        format.html { redirect_to(users_path) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+      end
+    end
   end
 
   def activate

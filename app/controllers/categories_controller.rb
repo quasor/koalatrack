@@ -15,12 +15,7 @@ class CategoriesController < ApplicationController
   # GET /categories/1
   # GET /categories/1.xml
   def show
-    @category = Category.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @category }
-    end
+    redirect_to categories_path
   end
 
   # GET /categories/new
@@ -44,10 +39,17 @@ class CategoriesController < ApplicationController
   # POST /categories.xml
   def create
     @category = Category.new(params[:category])
-    if @category.parent_id.nil? && !admin?
-       flash[:warning] = 'You cannot create a root category unless you are an admin.'
-       return render :action => "new"
+    if !admin?
+      if @category.parent_id.nil?
+         flash[:warning] = 'You cannot create a root category unless you are an admin.'
+         return render :action => "new"
+      end
+      if @category.ancestors.size < 2 || @category.group_id != current_user.group_id 
+        flash[:warning] = 'You cannot create a group category unless you are an admin.'
+        return redirect_to test_cases_path(:category_id => @category.parent_id)
+      end
     end
+      
     respond_to do |format|
       if @category.save
         flash[:notice] = 'Category was successfully created.'

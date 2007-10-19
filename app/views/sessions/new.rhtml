@@ -1,14 +1,12 @@
 <% form_tag session_path do -%>
-<p><label for="login">Login</label>
+<p><label for="login">Login: </label>
 <%= text_field_tag 'login' %></p>
 
-<p><label for="password">Password</label>
+<p><label for="password">Password: </label>
 <%= password_field_tag 'password' %></p>
 
-<!-- Uncomment this if you want this functionality
-<p><label for="remember_me">Remember me:</label>
+<p><label for="remember_me">Remember me: </label>
 <%= check_box_tag 'remember_me' %></p>
--->
 
 <p><label>&nbsp;</label><%= submit_tag 'Log in' %></p>
 <% end -%>
