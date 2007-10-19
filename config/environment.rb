@@ -58,24 +58,21 @@ Rails::Initializer.run do |config|
   # -- all .rb files in that directory is automatically loaded
 end
 
-require 'memcache'
 
-WhiteListHelper.tags.merge %w(table td th tr tbody span)
-
-module ActsAsFerret
-  module ClassMethods
-    def paginate_search(query, options = {})
-      options, page, per_page = wp_parse_options!(options)
-      pager = WillPaginate::Collection.new(page, per_page, nil)
-      options.merge!(:offset => pager.offset, :limit => per_page)
-      result = result = find_by_contents(query, options)
-      returning WillPaginate::Collection.new(page, per_page, result.total_hits) do |pager|
-        pager.replace result
-      end
-    end
-  end
-end
-
+# module ActsAsFerret
+#   module ClassMethods
+#     def paginate_search(query, options = {})
+#       options, page, per_page = wp_parse_options!(options)
+#       pager = WillPaginate::Collection.new(page, per_page, nil)
+#       options.merge!(:offset => pager.offset, :limit => per_page)
+#       result = result = find_by_contents(query, options)
+#       returning WillPaginate::Collection.new(page, per_page, result.total_hits) do |pager|
+#         pager.replace result
+#       end
+#     end
+#   end
+# end
+# 
 # 
 # #First extend ActiveRecord::Base to allow us to override connections 
 # module ActiveRecord 

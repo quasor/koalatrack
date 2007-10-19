@@ -24,7 +24,9 @@
 class TestCase < ActiveRecord::Base
   acts_as_taggable
   acts_as_versioned
-  acts_as_ferret :fields => [:title, :body, :tag, :owner], :remote => true
+  #acts_as_ferret :fields => [:title, :body, :tag, :owner], :remote => true
+  add_index :fields => %w[title body tag owner] 
+ 
   def owner
     user.login
   end

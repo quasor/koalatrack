@@ -2,7 +2,11 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
+<<<<<<< .mine
+ActiveRecord::Schema.define(:version => 34) do
+=======
 ActiveRecord::Schema.define(:version => 35) do
+>>>>>>> .r45
 
   create_table "categories", :force => true do |t|
     t.string   "name"
@@ -10,6 +14,7 @@ ActiveRecord::Schema.define(:version => 35) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "children_count", :default => 0
+    t.integer  "group_id"
   end
 
   create_table "file_attachments", :force => true do |t|
@@ -25,11 +30,19 @@ ActiveRecord::Schema.define(:version => 35) do
     t.datetime "updated_at"
   end
 
+  create_table "groups", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "milestones", :force => true do |t|
     t.text     "name"
     t.date     "due_on"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "group_id"
   end
 
   create_table "playlist_test_cases", :force => true do |t|
@@ -67,6 +80,7 @@ ActiveRecord::Schema.define(:version => 35) do
     t.integer  "tag_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "group_id"
   end
 
   create_table "taggings", :force => true do |t|
@@ -144,6 +158,7 @@ ActiveRecord::Schema.define(:version => 35) do
     t.string   "activation_code",           :limit => 40
     t.datetime "activated_at"
     t.boolean  "admin",                                   :default => false
+    t.integer  "group_id"
   end
 
 end
