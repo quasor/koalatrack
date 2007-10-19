@@ -13,7 +13,7 @@
 #
 
 class Playlist < ActiveRecord::Base
-  acts_as_ferret :fields => [:title, :milestone_name, :user]
+  acts_as_ferret :fields => [:title, :milestone_name, :user], :remote => true
   def milestone_name
     self.milestone.name
   end
