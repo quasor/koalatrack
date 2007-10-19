@@ -81,7 +81,11 @@
 <% unless @playlist.playlist_test_cases.empty?%>
 <table border="0" cellspacing="0" class="padded" id='playlist'>
   <tr>
-	  <% if logged_in? %><th><%=check_box_tag :select_all, 1, false, :onClick => 'selectAll(this.checked)'%></th><% end # space for checkboxes %>
+	  <% if logged_in? %>
+		<th><%=check_box_tag :select_all, 1, false, :onClick => 'selectAll(this.checked)'%></th>
+          <% else %>
+		<th></th>
+	  <% end # space for checkboxes %>
     <th><%= link_to '#', playlist_path(@playlist)%></th>
     <th><%= link_to 'Category', playlist_path(@playlist, :sort => :category)%></th>
     <th>Title</th>

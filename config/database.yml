@@ -14,7 +14,7 @@
 development:
   adapter: mysql
   encoding: utf8
-  database: tcm_development
+  database: tcm_production
   username: root
   password:
   host: localhost
@@ -42,7 +42,7 @@ test:
 production:
   adapter: mysql
   encoding: utf8
-  database: tcm_development
+  database: tcm_production
   username: root
   password: 
   host: localhost

