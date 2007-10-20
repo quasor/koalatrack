@@ -4,21 +4,17 @@ class TestCasesController < ApplicationController
   # GET /test_cases
   # GET /test_cases.xml
   def index
-      if params[:category_id] && params[:q].nil?
+      if params[:category_id]
         @category = Category.find(params[:category_id])
-        @test_cases = TestCase.paginate_by_category_id @category.id, :page => params[:page]
-          
+      end
+      if params[:q].nil? && @category
+        @test_cases = TestCase.paginate_by_category_id @category.id, :page => params[:page], :per_page => 50  
       elsif params[:q]
-        @category = Category.find(params[:category_id]) if params[:category_id]
-        #if @category.nil?
-          #@total_hits, @test_cases = TestCase.find_id_by_contents( params[:q], :limit => 100, :include => :categories )
-          #@test_cases = TestCase.find_by_contents( params[:q], :limit => 200, :include => :categories )
-          @test_cases = TestCase.paginate_search params[:q], :page => params[:page]
-          #@total_hits = @test_cases.total_hits
-        #else
-          #@test_cases = @category.test_cases.find_by_contents( params[:q], :limit => 100 )
-        #  @test_cases = @category.test_cases.find_by_contents( params[:q], :limit => 100, :conditions => {:category_id => 192})
-        #end
+        if @category.nil?
+          @test_cases = TestCase.search(params[:q], :match_mode => Sphinx::Client::SPH_MATCH_EXTENDED, :per_page => 20, :page => params[:page])
+        else
+          @test_cases = TestCase.search(params[:q], :match_mode => Sphinx::Client::SPH_MATCH_EXTENDED, :per_page => 20, :page => params[:page], :conditions => { :category_id => @category.self_and_descendants.collect(&:id).sort })
+        end
       else
         @test_cases = []
       end

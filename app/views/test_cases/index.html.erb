@@ -1,12 +1,18 @@
 <% if @category %>
 <h3><%= (@category.ancestors + [@category]).collect(&:name).join(' \ ') %></h3>
-
-<p>	
-	<%= link_to 'New test case', new_test_case_path(:category_id => params[:category_id])  %> |
-	<%= link_to "New sub-category of #{@category.name}", new_category_path(:parent_id => params[:category_id]) if admin? or (@category.ancestors.size > 0 )  %>
-</p>
+	<% if params[:q] %>
+	<p style="border: 1px solid #90A0A2; padding:10px;background-color:#D4E4D0">
+	<span style="font-size:12px">Searching in <b><%= (@category.ancestors + [@category]).collect(&:name).join(' \ ') %></b>. <%= link_to "Search All Categories for <i>'#{params[:q]}'</i> ...", test_cases_path(:q => params[:q])%></span>
+	</p>
+	<% else %>
+	<p>	
+		<%= link_to 'New test case', new_test_case_path(:category_id => params[:category_id])  %> |
+		<%= link_to "New sub-category of #{@category.name}", new_category_path(:parent_id => params[:category_id]) if admin? or (@category.ancestors.size > 0 )  %>
+	</p>
+	<% end %>
 
 <% end %>
+
 <% if @test_cases.empty?%>
 	<< Select a category or search
 	<% form_tag test_cases_path, :method => 'get' do %>
@@ -18,20 +24,20 @@
 	<% end %>
 	
 <% else %>
+
 <%= will_paginate @test_cases %>
 <div id="multi2"></div>
 <table class="padded" cellspacing="0">
   <tr>
 	  <% if logged_in? %><th><%=check_box_tag :select_all, 1, false, :onClick => 'selectAll(this.checked)'%></th><% end # space for checkboxes %>
-    <% if @category.nil? %><th>Category</th><% end %>
+<% if @category.nil? %><th>Category</th><% end %>
     <th>Title</th>
     <th>Owner</th>
     <th>Tags</th>
-	<% if params[:q] %>
-	<th>Score</th>
-	<% end %>
+<% unless params[:q] %>  
   <th></th>
   <th></th>
+<% end %>
   <th></th>
   </tr>
 
@@ -45,22 +51,17 @@
 				<%= check_box_tag 'pickme', test_case.id, false, :onClick => 'pick(this)', :class=>'cbTestCase'%>
 		</td>
 	<%end %>
-	<% if test_case.category && @category.nil? %>
+	<% if test_case.category && params[:q] %>
     <td><%= (test_case.category.ancestors + [test_case.category]).collect(&:name).join(' \ ') %></td> 
 	<% end %>
-    <td><%=link_to (h test_case.title), test_case %></td>
+    <td>
+			<%=link_to (h test_case.title), test_case %></td>
     <td><%=h test_case.user.login if test_case.user_id %></td>
     <td><%=h test_case.tag %></td>
-	<% if params[:q] %>
-	<td>
-		<div style="width:52px;border:1px solid black">
-		<div style="height:8px;background-color:#8888ff;width:<%=(test_case.ferret_score*50).round%>px;border:1px solid #6666FF"></div>
-		</div>
-	</td>
-	<% end %>
+	<% unless params[:q]%>
 	<td><%= link_to 'Edit', edit_test_case_path(test_case) %></td>
 	<td><%= link_to 'Clone', edit_test_case_path(test_case, :clone => true ) %></td>
-
+  <% end %>
 	<td>
 		<% remote_form_for(pte, :loading=>"Element.toggle('spinner_#{test_case.id}')",:complete => "Element.toggle('spinner_#{test_case.id}')") do |f| %>
 		    <%= f.select(:playlist_id, @playlist_collection ) %>

@@ -1,0 +1,14 @@
+<h1>Editing user</h1>
+
+<%= error_messages_for :user %>
+
+<% form_for(@user) do |f| %>
+  <p><label><b>Login: </b></label><%= f.text_field :login %></p>
+  <p><label><b>Group: </b></label><%= f.select(:group_id, Group.find(:all).collect {|p| [ p.name, p.id ] } ) %></p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @user %> |
+<%= link_to 'Back', users_path %>

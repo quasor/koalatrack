@@ -15,5 +15,16 @@ class Category < ActiveRecord::Base
   acts_as_tree :counter_cache => :children_count
   has_many :test_cases
   
+  def descendants  
+    ( children + children.map(&:descendants_recurse).flatten ).uniq
+  end
+  def self_and_descendants  
+    ( [self] + children + children.map(&:descendants_recurse).flatten ).uniq
+  end
+    
   validates_presence_of :name
+private
+  def descendants_recurse
+    children + children.map(&:descendants_recurse)
+  end
 end

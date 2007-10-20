@@ -59,43 +59,7 @@ Rails::Initializer.run do |config|
 end
 
 
-# module ActsAsFerret
-#   module ClassMethods
-#     def paginate_search(query, options = {})
-#       options, page, per_page = wp_parse_options!(options)
-#       pager = WillPaginate::Collection.new(page, per_page, nil)
-#       options.merge!(:offset => pager.offset, :limit => per_page)
-#       result = result = find_by_contents(query, options)
-#       returning WillPaginate::Collection.new(page, per_page, result.total_hits) do |pager|
-#         pager.replace result
-#       end
-#     end
-#   end
-# end
-# 
-# 
-# #First extend ActiveRecord::Base to allow us to override connections 
-# module ActiveRecord 
-#   class Base 
-# 
-#     # Sets the active connection to conn and runs the given block. Active 
-#     # connection is reset to it's previous value once the block finishes. 
-#     def self.using_connection(conn) 
-#       old_connection = use_connection(conn) 
-#       ret = yield if block_given? 
-#       use_connection(old_connection) 
-#       ret 
-#     end 
-# 
-#     # Sets the active connection to conn, returns the previously active connection 
-#     def self.use_connection(conn) 
-#       old_active_connection = active_connections[active_connection_name] 
-#       active_connections[active_connection_name] = conn 
-#       old_active_connection 
-#     end 
-# 
-#   end 
-# end 
+
 # 
 # class ModelBaseRead < ActiveRecord::Base 
 #   self.abstract_class = true 
