@@ -14,7 +14,6 @@
 	<div id="<%= fckeditor_div_id('test_case', 'body') %>">
       <%= fckeditor_textarea( "test_case", "body" , :width => 800, :height => 400) %> 
   </div>
-  <%#= form.text_area :body %>
 </p>
 
 <p>
@@ -44,7 +43,6 @@
 
 <p>
 	<label>Quick Tags:</label>
-	<% @tag_favorites = TagFavorite.find(:all)%>
 	<% for tag in @tag_favorites %>
 		<%=check_box_tag tag.tag.name, tag.tag.name, false,  :onClick => "toggleQTag(this)" %><%= tag.tag.name%>
 	<% end %>
@@ -57,7 +55,6 @@
 		ar = ar.replace(/\s,/g, ',');
 		ar = ar.replace(/,\s/g, ',');
 		ar = ar.split(',');
-		//alert(ar);
 		if (cb.checked)
 		{
 			ar.push(cb.value);

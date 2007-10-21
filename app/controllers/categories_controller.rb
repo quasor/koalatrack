@@ -44,10 +44,6 @@ class CategoriesController < ApplicationController
          flash[:warning] = 'You cannot create a root category unless you are an admin.'
          return render :action => "new"
       end
-      if group_admin? && @category.group_id != current_user.group_id
-        flash[:warning] = 'You cannot create a group category unless you are an group admin.'
-        return redirect_to test_cases_path(:category_id => @category.parent_id)
-      end
       @category.group_id = current_user.group_id
     end
       

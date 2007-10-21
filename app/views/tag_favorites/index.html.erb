@@ -1,14 +1,16 @@
 <h1>Listing Quick Tags</h1>
 
-<table>
+<table class="padded" cellspacing="0">
   <tr>
     <th>Tag</th>
+    <th>Group</th>
+	<th></th>
   </tr>
 
 <% for tag_favorite in @tag_favorites %>
   <tr>
     <td><%=h tag_favorite.tag.name %></td>
-		<td><%=h tag_favorite.group.name if tag_favorite.group_id%></td>
+	<td><%=h tag_favorite.group.name if tag_favorite.group_id%></td>
     <td><%= link_to 'Remove', tag_favorite, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
