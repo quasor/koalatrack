@@ -7,7 +7,7 @@
 	<% else %>
 	<p>	
 		<%= link_to 'New test case', new_test_case_path(:category_id => params[:category_id])  %> |
-		<%= link_to "New sub-category of #{@category.name}", new_category_path(:parent_id => params[:category_id]) if ((group_admin? || @category.ancestors.size > 0) && @category.group_id == current_user.group_id)  %>
+		<%= link_to "New sub-category of #{@category.name}", new_category_path(:parent_id => params[:category_id]) if ( logged_in? && (group_admin? || @category.ancestors.size > 0) && @category.group_id == current_user.group_id)  %>
 	</p>
 	<% end %>
 
