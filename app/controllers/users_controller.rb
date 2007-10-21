@@ -40,14 +40,12 @@ class UsersController < ApplicationController
   # PUT /users/1.xml
   def update
     @user = User.find(params[:id])
-    if !current_user.group_admin? && @user.id != current_user.id 
+    if !(current_user.group_admin? || current_user.admin?) && @user.id != current_user.id 
       return redirect_to users_path
     end
     if (current_user.role_id > params[:user][:role_id].to_i) #prevent user escalation
       return redirect_to users_path
     end 
-       
-    params[:user][:role_id] = current_user.role_id 
     respond_to do |format|
       if @user.update_attributes(params[:user])
         flash[:notice] = 'User was successfully updated.'

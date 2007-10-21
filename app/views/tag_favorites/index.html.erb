@@ -8,6 +8,7 @@
 <% for tag_favorite in @tag_favorites %>
   <tr>
     <td><%=h tag_favorite.tag.name %></td>
+		<td><%=h tag_favorite.group.name if tag_favorite.group_id%></td>
     <td><%= link_to 'Remove', tag_favorite, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>

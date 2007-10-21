@@ -8,6 +8,10 @@
     <%= text_field_tag :tag %>
   </p>
 
+	<% if admin?%>	
+		<p><label><b>Group: </b></label> <%= f.select(:group_id, ( [[ 'Global', nil ]] + Group.find(:all).collect {|p| [ p.name, p.id ] } ) ) %></p>
+	<% end %>
+
   <p>
     <%= f.submit "Create" %>
   </p>

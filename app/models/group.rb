@@ -16,6 +16,7 @@ class Group < ActiveRecord::Base
   has_many :groups
   has_many :categories
   has_many :playlists, :through => :users
+  has_many :tag_favorites
   
   def after_create
     self.categories.find_or_create_by_name(:name => self.name)

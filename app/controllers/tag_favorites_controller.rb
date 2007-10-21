@@ -5,7 +5,7 @@ class TagFavoritesController < ApplicationController
   # GET /tag_favorites
   # GET /tag_favorites.xml
   def index
-    @tag_favorites = TagFavorite.find(:all)
+    @tag_favorites = current_user.admin? ? TagFavorite.find(:all) : current_user.group.tag_favorites
 
     respond_to do |format|
       format.html # index.html.erb
@@ -44,10 +44,11 @@ class TagFavoritesController < ApplicationController
   # POST /tag_favorites.xml
   def create
     @tag = Tag.find_or_create_by_name(params[:tag]) unless params[:tag].nil? or params[:tag].blank?
-    @tag_favorite = TagFavorite.new(:tag_id => @tag.id)
+    @tag_favorite = TagFavorite.new(params[:tag_favorite])
+    @tag_favorite.tag_id = @tag.id
 
     respond_to do |format|
-      if @tag_favorite.save
+      if (current_user.admin? && @tag_favorite.save || current_user.group.tag_favorites << @tag_favorite )
         flash[:notice] = 'TagFavorite was successfully created.'
         format.html { redirect_to(tag_favorites_url) }
         format.xml  { render :xml => @tag_favorite, :status => :created, :location => @tag_favorite }

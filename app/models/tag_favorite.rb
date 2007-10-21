@@ -12,6 +12,7 @@
 
 class TagFavorite < ActiveRecord::Base
   belongs_to :tag
+  belongs_to :group
   validates_uniqueness_of :tag_id
   validates_presence_of :tag_id
 end
