@@ -5,7 +5,7 @@ body, p, ol, ul, td {
   font-size:   13px;
 }
 
-table.padded td {padding:2px 8px 2px 8px;font-size:11px;}
+table.padded td {padding:2px 8px 2px 8px;font-size:12px;}
 table.padded th {padding:2px 8px 2px 8px;}
 pre {
   background-color: #eee;
@@ -85,21 +85,22 @@ div.progressBar div.background {
 }
 ul#category_tree {
 	margin-top:0; margin-bottom:0; list-style-type:disc; list-style-position:outside;
-	font-size:12px;
+	font-size:11px;
 }
 ul#category_tree li {
-	list-style-image: url(/images/logo-tiny.jpg);
-	margin:0px 0px 0px -20px;
+	list-style-image: url(/images/spaceit.gif);
+	padding-bottom:4px;
+	margin:0px 0px 0px -30px;
 }
 ul#category_tree li.has_children_false {
 	list-style-image: url(/images/plus-small.png);
-	margin:0px 0px 0px -20px;
+	margin:0px 0px 0px -30px;
 }
 ul#category_tree li.has_children_true {
 	list-style-image: url(/images/minus-small.png);
-	margin:0px 0px 0px -20px;
+	margin:0px 0px 0px -30px;
 }
-
+.selected { font-weight:bold; color:rgb(204, 102, 0);}
 ul#nav {
 list-style-type: none;
 padding: 0px;
@@ -156,7 +157,7 @@ background-color:#FC6;
 .clearfix {display:block;}
 /* End hide from IE Mac */
 
-p label {float:left; width:150px; text-align:right;}
+p label {float:left; width:150px; text-align:right; margin-right:5px;}
 
 th {background-color:#666;color:white;}
 th a {color:white}

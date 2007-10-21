@@ -1,7 +1,7 @@
 
 <p>
   <label>Category:</label>
-	<%= form.select(:category_id, Category.find(:all).collect {|p| [ p.name, p.id ] } ) %>
+	<%= form.select(:category_id, Category.find(:all).collect {|p| [ (p.ancestors.reverse + [p]).collect(&:name).join(' \ '), p.id ] }.sort ) %>
 </p>
 
 <p>

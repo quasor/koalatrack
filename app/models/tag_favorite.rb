@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 29
+# Schema version: 36
 #
 # Table name: tag_favorites
 #
@@ -7,6 +7,7 @@
 #  tag_id     :integer(11)   
 #  created_at :datetime      
 #  updated_at :datetime      
+#  group_id   :integer(11)   
 #
 
 class TagFavorite < ActiveRecord::Base

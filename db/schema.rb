@@ -2,20 +2,19 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-<<<<<<< .mine
-ActiveRecord::Schema.define(:version => 34) do
-=======
-ActiveRecord::Schema.define(:version => 35) do
->>>>>>> .r45
+ActiveRecord::Schema.define(:version => 37) do
 
   create_table "categories", :force => true do |t|
     t.string   "name"
     t.integer  "parent_id"
+    t.string   "ancestor_cache"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "children_count", :default => 0
     t.integer  "group_id"
   end
+
+  add_index "categories", ["parent_id"], :name => "index_categories_on_parent_id"
 
   create_table "file_attachments", :force => true do |t|
     t.integer  "parent_id"
@@ -57,11 +56,20 @@ ActiveRecord::Schema.define(:version => 35) do
     t.integer  "position"
   end
 
+  add_index "playlist_test_cases", ["playlist_id"], :name => "index_playlist_test_cases_on_playlist_id"
+  add_index "playlist_test_cases", ["test_case_id"], :name => "index_playlist_test_cases_on_test_case_id"
+
   create_table "playlists", :force => true do |t|
     t.string   "title"
     t.text     "description"
     t.integer  "user_id"
     t.integer  "milestone_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "roles", :force => true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -109,6 +117,9 @@ ActiveRecord::Schema.define(:version => 35) do
     t.datetime "updated_at"
   end
 
+  add_index "test_case_executions", ["test_case_id"], :name => "index_test_case_executions_on_test_case_id"
+  add_index "test_case_executions", ["playlist_test_case_id"], :name => "index_test_case_executions_on_playlist_test_case_id"
+
   create_table "test_case_versions", :force => true do |t|
     t.integer  "test_case_id"
     t.integer  "version"
@@ -146,6 +157,8 @@ ActiveRecord::Schema.define(:version => 35) do
     t.string   "project_id"
   end
 
+  add_index "test_cases", ["category_id"], :name => "index_test_cases_on_category_id"
+
   create_table "users", :force => true do |t|
     t.string   "login"
     t.string   "email"
@@ -157,7 +170,7 @@ ActiveRecord::Schema.define(:version => 35) do
     t.datetime "remember_token_expires_at"
     t.string   "activation_code",           :limit => 40
     t.datetime "activated_at"
-    t.boolean  "admin",                                   :default => false
+    t.integer  "role_id",                                 :default => 3
     t.integer  "group_id"
   end
 

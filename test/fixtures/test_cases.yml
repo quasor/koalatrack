@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 29
+# Schema version: 36
 #
 # Table name: test_cases
 #
@@ -13,11 +13,11 @@
 #  automated           :boolean(1)    
 #  created_at          :datetime      
 #  updated_at          :datetime      
-#  version             :integer(11)   
 #  updated_by          :integer(11)   
 #  category_id         :integer(11)   
 #  tag                 :string(255)   
 #  qatraq_id           :integer(11)   
+#  version             :integer(11)   
 #  project_id          :string(255)   
 #
 

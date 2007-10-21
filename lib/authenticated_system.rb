@@ -11,7 +11,7 @@ module AuthenticatedSystem
     end
 
     def group_admin?
-      logged_in? && current_user.admin? && current_user.group
+      logged_in? && current_user.group_admin?
     end
     
     # Accesses the current user from the session.  Set it to :false if login fails
@@ -100,7 +100,7 @@ module AuthenticatedSystem
     # Inclusion hook to make #current_user and #logged_in?
     # available as ActionView helper methods.
     def self.included(base)
-      base.send :helper_method, :current_user, :logged_in?, :admin?
+      base.send :helper_method, :current_user, :logged_in?, :admin?, :group_admin?
     end
 
     # Called from #current_user.  First attempt to login by the user id stored in the session.

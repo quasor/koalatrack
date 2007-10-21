@@ -2,6 +2,7 @@ class AddProjectIdToTestCase < ActiveRecord::Migration
   def self.up
     add_column :test_cases, :project_id, :string  
     TestCase.drop_versioned_table
+    TestCase.reset_column_information
     TestCase.create_versioned_table
   end
 

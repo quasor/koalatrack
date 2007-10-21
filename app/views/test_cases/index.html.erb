@@ -1,13 +1,13 @@
 <% if @category %>
-<h3><%= (@category.ancestors + [@category]).collect(&:name).join(' \ ') %></h3>
+<h3><%= (@category.ancestors.reverse + [@category]).collect(&:name).join(' \ ') %></h3>
 	<% if params[:q] %>
 	<p style="border: 1px solid #90A0A2; padding:10px;background-color:#D4E4D0">
-	<span style="font-size:12px">Searching in <b><%= (@category.ancestors + [@category]).collect(&:name).join(' \ ') %></b>. <%= link_to "Search All Categories for <i>'#{params[:q]}'</i> ...", test_cases_path(:q => params[:q])%></span>
+	<span style="font-size:12px">Searching in <b><%= (@category.ancestors.reverse + [@category]).collect(&:name).join(' \ ') %></b>. <%= link_to "Search All Categories for <i>'#{params[:q]}'</i> ...", test_cases_path(:q => params[:q])%></span>
 	</p>
 	<% else %>
 	<p>	
 		<%= link_to 'New test case', new_test_case_path(:category_id => params[:category_id])  %> |
-		<%= link_to "New sub-category of #{@category.name}", new_category_path(:parent_id => params[:category_id]) if admin? or (@category.ancestors.size > 0 )  %>
+		<%= link_to "New sub-category of #{@category.name}", new_category_path(:parent_id => params[:category_id]) if ((group_admin? || @category.ancestors.size > 0) && @category.group_id == current_user.group_id)  %>
 	</p>
 	<% end %>
 
@@ -36,8 +36,8 @@
     <th>Tags</th>
 <% unless params[:q] %>  
   <th></th>
-  <th></th>
 <% end %>
+	<th></th>
   <th></th>
   </tr>
 
@@ -52,7 +52,7 @@
 		</td>
 	<%end %>
 	<% if test_case.category && params[:q] %>
-    <td><%= (test_case.category.ancestors + [test_case.category]).collect(&:name).join(' \ ') %></td> 
+    <td><%= (test_case.category.ancestors.reverse + [test_case.category]).collect(&:name).join(' \ ') %></td> 
 	<% end %>
     <td>
 			<%=link_to (h test_case.title), test_case %></td>

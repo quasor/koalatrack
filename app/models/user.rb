@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 29
+# Schema version: 36
 #
 # Table name: users
 #
@@ -14,11 +14,16 @@
 #  remember_token_expires_at :datetime      
 #  activation_code           :string(40)    
 #  activated_at              :datetime      
-#  admin                     :boolean(1)    
+#  role_id                   :integer(11)   default(3)
+#  group_id                  :integer(11)   
 #
 
 require 'digest/sha1'
 class User < ActiveRecord::Base
+  ROLE_ADMIN = 1
+  ROLE_GROUP_ADMIN = 2
+  ROLE_USER = 3
+  
   # Associations
   has_many :test_cases
   has_many :edited_test_cases, :class_name => "TestCase" 
@@ -26,6 +31,7 @@ class User < ActiveRecord::Base
   has_many :playlist_test_cases  
   has_many :associated_playlists, :class_name => "Playlist", :through => :playlist_test_cases, :source => :playlist, :select => "DISTINCT playlists.*"
   belongs_to :group
+  belongs_to :role
   
   def to_s
     login
@@ -42,15 +48,15 @@ class User < ActiveRecord::Base
   validates_length_of       :login,    :within => 3..40
   validates_length_of       :email,    :within => 3..100
   validates_uniqueness_of   :login, :email, :case_sensitive => false
-  validates_presence_of     :group
+  validates_presence_of     :group_id
   
   before_save :encrypt_password
   before_create :make_activation_code 
-  # before_create { |u| u.admin = true if User.count == 0 }
+  before_create { |u| u.role_id = ROLE_ADMIN if User.count == 0 } # first user is the admin
   
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :password, :password_confirmation, :group_id
+  attr_accessible :login, :email, :password, :password_confirmation, :group_id, :role_id
   
   # Activates the user in the database.
   def activate
@@ -58,6 +64,21 @@ class User < ActiveRecord::Base
     self.activated_at = Time.now.utc
     self.activation_code = nil
     save(false)
+  end
+  
+  def milestones
+    @milestones ||= []
+    @milestones += group.milestones if group
+    @milestones += Milestone.find_all_by_group_id(nil)
+    @milestones
+  end
+  
+  def admin?
+    role_id == ROLE_ADMIN
+  end
+  
+  def group_admin?
+    admin? || role_id == ROLE_GROUP_ADMIN 
   end
 
   def activated?

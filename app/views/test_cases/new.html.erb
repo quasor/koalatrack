@@ -5,7 +5,22 @@
 
 <% form_for(@test_case, :html => { :multipart => true }) do |f| %>
   <%= render :partial => 'form', :object => f%>
-  <p>
+	<p>
+	  <label>Attachments:</label>
+		<div>
+		<% for file_attachment in @test_case.file_attachments %>
+			<div>
+			<%= link_to file_attachment.filename, file_attachment.public_filename if file_attachment.filename%>
+			<%= link_to 'Delete', file_attachment, :confirm => 'Are you sure?', :method => :delete %>
+		  </div>
+		<% end %>
+		</div>
+	</p>
+	<p>
+		<label>Add an attachment:</label>
+	   <%= f.file_field :uploaded_data %>
+	</p>
+  	<p>
     <%= f.submit "Create" %>
   </p>
 <% end %>

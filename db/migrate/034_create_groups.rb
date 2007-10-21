@@ -1,6 +1,6 @@
 class CreateGroups < ActiveRecord::Migration
   def self.up
-    create_table :groups do |t|
+   create_table :groups do |t|
       t.string :name
       t.text :description
       t.timestamps 
@@ -15,5 +15,8 @@ class CreateGroups < ActiveRecord::Migration
   def self.down
     drop_table :groups
     remove_column :users, :group_id
+    remove_column :milestones, :group_id
+    remove_column :tag_favorites, :group_id
+    remove_column :categories, :group_id 
   end
 end

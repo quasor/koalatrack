@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
   include AuthenticatedSystem
-  #before_filter :login_required, :only => [:index]
+  before_filter :login_required, :only => [:destroy]
   alias authorized? admin?
   
   def index
@@ -17,6 +17,9 @@ class UsersController < ApplicationController
   # render new.rhtml
   def edit
     @user = User.find params[:id]
+    if !current_user.group_admin? && @user.id != current_user.id
+      return redirect_to users_path
+    end       
   end
   
   def show
@@ -37,7 +40,14 @@ class UsersController < ApplicationController
   # PUT /users/1.xml
   def update
     @user = User.find(params[:id])
-    logger.info params[:user][:group_id]
+    if !current_user.group_admin? && @user.id != current_user.id 
+      return redirect_to users_path
+    end
+    if (current_user.role_id > params[:user][:role_id].to_i) #prevent user escalation
+      return redirect_to users_path
+    end 
+       
+    params[:user][:role_id] = current_user.role_id 
     respond_to do |format|
       if @user.update_attributes(params[:user])
         flash[:notice] = 'User was successfully updated.'
@@ -47,6 +57,18 @@ class UsersController < ApplicationController
         format.html { render :action => "edit" }
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
       end
+    end
+  end
+  
+  # DELETE /test_cases/1
+  # DELETE /test_cases/1.xml
+  def destroy
+    @user = User.find(params[:id])
+    @user.destroy
+
+    respond_to do |format|
+      format.html { redirect_to(users_url) }
+      format.xml  { head :ok }
     end
   end
 

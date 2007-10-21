@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 29
+# Schema version: 36
 #
 # Table name: categories
 #
@@ -9,17 +9,22 @@
 #  created_at     :datetime      
 #  updated_at     :datetime      
 #  children_count :integer(11)   default(0)
+#  group_id       :integer(11)   
 #
 
 class Category < ActiveRecord::Base
   acts_as_tree :counter_cache => :children_count
   has_many :test_cases
+  belongs_to :group
   
   def descendants  
     ( children + children.map(&:descendants_recurse).flatten ).uniq
   end
   def self_and_descendants  
     ( [self] + children + children.map(&:descendants_recurse).flatten ).uniq
+  end
+  def before_update
+    self.ancestor_cache = ancestors.reverse.collect(&:name).join(' \ ')
   end
     
   validates_presence_of :name

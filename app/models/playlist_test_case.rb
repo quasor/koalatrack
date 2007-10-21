@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 29
+# Schema version: 36
 #
 # Table name: playlist_test_cases
 #
@@ -12,6 +12,7 @@
 #  updated_at                 :datetime      
 #  test_case_executions_count :integer(11)   default(0)
 #  last_result                :integer(11)   default(0)
+#  position                   :integer(11)   
 #
 
 class PlaylistTestCase < ActiveRecord::Base

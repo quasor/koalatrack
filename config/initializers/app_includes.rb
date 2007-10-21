@@ -43,10 +43,8 @@ module Sphincter::Search
     matches = sphinx_result['matches'].sort_by do |id, match|
       -match['index'] # #find reverses, lame!
     end
-
     ids = matches.map do |id, match|
-      (id - match['attrs']['sphincter_index_id']) /
-        Sphincter::Configure.index_count
+      (id - match['attrs']['sphincter_index_id']) / Sphincter::Configure.index_count
     end
 
     results = Results.new

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 29
+# Schema version: 36
 #
 # Table name: playlists
 #
@@ -14,22 +14,16 @@
 
 class Playlist < ActiveRecord::Base
   #acts_as_ferret :fields => [:title, :milestone_name, :user], :remote => true
+  belongs_to :milestone
+  has_many :playlist_test_cases, :order => :position
+  has_many :test_cases, :through => :playlist_test_cases, :source => :test_case
+  belongs_to :user
+  add_index :fields => %w[title milestone.name user.login] 
+  
   def milestone_name
     self.milestone.name
   end
-  def user
-    self.user.login
-  end
-  belongs_to :milestone
-  
-  has_many :playlist_test_cases, :order => :position
-  
-  has_many :test_cases, :through => :playlist_test_cases, :source => :test_case
-  belongs_to :user
   validates_presence_of :title
   
-  def to_param
-    "#{id}-#{title.downcase.gsub(/[^[:alnum:]\'\,\.'\ ]/,'')}".gsub(/-{2,}/,' ')
-  end
   
 end

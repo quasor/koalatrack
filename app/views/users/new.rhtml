@@ -13,5 +13,7 @@
 <p><label for="password_confirmation">Confirm Password: </label>
 <%= f.password_field :password_confirmation %></p>
 
+<p><label><b>Group: </b></label><%= f.select(:group_id, Group.find(:all).collect {|p| [ p.name, p.id ] } ) %></p>
+
 <p><%= submit_tag 'Sign up' %></p>
 <% end -%>

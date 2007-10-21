@@ -1,6 +1,6 @@
 class TagFavoritesController < ApplicationController
   before_filter :login_required
-  alias authorized? admin?
+  alias authorized? group_admin?
   
   # GET /tag_favorites
   # GET /tag_favorites.xml

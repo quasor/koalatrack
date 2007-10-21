@@ -1,4 +1,4 @@
-<h1>Milestones</h1>
+<h1><%= current_user.group.name unless admin?%> Milestones</h1>
 
 <%= link_to 'New milestone', new_milestone_path %>
 
@@ -6,17 +6,17 @@
   <tr>
     <th>Name</th>
     <th>Due on</th>
+    <th>Group</th>
   </tr>
 
 <% for milestone in @milestones %>
   <tr>
     <td><%=h milestone.name %></td>
     <td><%=h milestone.due_on %></td>
+    <td><%=milestone.group.nil? ? 'Global' : milestone.group.name  %></td>
     <td><%= link_to 'Show', milestone %></td>
     <td><%= link_to 'Edit', edit_milestone_path(milestone) %></td>
     <td><%= link_to 'Destroy', milestone, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
-
-<%= debug current_user.group.milestones%>

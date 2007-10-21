@@ -44,10 +44,11 @@ class CategoriesController < ApplicationController
          flash[:warning] = 'You cannot create a root category unless you are an admin.'
          return render :action => "new"
       end
-      if @category.ancestors.size < 2 || @category.group_id != current_user.group_id 
-        flash[:warning] = 'You cannot create a group category unless you are an admin.'
+      if group_admin? && @category.group_id != current_user.group_id
+        flash[:warning] = 'You cannot create a group category unless you are an group admin.'
         return redirect_to test_cases_path(:category_id => @category.parent_id)
       end
+      @category.group_id = current_user.group_id
     end
       
     respond_to do |format|
@@ -65,7 +66,8 @@ class CategoriesController < ApplicationController
   # PUT /categories/1
   # PUT /categories/1.xml
   def update
-    @category = Category.find(params[:id])
+    @category = current_user.group.categories.find(params[:id])
+    @category.group_id = current_user.group_id
 
     respond_to do |format|
       if @category.update_attributes(params[:category])

@@ -37,16 +37,16 @@
 				<% end %>
 				<%=	li_link_to_unless_current 'Test Cases', test_cases_path%>
 				<%=	li_link_to_unless_current 'Playlists', playlists_path%>
-				<% if admin? %>
-					<%=	li_link_to_unless_current 'Users', users_path%>
-					<%=	li_link_to_unless_current 'Groups', groups_path%>
-					<%=	li_link_to_unless_current 'Categories', categories_path%>
-					<%=	li_link_to_unless_current 'Milestones', milestones_path%>
-					<%=	li_link_to_unless_current 'Quick Tags', tag_favorites_path%> 
+				<% if group_admin? %>
+					<%=	li_link_to_unless_current 'Users', users_path %>
+					<%=	li_link_to_unless_current 'Categories', categories_path %>
+					<%=	li_link_to_unless_current 'Milestones', milestones_path %>
+					<%=	li_link_to_unless_current 'Quick Tags', tag_favorites_path %> 
 				<% end %>
 				<%= li_link_to_unless_current "Logout #{current_user.login}", logout_path if logged_in?%>
 				<%= li_link_to_unless_current "Login", login_path unless logged_in?%>
 				<%= li_link_to_unless_current "Create Account", signup_path unless logged_in?%>
+				<%=	li_link_to_unless_current 'Groups', groups_path if admin? %>
 				</ul>
 				</div>
 

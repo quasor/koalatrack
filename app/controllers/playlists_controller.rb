@@ -5,11 +5,11 @@ class PlaylistsController < ApplicationController
   # GET /playlists.xml
   def index
     if params[:q] && !params[:q].blank?
-      @playlists = Playlist.find_by_contents( params[:q], :limit => 100 )
+      @playlists = Playlist.search(params[:q], :match_mode => Sphinx::Client::SPH_MATCH_EXTENDED, :per_page => 100, :page => params[:page])      
       @my_playlists =  []
     elsif logged_in?
       @my_playlists = Playlist.find_all_by_user_id(current_user.id) 
-      @playlists = Playlist.find(:all, :conditions => ["user_id != ?", current_user.id])
+      @playlists = current_user.group.playlists.find(:all, :conditions => ["user_id != ?", current_user.id])
     else
       @playlists = Playlist.find(:all)
       @my_playlists =  []

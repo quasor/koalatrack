@@ -1,11 +1,13 @@
 module CategoriesHelper
   def renderCategoryTree
-    groups = Category.find(:all).group_by {| l | l.parent_id }
     expanded_categories = (session[:expanded_categories] ||= Array.new)
     unless @category.nil?
       expanded_categories.push(@category.id) if expanded_categories.delete(@category.id).nil?
     end
-    renderCategoryTreeFastDriver(nil,groups,@category)    
+    Group.find(:all).collect do |group|
+      groups = group.categories.find(:all).group_by {| l | l.parent_id }
+      renderCategoryTreeFastDriver(nil,groups,@category)    
+    end
   end
   
   def renderCategoryTreeFastDriver(i,groups, curr)

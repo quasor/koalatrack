@@ -1,11 +1,12 @@
 class MilestonesController < ApplicationController
   before_filter :login_required
-  alias authorized? admin?
+  alias authorized? group_admin?
 
   # GET /milestones
   # GET /milestones.xml
   def index
-    @milestones = Milestone.find(:all)
+    
+    @milestones = current_user.admin? ? Milestone.find(:all) : current_user.group.milestones.find(:all)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -39,7 +40,7 @@ class MilestonesController < ApplicationController
   # POST /milestones.xml
   def create
     @milestone = Milestone.new(params[:milestone])
-
+    params[:milestone][:group_id] = current_user.group.id unless current_user.admin?
     respond_to do |format|
       if @milestone.save
         flash[:notice] = 'Milestone was successfully created.'
@@ -56,7 +57,7 @@ class MilestonesController < ApplicationController
   # PUT /milestones/1.xml
   def update
     @milestone = Milestone.find(params[:id])
-
+    params[:milestone][:group_id] = current_user.group.id unless current_user.admin?
     respond_to do |format|
       if @milestone.update_attributes(params[:milestone])
         flash[:notice] = 'Milestone was successfully updated.'
