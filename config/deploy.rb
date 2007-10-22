@@ -1,5 +1,3 @@
-require 'vendor/plugins/acts_as_ferret/lib/ferret_cap_tasks'
-
 namespace :deploy do
   namespace :mongrel do
     [ :stop, :start, :restart ].each do |t|
