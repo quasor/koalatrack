@@ -64,7 +64,7 @@ class TestCaseExecutionsController < ApplicationController
              page["form_#{oid}"].reset()
              page["playlist_test_case_#{oid}_result"].innerHTML = result_to_html(@test_case_execution.result)
              page["playlist_test_case_#{oid}_last_run"].innerHTML = @test_case_execution.created_at.to_s(:short)
-             page["playlist_test_case_#{oid}_bugs"].innerHTML = @test_case_execution.bug_url if @test_case_execution.bug_id
+             page["playlist_test_case_#{oid}_bugs"].innerHTML = @test_case_execution.bug_url unless @test_case_execution.bug_id.blank?
              page.replace_html "playlist_test_case_#{oid}_results", :partial => 'playlist_test_cases/results', :object => @test_case_execution.playlist_test_case
            end
         end
