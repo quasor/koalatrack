@@ -74,19 +74,26 @@
 </tr>
 </table>
 
+<table>
+	<tr>
+		<td>
 <h3>Test Cases <span style="font-size:11px">
 <%= link_to "Show All", playlist_path(@playlist, :show_all=>true) if session[:filtering] %>
 <%= link_to "Hide cases that have been run", playlist_path(@playlist, :notrun => true) unless session[:filtering] or @playlist.playlist_test_cases.empty?%>
 </span>
 </h3>
-
+</td>
+<td>
 <% form_tag playlist_path(@playlist), :method => 'get' do %>
   Search:
   <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box, :type => :search %><%= link_to 'Show All', @playlist if params[:q]%>
   <br/><span style='font-size:10px;margin-left:60px'>
 	<%#= link_to 'Query Syntax Help', "query.html", :target => '_blank' %>
 	</span>					
-<% end %><br/>
+<% end %>
+</td>
+</tr>
+</table>
 
 <%= will_paginate @playlist_test_cases unless @playlist_test_cases.empty?%>
 
