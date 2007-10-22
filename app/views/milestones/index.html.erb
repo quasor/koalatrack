@@ -14,9 +14,10 @@
     <td><%=h milestone.name %></td>
     <td><%=h milestone.due_on %></td>
     <td><%=milestone.group.nil? ? 'Global' : milestone.group.name  %></td>
-    <td><%= link_to 'Show', milestone %></td>
+		<% unless milestone.group.nil? && !admin? %>
     <td><%= link_to 'Edit', edit_milestone_path(milestone) %></td>
     <td><%= link_to 'Destroy', milestone, :confirm => 'Are you sure?', :method => :delete %></td>
+		<% end %>
   </tr>
 <% end %>
 </table>

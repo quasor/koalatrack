@@ -49,7 +49,7 @@ class TestCasesController < ApplicationController
   def new
     @test_case = TestCase.new( :user_id => current_user.id, :category_id => params[:category_id] )
 
-    @tag_favorites = current_user.admin? ? TagFavorite.find(:all) : current_user.group.tag_favorites + TagFavorite.find_all_by_group_id()
+    @tag_favorites = current_user.group.tag_favorites + TagFavorite.find_all_by_group_id()
     
     respond_to do |format|
       format.html # new.html.erb

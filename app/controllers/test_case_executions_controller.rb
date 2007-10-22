@@ -59,11 +59,13 @@ class TestCaseExecutionsController < ApplicationController
         format.xml  { render :xml => @test_case_execution, :status => :created, :location => @test_case_execution }
         format.js do
            render :update do |page|
+             oid = @test_case_execution.playlist_test_case_id;
              page["exec_form_playlist_test_case_#{@test_case_execution.playlist_test_case_id}"].hide
-             page["playlist_test_case_#{@test_case_execution.playlist_test_case_id}_result"].innerHTML = result_to_html(@test_case_execution.result)
-             page["playlist_test_case_#{@test_case_execution.playlist_test_case_id}_last_run"].innerHTML = @test_case_execution.created_at
-             page["playlist_test_case_#{@test_case_execution.playlist_test_case_id}_bugs"].innerHTML = @test_case_execution.bug_url
-             page.replace_html "playlist_test_case_#{@test_case_execution.playlist_test_case_id}_results", :partial => 'playlist_test_cases/results', :object => @test_case_execution.playlist_test_case
+             page["form_#{oid}"].reset()
+             page["playlist_test_case_#{oid}_result"].innerHTML = result_to_html(@test_case_execution.result)
+             page["playlist_test_case_#{oid}_last_run"].innerHTML = @test_case_execution.created_at.to_s(:short)
+             page["playlist_test_case_#{oid}_bugs"].innerHTML = @test_case_execution.bug_url if @test_case_execution.bug_id
+             page.replace_html "playlist_test_case_#{oid}_results", :partial => 'playlist_test_cases/results', :object => @test_case_execution.playlist_test_case
            end
         end
       else

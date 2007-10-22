@@ -6,7 +6,7 @@ class MilestonesController < ApplicationController
   # GET /milestones.xml
   def index
     
-    @milestones = current_user.admin? ? Milestone.find(:all) : current_user.group.milestones.find(:all)
+    @milestones = current_user.admin? ? Milestone.find(:all) : ( Milestone.find_all_by_group_id(nil) + current_user.group.milestones.find(:all) )
 
     respond_to do |format|
       format.html # index.html.erb
@@ -40,7 +40,7 @@ class MilestonesController < ApplicationController
   # POST /milestones.xml
   def create
     @milestone = Milestone.new(params[:milestone])
-    params[:milestone][:group_id] = current_user.group.id unless current_user.admin?
+    @milestone.group_id = current_user.group_id unless current_user.admin?
     respond_to do |format|
       if @milestone.save
         flash[:notice] = 'Milestone was successfully created.'

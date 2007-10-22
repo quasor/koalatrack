@@ -5,7 +5,7 @@ class TagFavoritesController < ApplicationController
   # GET /tag_favorites
   # GET /tag_favorites.xml
   def index
-    @tag_favorites = current_user.admin? ? TagFavorite.find(:all) : current_user.group.tag_favorites
+    @tag_favorites = current_user.admin? ? TagFavorite.find(:all) : (current_user.group.tag_favorites + TagFavorite.global_tags)
 
     respond_to do |format|
       format.html # index.html.erb

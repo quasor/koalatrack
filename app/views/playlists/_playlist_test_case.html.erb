@@ -1,6 +1,6 @@
 <tr id="playlist_test_case_<%=playlist_test_case.id%>" style="background-color:<%= background_color = cycle("#fff", "#E6E6E6", :name => "colors") %>">
 	<td>
-		<%= playlist_test_case.id%>
+		<%#= playlist_test_case.id%>
 		<%= check_box_tag 'pickme', playlist_test_case.id, false, :onClick => 'pick(this)', :class => 'cbTestCase'%>
 	</td>
 	<td>
@@ -15,7 +15,7 @@
   <td><%=h playlist_test_case.user.login if playlist_test_case.user_id %></td>
 	<td>
 		<% test_case_execution.playlist_test_case_id = playlist_test_case.id %>
-		<% remote_form_for( test_case_execution ) do |f| %>
+		<% remote_form_for( test_case_execution, :html => {:id => "form_#{playlist_test_case.id}"}) do |f| %>
 			<%= f.select :result, [['Execute...',''], ['Pass',1], ['Fail',2], ['Blocked',3],['Not Implemented',4]], {}, {:onChange => "this.value ? $('exec_form_playlist_test_case_#{playlist_test_case.id}').show() : $('exec_form_playlist_test_case_#{playlist_test_case.id}').hide();"} %>
 		  <div id="exec_form_playlist_test_case_<%=playlist_test_case.id%>" style="display:none">
 		    <b>Bug</b><br />
@@ -45,7 +45,7 @@
 	<td id="playlist_test_case_<%=playlist_test_case.id%>_bugs">
 			<%= playlist_test_case.test_case_executions.collect{ |e| "#{e.bug_url} " } %>
 	</td>
-	<td id="playlist_test_case_<%=playlist_test_case.id%>_last_run" nowrap><%=h playlist_test_case.test_case_executions.last.created_at if !playlist_test_case.test_case_executions.empty? %></td>
+	<td id="playlist_test_case_<%=playlist_test_case.id%>_last_run" nowrap><%=h playlist_test_case.test_case_executions.last.created_at.to_s(:short) if !playlist_test_case.test_case_executions.empty? %></td>
   <td><%=h playlist_test_case.test_case.priority_in_feature %></td>
   <td><%=h playlist_test_case.test_case.priority_in_product %></td>
 	<td style="font-size:10px;line-height:9px;"><%= playlist_test_case.test_case.tag %></td>

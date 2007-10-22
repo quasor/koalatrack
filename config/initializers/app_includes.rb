@@ -44,10 +44,12 @@ module Sphincter::Search
       -match['index'] # #find reverses, lame!
     end
     ids = matches.map do |id, match|
-      (id - match['attrs']['sphincter_index_id']) / Sphincter::Configure.index_count
+      #logger.info "#{id} - #{match['attrs']['sphincter_index_id']}"
+      #(id - match['attrs']['sphincter_index_id']) / Sphincter::Configure.index_count
+      id
     end
     
-    logger.info ids.join '##'
+    logger.info ids.join ','
 
     results = Results.new
 
@@ -65,6 +67,56 @@ module Sphincter::Search
     end
 
     collection
+  rescue Sphinx::SphinxInternalError  
+    #WillPaginate::Collection.new(0,0,0)
+    []
   end
 
+end
+
+module Sphincter::Configure
+
+  ##
+  # A class for building sphinx.conf source/index sections.
+
+  class Index
+    def configure
+      conn = @klass.connection
+      pk = conn.quote_column_name @klass.primary_key
+      index_id = @options[:index_id]
+
+      index_count = Sphincter::Configure.index_count
+
+      @fields << "#{@table}.#{pk} AS #{pk}"
+      @fields << "#{index_id} AS sphincter_index_id"
+      @fields << "'#{@klass.name}' AS sphincter_klass"
+
+      @options[:fields].each do |field|
+        case field
+        when /\./ then add_include(*field.split('.', 2))
+        else           @fields << add_field(field)
+        end
+      end
+
+      @fields = @fields.join ', '
+
+      @where << "#{@table}.#{pk} >= $start"
+      @where << "#{@table}.#{pk} <= $end"
+      @where.push(*@options[:conditions])
+      @where = @where.compact.join ' AND '
+
+      query = "SELECT #{@fields} FROM #{@tables} WHERE #{@where}"
+      query << " GROUP BY #{@table}.#{pk}" if @group
+
+      @source_conf['sql_query'] = query
+      @source_conf['sql_query_info'] =
+        "SELECT * FROM #{@table} " \
+          "WHERE #{@table}.#{pk} = $id"
+      @source_conf['sql_query_range'] =
+        "SELECT MIN(#{pk}), MAX(#{pk}) FROM #{@table}"
+      @source_conf['strip_html'] = @options[:strip_html] ? 1 : 0
+
+      @source_conf
+    end
+  end
 end

@@ -46,7 +46,7 @@ class CategoriesController < ApplicationController
       end
       @category.group_id = current_user.group_id
     end
-      
+    @category.group_id = @category.parent.group_id if @category.parent
     respond_to do |format|
       if @category.save
         flash[:notice] = 'Category was successfully created.'

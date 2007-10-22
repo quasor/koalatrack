@@ -20,7 +20,7 @@
 
   <p>
     <b>Milestone</b><br />
-    <%= f.select(:milestone_id, current_user.milestones.collect {|p| [ "#{p.name}", p.id ] } ) %>
+    <%= f.select(:milestone_id, (Milestone.find_all_by_group_id(nil) + current_user.milestones).collect {|p| [ "#{p.name}", p.id ] } ) %>
   </p>
 
   <p>

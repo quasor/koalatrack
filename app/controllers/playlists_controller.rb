@@ -52,7 +52,7 @@ class PlaylistsController < ApplicationController
                  end
       sort += " DESC" if params[:desc] == "true"
       @conditions = session[:filtering] ? "test_case_executions.updated_at IS NULL" : nil
-      @playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 25, :include => [:test_case_executions,:test_case,:user], :order => sort  
+      @playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 25, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions => @conditions  
     end
   
     #.find(:all, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions=> @conditions)
