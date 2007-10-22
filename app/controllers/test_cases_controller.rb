@@ -11,9 +11,12 @@ class TestCasesController < ApplicationController
         @test_cases = TestCase.paginate_by_category_id @category.id, :page => params[:page], :per_page => 50  
       elsif params[:q]
         if @category.nil?
-          @test_cases = TestCase.search(params[:q], :match_mode => Sphinx::Client::SPH_MATCH_EXTENDED, :per_page => 20, :page => params[:page])
+          @test_cases = TestCase.search(params[:q], :match_mode => Sphinx::Client::SPH_MATCH_EXTENDED, :per_page => 50, :page => params[:page], :order => 'category_id')
+          @scores = {}
+          @test_cases.each_with_index { |element, idx| @scores[element.id] = idx } 
+          #@test_cases = @test_cases.sort_by(&:category_id)
         else
-          @test_cases = TestCase.search(params[:q], :match_mode => Sphinx::Client::SPH_MATCH_EXTENDED, :per_page => 20, :page => params[:page], :conditions => { :category_id => @category.self_and_descendants.collect(&:id).sort })
+          @test_cases = TestCase.search(params[:q], :match_mode => Sphinx::Client::SPH_MATCH_EXTENDED, :per_page => 50, :page => params[:page], :conditions => { :category_id => @category.self_and_descendants.collect(&:id).sort }, :order => 'category_id')
         end
       else
         @test_cases = []

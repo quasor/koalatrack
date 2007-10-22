@@ -5,6 +5,7 @@ body, p, ol, ul, td {
   font-size:   13px;
 }
 
+form {margin:0; padding:0;}
 table.padded td {padding:2px 8px 2px 8px;font-size:12px;}
 table.padded th {padding:2px 8px 2px 8px;}
 pre {
@@ -100,7 +101,7 @@ ul#category_tree li.has_children_true {
 	list-style-image: url(/images/minus-small.png);
 	margin:0px 0px 0px -30px;
 }
-.selected { font-weight:bold; color:rgb(204, 102, 0);}
+.selected { font-weight:bold; color:black;}
 ul#nav {
 list-style-type: none;
 padding: 0px;

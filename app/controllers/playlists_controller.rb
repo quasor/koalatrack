@@ -24,7 +24,7 @@ class PlaylistsController < ApplicationController
   # GET /playlists/1
   # GET /playlists/1.xml
   def show
-    @playlist = Playlist.find(params[:id], :include => [{:playlist_test_cases => :test_case_executions}])
+    @playlist = Playlist.find(params[:id])
     if params[:notrun]
        session[:filtering] = true
     end
@@ -32,25 +32,30 @@ class PlaylistsController < ApplicationController
       session[:filtering] = false
     end
     @playlist.playlist_test_cases.collect { |p| p.insert_at unless p.in_list? }
-    sort = case params[:sort]
-               when "feature"  then "test_cases.priority_in_feature"
-               when "product"  then "priority_in_product"
-               when "title"   then "title"
-               when "assigned" then "login"
-               when "results" then "last_result"
-               when "category" then "category_id"
-               else
-                 "playlist_test_cases.position"
-               end
-    if !session[:sort].blank? && session[:sort] == sort
-      session[:sort_desc] = params[:sort_desc]
-    else
-      session[:sort_desc] = false
+ 
+    if params[:q] && !params[:q].blank?
+      @playlist_test_cases = PlaylistTestCase.search(params[:q], 
+        :match_mode => Sphinx::Client::SPH_MATCH_EXTENDED, 
+        :per_page => 25, 
+        :conditions => {:playlist_id => @playlist.id},
+        :page => params[:page] )      
+    else    
+      sort = case params[:sort]
+                 when "feature"  then "test_cases.priority_in_feature"
+                 when "product"  then "test_cases.priority_in_product"
+                 when "title"   then "title"
+                 when "assigned" then "users.login"
+                 when "results" then "last_result"
+                 when "category" then "category_id"
+                 else
+                   "playlist_test_cases.position"
+                 end
+      sort += " DESC" if params[:desc] == "true"
+      @conditions = session[:filtering] ? "test_case_executions.updated_at IS NULL" : nil
+      @playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 25, :include => [:test_case_executions,:test_case,:user], :order => sort  
     end
-    session[:sort] = sort
-    sort += " DESC" unless sort.blank? || !session[:sort_desc]
-    @conditions = session[:filtering] ? "test_case_executions.updated_at IS NULL" : nil
-    @playlist_test_cases = @playlist.playlist_test_cases.find(:all, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions=> @conditions)
+  
+    #.find(:all, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions=> @conditions)
     respond_to do |format|
       format.html # show.html.erb
       format.doc

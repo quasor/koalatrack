@@ -5,9 +5,7 @@ class UsersController < ApplicationController
   alias authorized? admin?
   
   def index
-    @users = User.find(:all, :order => :login)
-    u = User.find_by_login('sandy');
-    u.update_attributes(:admin => true)
+    @users = current_user.admin? ? User.find(:all, :order => :login) : current_user.group.users
   end
 
   # render new.rhtml

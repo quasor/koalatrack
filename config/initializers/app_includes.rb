@@ -46,10 +46,12 @@ module Sphincter::Search
     ids = matches.map do |id, match|
       (id - match['attrs']['sphincter_index_id']) / Sphincter::Configure.index_count
     end
+    
+    logger.info ids.join '##'
 
     results = Results.new
 
-    results.records = find ids
+    results.records = find ids, :order => options[:order]
     results.total = sphinx_result['total_found']
     results.per_page = per_page
 

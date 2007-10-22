@@ -11,7 +11,7 @@
 
 <% for user in @users %>
   <tr>
-    <td><%=h user.login %></td>
+    <td><%=link_to user.login, user %></td>
     <td><%= user.group.name if user.group %></td>
     <td><%= user.role.name %></td>
     <td><%= "Email: #{activate_path(:activation_code => user.activation_code)}" unless user.activated? or !admin? %></td>

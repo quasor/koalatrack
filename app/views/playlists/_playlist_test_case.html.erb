@@ -1,5 +1,6 @@
 <tr id="playlist_test_case_<%=playlist_test_case.id%>" style="background-color:<%= background_color = cycle("#fff", "#E6E6E6", :name => "colors") %>">
 	<td>
+		<%= playlist_test_case.id%>
 		<%= check_box_tag 'pickme', playlist_test_case.id, false, :onClick => 'pick(this)', :class => 'cbTestCase'%>
 	</td>
 	<td>
@@ -13,44 +14,46 @@
 	</td>
   <td><%=h playlist_test_case.user.login if playlist_test_case.user_id %></td>
 	<td>
-		<% form_for(TestCaseExecution.new(:playlist_test_case_id => playlist_test_case.id, :test_case_id => playlist_test_case.test_case.id) ) do |f| %><%= f.select :result, [['Execute...',''], ['Pass',1], ['Fail',2], ['Blocked',3],['Not Implemented',4]], {}, {:onChange => "this.value ? $('playlist_test_case_oid_#{playlist_test_case.object_id}').show() : $('playlist_test_case_oid_#{playlist_test_case.object_id}').hide();"} %>
-		  <div id="playlist_test_case_oid_<%=playlist_test_case.object_id%>" style="display:none">
+		<% test_case_execution.playlist_test_case_id = playlist_test_case.id %>
+		<% remote_form_for( test_case_execution ) do |f| %>
+			<%= f.select :result, [['Execute...',''], ['Pass',1], ['Fail',2], ['Blocked',3],['Not Implemented',4]], {}, {:onChange => "this.value ? $('exec_form_playlist_test_case_#{playlist_test_case.id}').show() : $('exec_form_playlist_test_case_#{playlist_test_case.id}').hide();"} %>
+		  <div id="exec_form_playlist_test_case_<%=playlist_test_case.id%>" style="display:none">
 		    <b>Bug</b><br />
-		    <%= f.text_field :bug_id %>
+		    <%= f.text_field :bug_id, :size => 15 %>
 		  </p>
 
 		  <p>
 		    <b>Comment</b><br />
-		    <%= f.text_area :comment, :rows => 4 %>
+		    <%= f.text_area :comment, :rows => 4, :cols => 14 %>
 		  </p>
 
 		  <p>
 		    <%= f.submit "Save" %>
 		  </p>
 		    <%= f.hidden_field(:playlist_test_case_id) %>
-		    <%= f.hidden_field(:test_case_id) %>
-		    <%= f.hidden_field :test_case_version %>
 		  </div>
-		<% end %>
+		<% end if logged_in?%>
 	</td>
-	<td id="playlist_test_case_<%=playlist_test_case.id%>_results">
-	<%= playlist_test_case.test_case_executions.last.to_html unless playlist_test_case.test_case_executions.empty? || playlist_test_case.test_case_executions.last.nil? %>
-	<% if playlist_test_case.test_case_executions.empty? %>
+	<td id="playlist_test_case_<%=playlist_test_case.id%>_result">
+	<%= result_to_html playlist_test_case.last_result%>
+	<% if playlist_test_case.last_result == 0%>
 		Not Run
 	<% else %>
-	<%= link_to_function 'History', "$('playlist').getElementsByClassName('playlist_test_case_#{playlist_test_case.id}').invoke('toggle');"%>
+		<%= link_to_function 'History', "$('playlist').getElementsByClassName('playlist_test_case_#{playlist_test_case.id}').invoke('toggle');"%>
 	<% end %>
-	<%#= debug playlist_test_case.test_case_executions%>
 	</td>
-	<td>
-		<% unless playlist_test_case.test_case_executions.empty?%>
+	<td id="playlist_test_case_<%=playlist_test_case.id%>_bugs">
 			<%= playlist_test_case.test_case_executions.collect{ |e| "#{e.bug_url} " } %>
-		<% end %>
 	</td>
-	<td nowrap><%=h playlist_test_case.test_case_executions.last.created_at if !playlist_test_case.test_case_executions.empty? %></td>
+	<td id="playlist_test_case_<%=playlist_test_case.id%>_last_run" nowrap><%=h playlist_test_case.test_case_executions.last.created_at if !playlist_test_case.test_case_executions.empty? %></td>
   <td><%=h playlist_test_case.test_case.priority_in_feature %></td>
   <td><%=h playlist_test_case.test_case.priority_in_product %></td>
 	<td style="font-size:10px;line-height:9px;"><%= playlist_test_case.test_case.tag %></td>
   <td><%= link_to 'X', playlist_test_case, :confirm => 'Removing test case from playlist. Are you sure?', :method => :delete %></td>
 </tr>
-	<%= render :partial => 'playlist_test_cases/results', :collection => playlist_test_case.test_case_executions, :locals => {:class_name => "playlist_test_case_#{playlist_test_case.id}", :background_color => background_color} %>
+<tr class='playlist_test_case_<%=playlist_test_case.id%>' style='display:none;background-color:<%=background_color%>'>
+	<td colspan=5></td>
+	<td colspan=8 id='playlist_test_case_<%=playlist_test_case.id%>_results'>
+	<%= render :partial => 'playlist_test_cases/results', :object => playlist_test_case %>
+	</td>
+</tr>

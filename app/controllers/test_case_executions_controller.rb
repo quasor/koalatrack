@@ -5,12 +5,7 @@ class TestCaseExecutionsController < ApplicationController
   # GET /test_case_executions
   # GET /test_case_executions.xml
   def index
-    @test_case_executions = TestCaseExecution.find(:all)
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @test_case_executions }
-    end
+    redirect_to playlists_path
   end
 
   # GET /test_case_executions/1
@@ -45,6 +40,18 @@ class TestCaseExecutionsController < ApplicationController
   def create
     @test_case_execution = TestCaseExecution.new(params[:test_case_execution])
     @test_case_execution.user_id = current_user.id
+    @playlist_test_case = @test_case_execution.playlist_test_case
+
+    @test_case_execution.test_case_version = @playlist_test_case.test_case_version || @playlist_test_case.test_case.version
+    @test_case_execution.test_case_id = @playlist_test_case.test_case.id
+
+    def pass_by!(user_id)
+      @version = test_case_version || test_case.version
+      @tce = TestCaseExecution.create( :playlist_test_case_id => id, 
+        :test_case_id => test_case_id, :user_id => user_id, 
+        :test_case_version => @version,:result => 1)                                
+    end
+    
     respond_to do |format|
       if @test_case_execution.save
         flash[:notice] = 'TestCaseExecution was successfully created.'
@@ -52,6 +59,11 @@ class TestCaseExecutionsController < ApplicationController
         format.xml  { render :xml => @test_case_execution, :status => :created, :location => @test_case_execution }
         format.js do
            render :update do |page|
+             page["exec_form_playlist_test_case_#{@test_case_execution.playlist_test_case_id}"].hide
+             page["playlist_test_case_#{@test_case_execution.playlist_test_case_id}_result"].innerHTML = result_to_html(@test_case_execution.result)
+             page["playlist_test_case_#{@test_case_execution.playlist_test_case_id}_last_run"].innerHTML = @test_case_execution.created_at
+             page["playlist_test_case_#{@test_case_execution.playlist_test_case_id}_bugs"].innerHTML = @test_case_execution.bug_url
+             page.replace_html "playlist_test_case_#{@test_case_execution.playlist_test_case_id}_results", :partial => 'playlist_test_cases/results', :object => @test_case_execution.playlist_test_case
            end
         end
       else

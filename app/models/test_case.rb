@@ -38,5 +38,5 @@ class TestCase < ActiveRecord::Base
   add_index :fields => %w[title body tag user.login] 
   
   
-  validates_presence_of     :title, :body
+  validates_presence_of     :title#, :body
 end

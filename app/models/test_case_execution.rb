@@ -20,9 +20,9 @@ class TestCaseExecution < ActiveRecord::Base
 
   belongs_to :test_case
   belongs_to :user
-  belongs_to :playlist_test_case#, :counter_cache => :test_case_executions_count
+  belongs_to :playlist_test_case, :counter_cache => :test_case_executions_count
   
-  validates_presence_of :playlist_test_case_id, :test_case_id, :user_id, :result
+  validates_presence_of :playlist_test_case_id, :test_case_id, :test_case_version, :user_id, :result
 #TODO  validates_presence_of :bug_id
     
   def bug_url
@@ -31,34 +31,18 @@ class TestCaseExecution < ActiveRecord::Base
   def siblings
     TestCaseExecution.find_all_by_test_case_id_and_playlist_test_case_id(test_case_id, playlist_test_case_id)
   end
-  def to_html
-    (result.to_i == 1) ? "<span class='passed'>PASSED</span>" : "<span class='failed'>FAILED</span>"
-    
-    case result.to_i
-    	when 1
-    	  "<span class='passed'>PASSED</span>"
-    	when 2
-    	  "<span class='failed'>FAILED</span>"
-    	when 3
-    	  "<span class='failed'>BLOCKED</span>"
-    	when 4
-    	  "<span class='failed'>NOT IMPL</span>"
-    	else
-    	  ""
-    	end
-  end
   
-  def after_save
-    self.update_counter_cache
+  def after_create
     super
+    self.update_counter_cache
   end
   def after_destroy
-    #self.update_counter_cache
+    self.update_counter_cache
   end
   
   def update_counter_cache
     self.playlist_test_case.last_result = self.result
-    self.playlist_test_case.save
+    self.playlist_test_case.save!
   end
   
 end

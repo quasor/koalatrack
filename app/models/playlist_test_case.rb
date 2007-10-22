@@ -22,6 +22,8 @@ class PlaylistTestCase < ActiveRecord::Base
   belongs_to :user
   belongs_to :test_case
   has_many :test_case_executions
+
+  add_index :fields => %w[test_case.title user.login test_case_executions.bug_id] 
     
   validates_uniqueness_of :test_case_id, :scope => :playlist_id
   validates_presence_of :playlist_id, :test_case_id, :user_id
