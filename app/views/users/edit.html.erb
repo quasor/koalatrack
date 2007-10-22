@@ -10,16 +10,14 @@
 	<% if group_admin? %>
   <p><label><b>Login: </b></label><%= f.text_field :login %></p>
   <p><label><b>Role: </b></label><%= f.select(:role_id, Role.find(:all).collect {|p| [ p.name, p.id ] } ) %></p>
+	<% end %>
   <% if admin? %>
 	<p><label><b>Group: </b></label><%= f.select(:group_id, Group.find(:all).collect {|p| [ p.name, p.id ] } ) %></p>
 	<% end %>
-  <% else %>
 	<p><label for="password">Password: </label><%= f.password_field :password %></p>
 	<p><label for="password_confirmation">Confirm Password: </label><%= f.password_field :password_confirmation %></p>
-	<% end %>
   <p>
     <%= f.submit "Update" %>
   </p>
 <% end %>
-
 <%= link_to 'Back', users_path %>
