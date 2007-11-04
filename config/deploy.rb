@@ -1,3 +1,4 @@
+require 'vendor/plugins/acts_as_ferret/lib/ferret_cap_tasks'
 namespace :deploy do
   namespace :mongrel do
     [ :stop, :start, :restart ].each do |t|
@@ -12,16 +13,19 @@ namespace :deploy do
   desc "Custom restart task for mongrel cluster"
   task :restart, :roles => :app, :except => { :no_release => true } do
     deploy.mongrel.restart
+    ferret.restart
   end
 
   desc "Custom start task for mongrel cluster"
   task :start, :roles => :app do
     deploy.mongrel.start
+    ferret.start
   end
 
   desc "Custom stop task for mongrel cluster"
   task :stop, :roles => :app do
     deploy.mongrel.stop
+    ferret.stop
   end
 
 end
@@ -51,4 +55,4 @@ task :after_update_code, :roles => :app do
    run "ln -nfs '#{shared_path}/file_attachments' '#{release_path}/public/file_attachments'"
 end
 
-#barrett walter allen orr 
+ #barrett walter allen orr 
