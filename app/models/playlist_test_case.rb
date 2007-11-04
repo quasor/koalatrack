@@ -23,8 +23,21 @@ class PlaylistTestCase < ActiveRecord::Base
   belongs_to :test_case
   has_many :test_case_executions
 
-  add_index :fields => %w[test_case.title user.login test_case_executions.bug_id] 
-    
+#  add_index :fields => %w[test_case.title test_case_executions.bug_id] + ['user.login AS assignedto']  
+  acts_as_ferret :fields => [:title, :bug_id, :assignedto, :body], :remote => true
+  def title
+    test_case.title
+  end
+  def bug_id
+    test_case_executions.bug_id
+  end
+  def assignedto
+    user.login
+  end
+  def body
+    test_case.body
+  end
+      
   validates_uniqueness_of :test_case_id, :scope => :playlist_id
   validates_presence_of :playlist_id, :test_case_id, :user_id
   

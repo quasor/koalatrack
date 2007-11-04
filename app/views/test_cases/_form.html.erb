@@ -53,8 +53,15 @@
 	{
 		ar = $('test_case_tag_list').value;
 		ar = ar.replace(/\s,/g, ',');
-		ar = ar.replace(/,\s/g, ',');
-		ar = ar.split(',');
+		ar = ar.replace(/,\s/g, ',');		
+		if (ar.length)
+		{
+			ar = ar.split(',');
+		}
+		else
+		{
+			ar = Array();
+		}
 		if (cb.checked)
 		{
 			ar.push(cb.value);
@@ -63,9 +70,8 @@
 		{
 			ar = ar.without(cb.value);
 		}
-		ar = ar.uniq().join(",");
-		ar.replace(/^,/g,'');
-		$('test_case_tag_list').value = ar;
+		val = ar.compact().uniq().join(",");
+		$('test_case_tag_list').value = val;
 	}
 	</script>
   <label>Tags:</label>

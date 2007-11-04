@@ -5,7 +5,7 @@ class PlaylistsController < ApplicationController
   # GET /playlists.xml
   def index
     if params[:q] && !params[:q].blank?
-      @playlists = Playlist.search(params[:q], :match_mode => Sphinx::Client::SPH_MATCH_EXTENDED, :per_page => 100, :page => params[:page])      
+      @playlists = Playlist.paginate_search(params[:q], :per_page => 100, :page => params[:page])      
       @my_playlists =  []
     elsif logged_in?
       @my_playlists = Playlist.find_all_by_user_id(current_user.id) 
@@ -34,11 +34,7 @@ class PlaylistsController < ApplicationController
     @playlist.playlist_test_cases.collect { |p| p.insert_at unless p.in_list? }
  
     if params[:q] && !params[:q].blank?
-      @playlist_test_cases = PlaylistTestCase.search(params[:q], 
-        :match_mode => Sphinx::Client::SPH_MATCH_EXTENDED, 
-        :per_page => 25, 
-        :conditions => {:playlist_id => @playlist.id},
-        :page => params[:page] )      
+      @playlist_test_cases = PlaylistTestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 25}, {:conditions => {:playlist_id => @playlist.id}})      
     else    
       sort = case params[:sort]
                  when "feature"  then "test_cases.priority_in_feature"

@@ -23,7 +23,7 @@
 				  Search:
 				  <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box, :type => :search %>
 				  <br/><span style='font-size:10px;margin-left:60px'>
-					<%#= link_to 'Query Syntax Help', "query.html", :target => '_blank' %>
+					<%= link_to 'Query Syntax Help', "/query.html", :target => '_blank' %>
 					</span>					
 				<% end %><br/>
 				<%= renderCategoryTree%>

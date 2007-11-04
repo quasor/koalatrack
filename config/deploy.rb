@@ -51,3 +51,4 @@ task :after_update_code, :roles => :app do
    run "ln -nfs '#{shared_path}/file_attachments' '#{release_path}/public/file_attachments'"
 end
 
+#barrett walter allen orr 

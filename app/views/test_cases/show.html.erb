@@ -1,10 +1,11 @@
+<h3><%= (@test_case.category.ancestors.reverse + [@test_case.category]).collect(&:name).join(' \ ') %></h3>
+  <h2><%=white_list @test_case.title %></h2>
 <div>
 <%= link_to 'Edit', edit_test_case_path(@test_case) %> |
 <%= link_to 'Clone', edit_test_case_path(@test_case, :clone => true ) %> |
 <%= link_to 'Delete', @test_case, :confirm => 'Are you sure?', :method => :delete %> |
 <%= link_to 'Back', test_cases_path(:category_id => @test_case.category_id) %>
 </div>
-  <h2><%=white_list @test_case.title %></h2>
 <p>Tagged: <%=@test_case.tag%></p>
 
 <b>Body:</b>

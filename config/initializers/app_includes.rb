@@ -1,5 +1,5 @@
 require 'sphincter'
-require 'memcache'
+#require 'memcache'
 WhiteListHelper.tags.merge %w(table td th tr tbody span)
 
 module Sphincter::Search
@@ -49,7 +49,7 @@ module Sphincter::Search
       id
     end
     
-    logger.info ids.join ','
+    logger.info(ids.join(','))
 
     results = Results.new
 
@@ -75,11 +75,107 @@ module Sphincter::Search
 end
 
 module Sphincter::Configure
+  class Index
+    ##
+    # Adds plain field +field+ to the index from class +klass+ using
+    # +as_table+ as the table name.
+
+    def add_field_simple(field)
+      field_name, friendly_name = field.split ' AS '
+      add_field(field_name, @klass, as_table = nil, friendly_name)
+    end
+
+    def add_field(field, klass = @klass, as_table = nil, friendly_name = nil)
+      table = klass.table_name
+      quoted_field = @conn.quote_column_name field
+
+      column_type = klass.columns_hash[field].type
+      expr = case column_type
+             when :date, :datetime, :time, :timestamp then
+               @source_conf['sql_date_column'] << field
+               "UNIX_TIMESTAMP(#{table}.#{quoted_field})"
+             when :boolean, :integer then
+               @source_conf['sql_group_column'] << field
+               "#{table}.#{quoted_field}"
+             when :string, :text then
+               "#{table}.#{quoted_field}"
+             else
+               raise Sphincter::Error, "unknown column type #{column_type}"
+             end
+
+      ###as_name = [as_table, field].compact.join '_'
+      as_name = friendly_name || field
+      as_name = @conn.quote_column_name as_name
+
+    "#{expr} AS #{as_name}"
+    end
+
+    ##
+    # Includes field +as_field+ from association +as_name+ in the index.
+
+    def add_include(as_name, as_field)
+      as_field, friendly_name = as_field.split ' AS '
+      as_assoc = @klass.reflect_on_all_associations.find do |assoc|
+        assoc.name == as_name.intern
+      end
+
+      if as_assoc.nil? then
+        raise Sphincter::Error,
+            "could not find association \"#{as_name}\" in #{@klass.name}"
+      end
+
+      as_klass = as_assoc.class_name.constantize
+      as_table = as_klass.table_name
+
+      as_klass_key = @conn.quote_column_name as_klass.primary_key.to_s
+      as_assoc_key = @conn.quote_column_name as_assoc.primary_key_name.to_s
+
+      case as_assoc.macro
+      when :belongs_to then
+        @fields << add_field(as_field, as_klass, as_table, friendly_name)
+        @tables << " LEFT JOIN #{as_table} ON" \
+                   " #{@table}.#{as_assoc_key} = #{as_table}.#{as_klass_key}"
+
+      when :has_many then
+        if as_assoc.options.include? :through then
+          raise Sphincter::Error,
+                "unsupported macro has_many :through for \"#{as_name}\" " \
+                "in #{klass.name}.add_index"
+        end
+
+        as_pkey = @conn.quote_column_name as_klass.primary_key.to_s
+        as_fkey = @conn.quote_column_name as_assoc.primary_key_name.to_s
+
+        ### as_name = [as_table, as_field].compact.join '_'
+        as_name = friendly_name ? friendly_name : as_field
+        as_name = @conn.quote_column_name as_name
+
+        field = @conn.quote_column_name as_field
+        @fields << "GROUP_CONCAT(#{as_table}.#{field} SEPARATOR ' ') AS #{as_name}"
+
+        if as_assoc.options.include? :as then
+          poly_name = as_assoc.options[:as]
+          id_col = @conn.quote_column_name "#{poly_name}_id"
+          type_col = @conn.quote_column_name "#{poly_name}_type"
+
+          @tables << " LEFT JOIN #{as_table} ON"\
+                     " #{@table}.#{as_klass_key} = #{as_table}.#{id_col} AND" \
+                     " #{@conn.quote @klass.name} = #{as_table}.#{type_col}"
+        else
+          @tables << " LEFT JOIN #{as_table} ON" \
+                     " #{@table}.#{as_klass_key} = #{as_table}.#{as_assoc_key}"
+        end
+
+        @group = true
+      else
+        raise Sphincter::Error,
+              "unsupported macro #{as_assoc.macro} for \"#{as_name}\" " \
+              "in #{klass.name}.add_index"
+      end
+    end
 
   ##
   # A class for building sphinx.conf source/index sections.
-
-  class Index
     def configure
       conn = @klass.connection
       pk = conn.quote_column_name @klass.primary_key
@@ -91,7 +187,7 @@ module Sphincter::Configure
       @fields << "#{index_id} AS sphincter_index_id"
       @fields << "'#{@klass.name}' AS sphincter_klass"
 
-      @options[:fields].each do |field|
+      @options[:fields].each do |field, friendly_name|
         case field
         when /\./ then add_include(*field.split('.', 2))
         else           @fields << add_field(field)
@@ -120,3 +216,20 @@ module Sphincter::Configure
     end
   end
 end
+
+require 'acts_as_ferret'
+
+module ActsAsFerret 
+  module ClassMethods 
+    def paginate_search(query, options = {}, find_options = {}) 
+      options, page, per_page = wp_parse_options!(options) 
+      pager = WillPaginate::Collection.new(page, per_page, nil) 
+      options.merge!(:offset => pager.offset, :limit => per_page) 
+      result = result = find_by_contents(query, options, find_options) 
+      returning WillPaginate::Collection.new(page, per_page, result.total_hits) do |pager| 
+        pager.replace result 
+      end 
+    end 
+  end 
+end
+  

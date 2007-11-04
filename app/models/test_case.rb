@@ -34,8 +34,8 @@ class TestCase < ActiveRecord::Base
   has_many :test_case_executions
   has_many :file_attachments
   
-  #acts_as_ferret :fields => [:title, :body, :tag, :owner], :remote => true
-  add_index :fields => %w[title body tag user.login] 
+  acts_as_ferret :fields => [:title, :body, :tag, :owner], :remote => true
+  #add_index :fields => %w[title body tag] + ['user.login AS owner'] 
   
   
   validates_presence_of     :title#, :body

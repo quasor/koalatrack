@@ -7,7 +7,7 @@
 		<%= text_field_tag :playlist_test_case, playlist_test_case.position, :size => 4, :tabindex=>2, :onChange => "sequence(#{playlist_test_case.id},this.value)" %>
 	</td>
   <td>
-		<%#=h playlist_test_case.test_case.category.name if playlist_test_case.test_case.category %>
+		<%=h playlist_test_case.test_case.category.name if playlist_test_case.test_case.category %>
 	</td>
   <td>
 		<%=link_to playlist_test_case.test_case.title, playlist_test_case.test_case %>
@@ -47,7 +47,6 @@
 	</td>
 	<td id="playlist_test_case_<%=playlist_test_case.id%>_last_run" nowrap><%=h playlist_test_case.test_case_executions.last.created_at.to_s(:short) if !playlist_test_case.test_case_executions.empty? %></td>
   <td><%=h playlist_test_case.test_case.priority_in_feature %></td>
-  <td><%=h playlist_test_case.test_case.priority_in_product %></td>
 	<td style="font-size:10px;line-height:9px;"><%= playlist_test_case.test_case.tag %></td>
   <td><%= link_to 'X', playlist_test_case, :confirm => 'Removing test case from playlist. Are you sure?', :method => :delete %></td>
 </tr>
