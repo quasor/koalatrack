@@ -10,13 +10,7 @@ module ActiveRecord
         if attributes.is_a?(Array)
           attributes.collect { |attr| build(attr) }
         else
-          record = @reflection.klass.new(attributes)
-          set_belongs_to_association_for(record)
-          
-          @target ||= [] unless loaded?
-          @target << record
-          
-          record
+          build_record(attributes) { |record| set_belongs_to_association_for(record) }
         end
       end
 
@@ -43,7 +37,7 @@ module ActiveRecord
         # If using a custom finder_sql, scan the entire collection.
         if @reflection.options[:finder_sql]
           expects_array = args.first.kind_of?(Array)
-          ids = args.flatten.compact.uniq
+          ids           = args.flatten.compact.uniq.map(&:to_i)
 
           if ids.size == 1
             id = ids.first

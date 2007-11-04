@@ -48,7 +48,7 @@ class LegacyRouteSetTests < Test::Unit::TestCase
   attr_reader :rs
   def setup
     # These tests assume optimisation is on, so re-enable it.
-    ActionController::Routing.optimise_named_routes = true
+    ActionController::Base.optimise_named_routes = true
 
     @rs = ::ActionController::Routing::RouteSet.new
     @rs.draw {|m| m.connect ':controller/:action/:id' }
@@ -175,6 +175,15 @@ class LegacyRouteSetTests < Test::Unit::TestCase
                  x.send(:home_url))
   end
 
+  def test_basic_named_route_with_relative_url_root
+    rs.add_named_route :home, '', :controller => 'content', :action => 'list' 
+    x = setup_for_named_route
+    x.relative_url_root="/foo"
+    assert_equal("http://named.route.test/foo/",
+                 x.send(:home_url))
+    assert_equal "/foo/", x.send(:home_path)
+  end
+
   def test_named_route_with_option
     rs.add_named_route :page, 'page/:title', :controller => 'content', :action => 'show_page'
     x = setup_for_named_route
@@ -228,7 +237,7 @@ class LegacyRouteSetTests < Test::Unit::TestCase
     end                     
     x = setup_for_named_route       
     assert_equal("http://named.route.test/", x.send(:root_url))
-    assert_equal("/relative/", x.send(:root_path))
+    assert_equal("/", x.send(:root_path))
   end
   
   def test_named_route_with_regexps
@@ -281,7 +290,7 @@ class LegacyRouteSetTests < Test::Unit::TestCase
 
     # No / to %2F in URI, only for query params. 
     x = setup_for_named_route 
-    assert_equal("/relative/file/hello/world", x.send(:path_path, 'hello/world'))
+    assert_equal("/file/hello/world", x.send(:path_path, 'hello/world'))
   end
   
   def test_non_controllers_cannot_be_matched
@@ -766,7 +775,7 @@ class DynamicSegmentTest < Test::Unit::TestCase
     
     eval(segment.expiry_statement)
   rescue RuntimeError
-    flunk "Expiry check should not have occured!"
+    flunk "Expiry check should not have occurred!"
   end
   
   def test_expiry_should_occur_according_to_expire_on
@@ -843,6 +852,11 @@ class DynamicSegmentTest < Test::Unit::TestCase
     assert_equal a_value, eval(%("#{segment.interpolation_chunk}"))
   end
   
+  def test_interpolation_chunk_should_accept_nil
+    a_value = nil
+    assert_equal '', eval(%("#{segment.interpolation_chunk('a_value')}"))
+  end
+  
   def test_value_regexp_should_be_nil_without_regexp
     assert_equal nil, segment.value_regexp
   end
@@ -860,6 +874,28 @@ class DynamicSegmentTest < Test::Unit::TestCase
     assert_kind_of String, segment.regexp_chunk
   end
   
+  def test_build_pattern_non_optional_with_no_captures
+    # Non optioanl
+    a_segment = ROUTING::DynamicSegment.new
+    a_segment.regexp = /\d+/ #number_of_captures is 0
+    assert_equal "(\\d+)stuff", a_segment.build_pattern('stuff')
+  end
+
+  def test_build_pattern_non_optional_with_captures
+    # Non optioanl
+    a_segment = ROUTING::DynamicSegment.new
+    a_segment.regexp = /(\d+)(.*?)/ #number_of_captures is 2
+    assert_equal "((\\d+)(.*?))stuff", a_segment.build_pattern('stuff')
+  end
+
+  def test_optionality_implied
+    a_segment = ROUTING::DynamicSegment.new
+    a_segment.key = :id
+    assert a_segment.optionality_implied?
+
+    a_segment.key = :action
+    assert a_segment.optionality_implied?
+  end
 end
 
 class ControllerSegmentTest < Test::Unit::TestCase
@@ -899,11 +935,16 @@ uses_mocha 'RouteTest' do
     def request
       @request ||= MockRequest.new(:host => "named.route.test", :method => :get)
     end
+    
+    def relative_url_root=(value)
+      request.relative_url_root=value
+    end
   end
 
   class MockRequest
-    attr_accessor :path, :path_parameters, :host, :subdomains, :domain, :method
-
+    attr_accessor :path, :path_parameters, :host, :subdomains, :domain,
+                  :method, :relative_url_root
+    
     def initialize(values={})
       values.each { |key, value| send("#{key}=", value) }
       if values[:host]
@@ -918,10 +959,6 @@ uses_mocha 'RouteTest' do
     
     def host_with_port
       (subdomains * '.') + '.' +  domain
-    end
-    
-    def relative_url_root
-      '/relative'
     end
   end
 
@@ -2015,4 +2052,64 @@ class RoutingTest < Test::Unit::TestCase
     assert c.ancestors.include?(h)
   end
   
+end
+
+uses_mocha 'route loading' do
+  class RouteLoadingTest < Test::Unit::TestCase
+
+    def setup
+      routes.instance_variable_set '@routes_last_modified', nil
+      silence_warnings { Object.const_set :RAILS_ROOT, '.' }
+
+      @stat = stub_everything
+    end
+
+    def teardown
+      Object.send :remove_const, :RAILS_ROOT
+    end
+
+    def test_load
+      File.expects(:stat).returns(@stat)
+      routes.expects(:load).with(regexp_matches(/routes\.rb$/))
+
+      routes.reload
+    end
+
+    def test_no_reload_when_not_modified
+      @stat.expects(:mtime).times(2).returns(1)
+      File.expects(:stat).times(2).returns(@stat)
+      routes.expects(:load).with(regexp_matches(/routes\.rb$/)).at_most_once
+
+      2.times { routes.reload }
+    end
+
+    def test_reload_when_modified
+      @stat.expects(:mtime).at_least(2).returns(1, 2)
+      File.expects(:stat).at_least(2).returns(@stat)
+      routes.expects(:load).with(regexp_matches(/routes\.rb$/)).times(2)
+
+      2.times { routes.reload }
+    end
+
+    def test_bang_forces_reload
+      @stat.expects(:mtime).at_least(2).returns(1)
+      File.expects(:stat).at_least(2).returns(@stat)
+      routes.expects(:load).with(regexp_matches(/routes\.rb$/)).times(2)
+
+      2.times { routes.reload! }
+    end
+
+    def test_adding_inflections_forces_reload
+      Inflector::Inflections.instance.expects(:uncountable).with('equipment')
+      routes.expects(:reload!)
+
+      Inflector.inflections { |inflect| inflect.uncountable('equipment') }
+    end
+
+    private
+    def routes
+      ActionController::Routing::Routes
+    end
+
+  end
 end

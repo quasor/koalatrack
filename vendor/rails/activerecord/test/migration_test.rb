@@ -42,7 +42,7 @@ if ActiveRecord::Base.connection.supports_migrations?
       Reminder.reset_column_information
 
       %w(last_name key bio age height wealth birthday favorite_day
-         moment_of_truth male administrator).each do |column|
+         moment_of_truth male administrator funny).each do |column|
         Person.connection.remove_column('people', column) rescue nil
       end
       Person.connection.remove_column("people", "first_name") rescue nil
@@ -340,7 +340,7 @@ if ActiveRecord::Base.connection.supports_migrations?
         assert_equal 127, jonnyg.intelligence_quotient
         jonnyg.destroy
       ensure
-        ActiveRecord::Migration.remove_column :people, :intelligece_quotient rescue nil
+        ActiveRecord::Migration.remove_column :people, :intelligence_quotient rescue nil
       end
     end
 
@@ -429,6 +429,16 @@ if ActiveRecord::Base.connection.supports_migrations?
         Person.connection.add_column("people", "first_name", :string) rescue nil
       end
     end
+    
+    def test_change_type_of_not_null_column
+      assert_nothing_raised do
+        Topic.connection.change_column "topics", "written_on", :datetime, :null => false
+        Topic.reset_column_information
+        
+        Topic.connection.change_column "topics", "written_on", :datetime, :null => false
+        Topic.reset_column_information
+      end
+    end
 
     def test_rename_table
       begin
@@ -449,6 +459,19 @@ if ActiveRecord::Base.connection.supports_migrations?
         ActiveRecord::Base.connection.drop_table :octopuses rescue nil
         ActiveRecord::Base.connection.drop_table :octopi rescue nil
       end
+    end
+    
+    def test_change_column_nullability
+      Person.delete_all 
+      Person.connection.add_column "people", "funny", :boolean
+      Person.reset_column_information
+      assert Person.columns_hash["funny"].null, "Column 'funny' must initially allow nulls"
+      Person.connection.change_column "people", "funny", :boolean, :null => false, :default => true
+      Person.reset_column_information
+      assert !Person.columns_hash["funny"].null, "Column 'funny' must *not* allow nulls at this point"
+      Person.connection.change_column "people", "funny", :boolean, :null => true
+      Person.reset_column_information
+      assert Person.columns_hash["funny"].null, "Column 'funny' must allow nulls again at this point"
     end
 
     def test_rename_table_with_an_index
@@ -524,7 +547,19 @@ if ActiveRecord::Base.connection.supports_migrations?
       Person.reset_column_information
       assert_equal "Tester", Person.new.first_name
     end
-    
+
+    def test_change_column_quotes_column_names
+      Person.connection.create_table :testings do |t|
+        t.column :select, :string
+      end
+
+      assert_nothing_raised { Person.connection.change_column :testings, :select, :string, :limit => 10 }
+
+      assert_nothing_raised { Person.connection.execute "insert into testings (#{Person.connection.quote_column_name('select')}) values ('7 chars')" }
+    ensure
+      Person.connection.drop_table :testings rescue nil
+    end
+
     def test_change_column_default_to_null
       Person.connection.change_column_default "people", "first_name", nil
       Person.reset_column_information
@@ -578,7 +613,7 @@ if ActiveRecord::Base.connection.supports_migrations?
       assert_equal BigDecimal("1000234000567.95"), b.big_bank_balance
 
       # This one is fun. The 'value_of_e' field is defined as 'DECIMAL' with
-      # precision/scale explictly left out.  By the SQL standard, numbers
+      # precision/scale explicitly left out.  By the SQL standard, numbers
       # assigned to this field should be truncated but that's seldom respected.
       if current_adapter?(:PostgreSQLAdapter, :SQLite2Adapter)
         # - PostgreSQL changes the SQL spec on columns declared simply as
@@ -832,7 +867,66 @@ if ActiveRecord::Base.connection.supports_migrations?
         Person.connection.execute("select suitably_short_seq.nextval from dual")
       end
     end
-
   end
+
+  uses_mocha 'Sexy migration tests' do
+    class SexyMigrationsTest < Test::Unit::TestCase
+      def test_references_column_type_adds_id
+        with_new_table do |t|
+          t.expects(:column).with('customer_id', :integer, {})
+          t.references :customer
+        end
+      end
+ 
+      def test_references_column_type_with_polymorphic_adds_type
+        with_new_table do |t|
+          t.expects(:column).with('taggable_type', :string, {})
+          t.expects(:column).with('taggable_id', :integer, {})
+          t.references :taggable, :polymorphic => true
+        end
+      end
+      
+      def test_belongs_to_works_like_references
+        with_new_table do |t|
+          t.expects(:column).with('customer_id', :integer, {})
+          t.belongs_to :customer
+        end
+      end
+      
+      def test_timestamps_creates_updated_at_and_created_at
+        with_new_table do |t|
+          t.expects(:column).with(:created_at, :datetime)
+          t.expects(:column).with(:updated_at, :datetime)
+          t.timestamps
+        end
+      end
+      
+      def test_integer_creates_integer_column
+        with_new_table do |t|
+          t.expects(:column).with(:foo, 'integer', {})
+          t.expects(:column).with(:bar, 'integer', {})
+          t.integer :foo, :bar
+        end
+      end
+      
+      def test_string_creates_string_column
+        with_new_table do |t|
+          t.expects(:column).with(:foo, 'string', {})
+          t.expects(:column).with(:bar, 'string', {})
+          t.string :foo, :bar
+        end
+      end
+      
+      protected
+      def with_new_table
+        Person.connection.create_table :delete_me do |t|
+          yield t
+        end
+      ensure
+        Person.connection.drop_table :delete_me rescue nil
+      end
+      
+    end # SexyMigrationsTest
+  end # uses_mocha
 end
 

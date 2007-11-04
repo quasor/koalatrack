@@ -26,13 +26,14 @@ module Rails
   # +controller+ generator:
   #   
   #   generators/
-  #     controller/
-  #       controller_generator.rb
-  #       templates/
-  #         controller.rb
-  #         functional_test.rb
-  #         helper.rb
-  #         view.rhtml
+  #     components/
+  #       controller/
+  #         controller_generator.rb
+  #         templates/
+  #           controller.rb
+  #           functional_test.rb
+  #           helper.rb
+  #           view.html.erb
   #
   # The directory name (+controller+) matches the name of the generator file
   # (controller_generator.rb) and class (+ControllerGenerator+). The files
@@ -40,7 +41,7 @@ module Rails
   # directory.
   #
   # The filenames of the templates don't matter, but choose something that
-  # will be self-explatatory since you will be referencing these in the 
+  # will be self-explanatory since you will be referencing these in the 
   # +manifest+ method inside your generator subclass.
   #
   # 

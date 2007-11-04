@@ -136,6 +136,12 @@ module ActionView
       #     ...
       #   <% end %>
       #
+      # And for namespaced routes, like admin_post_url: 
+      #
+      #   <% form_for([:admin, @post]) do |f| %>
+      #    ...
+      #   <% end %>
+      #
       # === Customized form builders
       #
       # You can also build forms using a customized FormBuilder class. Subclass FormBuilder and override or define some more helpers,
@@ -409,10 +415,10 @@ module ActionView
         @template_object, @local_binding = template_object, local_binding
         @object = object
         if @object_name.sub!(/\[\]$/,"")
-          if object ||= @template_object.instance_variable_get("@#{Regexp.last_match.pre_match}") and object.respond_to?(:id_before_type_cast)
-            @auto_index = object.id_before_type_cast
+          if object ||= @template_object.instance_variable_get("@#{Regexp.last_match.pre_match}") and object.respond_to?(:to_param)
+            @auto_index = object.to_param
           else
-            raise ArgumentError, "object[] naming but object param and @object var don't exist or don't respond to id_before_type_cast: #{object.inspect}"
+            raise ArgumentError, "object[] naming but object param and @object var don't exist or don't respond to to_param: #{object.inspect}"
           end
         end
       end
@@ -480,7 +486,7 @@ module ActionView
         end
         options["checked"] = "checked" if checked
         add_default_name_and_id(options)
-        tag("input", options) << tag("input", "name" => options["name"], "type" => "hidden", "value" => unchecked_value)
+        tag("input", options) << tag("input", "name" => options["name"], "type" => "hidden", "value" => options['disabled'] && checked ? checked_value : unchecked_value)
       end
 
       def to_date_tag()
@@ -628,11 +634,11 @@ module ActionView
       end
       
       def error_message_on(method, prepend_text = "", append_text = "", css_class = "formError")
-        @template.error_message_on(@object_name, method, prepend_text, append_text, css_class)
+        @template.error_message_on(@object, method, prepend_text, append_text, css_class)
       end      
 
       def error_messages(options = {})
-        @template.error_messages_for(@object_name, options)
+        @template.error_messages_for(@object_name, options.merge(:object => @object))
       end
       
       def submit(value = "Save changes", options = {})

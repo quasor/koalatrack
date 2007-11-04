@@ -6,11 +6,11 @@ class CookieTest < Test::Unit::TestCase
       cookies["user_name"] = "david"
     end
 
-    def authenticate_for_fourten_days
+    def authenticate_for_fourteen_days
       cookies["user_name"] = { "value" => "david", "expires" => Time.local(2005, 10, 10) }
     end
 
-    def authenticate_for_fourten_days_with_symbols
+    def authenticate_for_fourteen_days_with_symbols
       cookies[:user_name] = { :value => "david", :expires => Time.local(2005, 10, 10) }
     end
 
@@ -18,7 +18,7 @@ class CookieTest < Test::Unit::TestCase
       cookies["user_name"] = { "value" => "david", "expires" => Time.local(2005, 10, 10) }
       cookies["login"]     = "XJ-122"
     end
-
+    
     def access_frozen_cookies
       cookies["will"] = "work"
     end
@@ -55,12 +55,12 @@ class CookieTest < Test::Unit::TestCase
   end
 
   def test_setting_cookie_for_fourteen_days
-    get :authenticate_for_fourten_days
+    get :authenticate_for_fourteen_days
     assert_equal [ CGI::Cookie::new("name" => "user_name", "value" => "david", "expires" => Time.local(2005, 10, 10)) ], @response.headers["cookie"]
   end
 
   def test_setting_cookie_for_fourteen_days_with_symbols
-    get :authenticate_for_fourten_days
+    get :authenticate_for_fourteen_days
     assert_equal [ CGI::Cookie::new("name" => "user_name", "value" => "david", "expires" => Time.local(2005, 10, 10)) ], @response.headers["cookie"]
   end
 
@@ -92,6 +92,14 @@ class CookieTest < Test::Unit::TestCase
     assert_equal nil, jar["something_else"]
   end
 
+  def test_cookiejar_accessor_with_array_value
+    a = %w{1 2 3}
+    @request.cookies["pages"] = CGI::Cookie.new("name" => "pages", "value" => a, "expires" => Time.local(2025, 10, 10))
+    @controller.request = @request
+    jar = ActionController::CookieJar.new(@controller)
+    assert_equal a, jar["pages"]
+  end
+  
   def test_delete_cookie_with_path
     get :delete_cookie_with_path
     assert_equal "/beaten", @response.headers["cookie"].first.path

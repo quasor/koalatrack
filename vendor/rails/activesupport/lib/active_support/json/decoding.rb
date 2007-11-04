@@ -43,13 +43,15 @@ module ActiveSupport
           end
 
           if marks.empty?
-            json
+            json.gsub(/\\\//, '/')
           else
-            ranges = ([0] + marks.map(&:succ)).zip(marks + [json.length])
-            output = ranges.collect! { |(left, right)| json[left..right] }.join(" ")
-            times.each do |pos|
-              output[pos-1] = ' '
-            end
+            # FIXME: multiple slow enumerations
+            output = ([0] + marks.map(&:succ)).
+                      zip(marks + [json.length]).
+                      map { |left, right| json[left..right] }.
+                      join(" ")
+            times.each { |i| output[i-1] = ' ' }
+            output.gsub!(/\\\//, '/')
             output
           end
         end

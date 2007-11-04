@@ -15,7 +15,7 @@ module UTF8HandlingTest
     # This is an ASCII string with some russian strings and a ligature. It's nicely calibrated, because
     # slicing it at some specific bytes will kill your characters if you use standard Ruby routines.
     # It has both capital and standard letters, so that we can test case conversions easily.
-    # It has 26 charactes and 28 when the ligature gets split during normalization.
+    # It has 26 characters and 28 when the ligature gets split during normalization.
     @string =     "Abcd Блå ﬃ бла бла бла бла"
     @string_kd =  "Abcd Блå ffi бла бла бла бла"
     @string_kc =  "Abcd Блå ffi бла бла бла бла"
@@ -160,6 +160,11 @@ module UTF8HandlingTest
     assert_equal "d Блå ﬃ", @handler.slice(@string, 3, 7), "Unicode characters have to be returned"
     assert_equal "A", @handler.slice(@string, 0, 1), "Slicing from an offset should return characters"
     assert_equal " Блå ﬃ ", @handler.slice(@string, 4..10), "Unicode characters have to be returned"
+    assert_equal "ﬃ бла", @handler.slice(@string, /ﬃ бла/u), "Slicing on Regexps should be supported"
+    assert_equal "ﬃ бла", @handler.slice(@string, /ﬃ \w\wа/u), "Slicing on Regexps should be supported"
+    assert_equal nil, @handler.slice(@string, /unknown/u), "Slicing on Regexps with no match should return nil"
+    assert_equal "ﬃ бла", @handler.slice(@string, /(ﬃ бла)/u,1), "Slicing on Regexps with a match group should be supported"
+    assert_equal nil, @handler.slice(@string, /(ﬃ)/u,2), "Slicing with a Regexp and asking for an invalid match group should return nil"
     assert_equal "", @handler.slice(@string, 7..6), "Range is empty, should return an empty string"
     assert_raise(ActiveSupport::Multibyte::Handlers::EncodingError) { @handler.slice(@bytestring, 2..3) }
     assert_raise(TypeError, "With 2 args, should raise TypeError for non-Numeric or Regexp first argument") { @handler.slice(@string, 2..3, 1) }

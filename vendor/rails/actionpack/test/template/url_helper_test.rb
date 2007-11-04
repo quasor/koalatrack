@@ -1,6 +1,6 @@
 require "#{File.dirname(__FILE__)}/../abstract_unit"
 
-RequestMock = Struct.new("Request", :request_uri, :protocol, :host_with_port)
+RequestMock = Struct.new("Request", :request_uri, :protocol, :host_with_port, :env)
 
 class UrlHelperTest < Test::Unit::TestCase
   include ActionView::Helpers::AssetTagHelper
@@ -107,6 +107,26 @@ class UrlHelperTest < Test::Unit::TestCase
 
   def test_link_tag_with_query_and_no_name
     assert_dom_equal "<a href=\"http://www.example.com?q1=v1&amp;q2=v2\">http://www.example.com?q1=v1&amp;q2=v2</a>", link_to(nil, "http://www.example.com?q1=v1&amp;q2=v2")
+  end
+
+  def test_link_tag_with_back
+    @controller.request = RequestMock.new("http://www.example.com/weblog/show", nil, nil, {'HTTP_REFERER' => 'http://www.example.com/referer'})
+    assert_dom_equal "<a href=\"http://www.example.com/referer\">go back</a>", link_to('go back', :back)
+  end
+
+  def test_link_tag_with_back_and_no_referer
+    @controller.request = RequestMock.new("http://www.example.com/weblog/show", nil, nil, {})
+    assert_dom_equal "<a href=\"javascript:history.back()\">go back</a>", link_to('go back', :back)
+  end
+
+  def test_link_tag_with_back
+    @controller.request = RequestMock.new("http://www.example.com/weblog/show", nil, nil, {'HTTP_REFERER' => 'http://www.example.com/referer'})
+    assert_dom_equal "<a href=\"http://www.example.com/referer\">go back</a>", link_to('go back', :back)
+  end
+  
+  def test_link_tag_with_back_and_no_referer
+    @controller.request = RequestMock.new("http://www.example.com/weblog/show", nil, nil, {})
+    assert_dom_equal "<a href=\"javascript:history.back()\">go back</a>", link_to('go back', :back)
   end
 
   def test_link_tag_with_img
@@ -268,8 +288,8 @@ class UrlHelperTest < Test::Unit::TestCase
     assert_dom_equal "<script type=\"text/javascript\">eval(unescape('%64%6f%63%75%6d%65%6e%74%2e%77%72%69%74%65%28%27%3c%61%20%68%72%65%66%3d%22%6d%61%69%6c%74%6f%3a%6d%65%40%64%6f%6d%61%69%6e%2e%63%6f%6d%22%3e%4d%79%20%65%6d%61%69%6c%3c%2f%61%3e%27%29%3b'))</script>", mail_to("me@domain.com", "My email", :encode => "javascript", :replace_at => "(at)", :replace_dot => "(dot)")
   end
   
-  def request_forgery_protection_token
-    nil
+  def protect_against_forgery?
+    false
   end
 end
 

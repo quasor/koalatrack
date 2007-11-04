@@ -71,23 +71,30 @@ module ActiveRecord
       def delete(*records)
         records = flatten_deeper(records)
         records.each { |associate| raise_on_type_mismatch(associate) }
-        records.reject! { |associate| @target.delete(associate) if associate.new_record? }
-        return if records.empty?
-        
-        @delete_join_finder ||= "find_all_by_#{@reflection.source_reflection.association_foreign_key}"
+
         through = @reflection.through_reflection
-        through.klass.transaction do
-          records.each do |associate|
-            joins = @owner.send(through.name).send(@delete_join_finder, associate.id)
-            @owner.send(through.name).delete(joins)
+        raise ActiveRecord::HasManyThroughCantDissociateNewRecords.new(@owner, through) if @owner.new_record?
+
+        load_target
+
+        klass = through.klass
+        klass.transaction do
+          flatten_deeper(records).each do |associate|
+            raise_on_type_mismatch(associate)
+            raise ActiveRecord::HasManyThroughCantDissociateNewRecords.new(@owner, through) unless associate.respond_to?(:new_record?) && !associate.new_record?
+
+            @owner.send(through.name).proxy_target.delete(klass.delete_all(construct_join_attributes(associate)))
             @target.delete(associate)
           end
         end
+
+        self
       end
 
       def build(attrs = nil)
         raise ActiveRecord::HasManyThroughCantAssociateNewRecords.new(@owner, @reflection.through_reflection)
       end
+      alias_method :new, :build
 
       def create!(attrs = nil)
         @reflection.klass.transaction do
@@ -100,7 +107,9 @@ module ActiveRecord
       # calling collection.size if it has. If it's more likely than not that the collection does have a size larger than zero
       # and you need to fetch that collection afterwards, it'll take one less SELECT query if you use length.
       def size
-        loaded? ? @target.size : count
+        return @owner.send(:read_attribute, cached_counter_attribute_name) if has_cached_counter?
+        return @target.size if loaded?
+        return count
       end
 
       # Calculate sum using SQL, not Enumerable
@@ -258,6 +267,14 @@ module ActiveRecord
         end
 
         alias_method :sql_conditions, :conditions
+
+        def has_cached_counter?
+          @owner.attribute_present?(cached_counter_attribute_name)
+        end
+
+        def cached_counter_attribute_name
+          "#{@reflection.name}_count"
+        end
     end
   end
 end

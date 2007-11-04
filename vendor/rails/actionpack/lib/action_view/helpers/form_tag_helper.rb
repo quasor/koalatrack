@@ -361,7 +361,7 @@ module ActionView
       #   image_submit_tag("agree.png"), :disabled => true, :class => "agree-disagree-button"
       #   # => <input class="agree-disagree-button" disabled="disabled" src="/images/agree.png" type="image" />
       def image_submit_tag(source, options = {})
-        tag :input, { "type" => "image", "src" => image_path(source) }.update(options.stringify_keys)
+        tag :input, { "type" => "image", "src" => path_to_image(source) }.update(options.stringify_keys)
       end
 
       # Creates a field set for grouping HTML form elements.
@@ -401,7 +401,7 @@ module ActionView
               ''
             when /^post$/i, "", nil
               html_options["method"] = "post"
-              request_forgery_protection_token ? content_tag(:div, token_tag, :style => 'margin:0;padding:0') : ''
+              protect_against_forgery? ? content_tag(:div, token_tag, :style => 'margin:0;padding:0') : ''
             else
               html_options["method"] = "post"
               content_tag(:div, tag(:input, :type => "hidden", :name => "_method", :value => method) + token_tag, :style => 'margin:0;padding:0')
@@ -421,7 +421,7 @@ module ActionView
         end
 
         def token_tag
-          if request_forgery_protection_token.nil?
+          unless protect_against_forgery?
             ''
           else
             tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token)

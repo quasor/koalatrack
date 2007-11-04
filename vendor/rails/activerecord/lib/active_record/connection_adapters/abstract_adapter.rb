@@ -63,6 +63,19 @@ module ActiveRecord
         rt
       end
 
+      # QUOTING ==================================================
+
+      # Override to return the quoted table name if the database needs it
+      def quote_table_name(name)
+        name
+      end
+
+      # REFERENTIAL INTEGRITY ====================================
+
+      # Override to turn off referential integrity while executing +&block+
+      def disable_referential_integrity(&block)
+        yield
+      end
 
       # CONNECTION MANAGEMENT ====================================
 
@@ -129,7 +142,7 @@ module ActiveRecord
           end
         rescue Exception => e
           # Log message and raise exception.
-          # Set last_verfication to 0, so that connection gets verified
+          # Set last_verification to 0, so that connection gets verified
           # upon reentering the request loop
           @last_verification = 0
           message = "#{e.class.name}: #{e.message}: #{sql}"

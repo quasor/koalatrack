@@ -11,6 +11,7 @@ require 'fixtures/column_name'
 require 'fixtures/subscriber'
 require 'fixtures/keyboard'
 require 'fixtures/post'
+require 'fixtures/minimalistic'
 
 class Category < ActiveRecord::Base; end
 class Smarts < ActiveRecord::Base; end
@@ -47,6 +48,10 @@ class TightDescendant < TightPerson
   attr_accessible :phone_number
 end
 
+class ReadonlyTitlePost < Post
+  attr_readonly :title
+end
+
 class Booleantest < ActiveRecord::Base; end
 
 class Task < ActiveRecord::Base
@@ -60,7 +65,14 @@ class TopicWithProtectedContentAndAccessibleAuthorName < ActiveRecord::Base
 end
 
 class BasicsTest < Test::Unit::TestCase
-  fixtures :topics, :companies, :developers, :projects, :computers, :accounts
+  fixtures :topics, :companies, :developers, :projects, :computers, :accounts, :minimalistics
+
+  # whiny_protected_attributes is turned off since several tests were
+  # not written with it in mind, and would otherwise raise exceptions
+  # as an irrelevant side-effect.
+  def setup
+    ActiveRecord::Base.whiny_protected_attributes = false
+  end
 
   def test_table_exists
     assert !NonExistentTable.table_exists?
@@ -180,6 +192,15 @@ class BasicsTest < Test::Unit::TestCase
     assert_nil topic.title
   end
 
+  def test_save_for_record_with_only_primary_key
+    minimalistic = Minimalistic.new
+    assert_nothing_raised { minimalistic.save }
+  end
+
+  def test_save_for_record_with_only_primary_key_that_is_provided
+    assert_nothing_raised { Minimalistic.create!(:id => 2) }
+  end
+
   def test_hashes_not_mangled
     new_topic = { :title => "New Topic" }
     new_topic_values = { :title => "AnotherTopic" }
@@ -235,6 +256,11 @@ class BasicsTest < Test::Unit::TestCase
     topicReloaded.title = "A New Topic"
     topicReloaded.send :write_attribute, 'does_not_exist', 'test'
     assert_nothing_raised { topicReloaded.save }
+  end
+
+  def test_update_for_record_with_only_primary_key
+    minimalistic = minimalistics(:first)
+    assert_nothing_raised { minimalistic.save }
   end
   
   def test_write_attribute
@@ -543,29 +569,26 @@ class BasicsTest < Test::Unit::TestCase
     assert_equal -2, Topic.find(2).replies_count
   end
 
-  # The ADO library doesn't support the number of affected rows
-  unless current_adapter?(:SQLServerAdapter)
-    def test_update_all
-      assert_equal 2, Topic.update_all("content = 'bulk updated!'")
-      assert_equal "bulk updated!", Topic.find(1).content
-      assert_equal "bulk updated!", Topic.find(2).content
+  def test_update_all
+    assert_equal 2, Topic.update_all("content = 'bulk updated!'")
+    assert_equal "bulk updated!", Topic.find(1).content
+    assert_equal "bulk updated!", Topic.find(2).content
 
-      assert_equal 2, Topic.update_all(['content = ?', 'bulk updated again!'])
-      assert_equal "bulk updated again!", Topic.find(1).content
-      assert_equal "bulk updated again!", Topic.find(2).content
+    assert_equal 2, Topic.update_all(['content = ?', 'bulk updated again!'])
+    assert_equal "bulk updated again!", Topic.find(1).content
+    assert_equal "bulk updated again!", Topic.find(2).content
 
-      assert_equal 2, Topic.update_all(['content = ?', nil])
-      assert_nil Topic.find(1).content
-    end
+    assert_equal 2, Topic.update_all(['content = ?', nil])
+    assert_nil Topic.find(1).content
+  end
 
-    def test_update_all_with_hash
-      assert_not_nil Topic.find(1).last_read
-      assert_equal 2, Topic.update_all(:content => 'bulk updated with hash!', :last_read => nil)
-      assert_equal "bulk updated with hash!", Topic.find(1).content
-      assert_equal "bulk updated with hash!", Topic.find(2).content
-      assert_nil Topic.find(1).last_read
-      assert_nil Topic.find(2).last_read
-    end
+  def test_update_all_with_hash
+    assert_not_nil Topic.find(1).last_read
+    assert_equal 2, Topic.update_all(:content => 'bulk updated with hash!', :last_read => nil)
+    assert_equal "bulk updated with hash!", Topic.find(1).content
+    assert_equal "bulk updated with hash!", Topic.find(2).content
+    assert_nil Topic.find(1).last_read
+    assert_nil Topic.find(2).last_read
   end
 
   if current_adapter?(:MysqlAdapter)
@@ -584,9 +607,6 @@ class BasicsTest < Test::Unit::TestCase
   end
 
   def test_delete_all
-    # The ADO library doesn't support the number of affected rows
-    return true if current_adapter?(:SQLServerAdapter)
-
     assert_equal 2, Topic.delete_all
   end
 
@@ -800,7 +820,7 @@ class BasicsTest < Test::Unit::TestCase
     assert_nil keyboard.id
   end
 
-  def test_customized_primary_key_remains_protected_when_refered_to_as_id
+  def test_customized_primary_key_remains_protected_when_referred_to_as_id
     subscriber = Subscriber.new(:id => 'webster123', :name => 'nice try')
     assert_nil subscriber.id
 
@@ -839,6 +859,30 @@ class BasicsTest < Test::Unit::TestCase
 
     assert_nil TightDescendant.protected_attributes
     assert_equal [ :name, :address, :phone_number  ], TightDescendant.accessible_attributes
+  end
+  
+  def test_whiny_protected_attributes
+    ActiveRecord::Base.whiny_protected_attributes = true
+    assert_raise(ActiveRecord::ProtectedAttributeAssignmentError) do
+      LoosePerson.create!(:administrator => true)
+    end
+    ActiveRecord::Base.whiny_protected_attributes = false
+    assert_nothing_raised do
+      LoosePerson.create!(:administrator => true)
+    end
+  end
+
+  def test_readonly_attributes
+    assert_equal [ :title ], ReadonlyTitlePost.readonly_attributes
+    
+    post = ReadonlyTitlePost.create(:title => "cannot change this", :body => "changeable")
+    post.reload
+    assert_equal "cannot change this", post.title
+    
+    post.update_attributes(:title => "try to change", :body => "changed")
+    post.reload
+    assert_equal "cannot change this", post.title
+    assert_equal "changed", post.body
   end
 
   def test_multiparameter_attributes_on_date
@@ -958,6 +1002,10 @@ class BasicsTest < Test::Unit::TestCase
     cloned_topic.title["a"] = "c" 
     assert_equal "b", topic.title["a"]
 
+    #test if attributes set as part of after_initialize are cloned correctly
+    assert_equal topic.author_email_address, cloned_topic.author_email_address
+
+    # test if saved clone object differs from original
     cloned_topic.save
     assert !cloned_topic.new_record?
     assert cloned_topic.id != topic.id
@@ -1222,12 +1270,12 @@ class BasicsTest < Test::Unit::TestCase
   end
 
   def test_increment_attribute
-    assert_equal 1, topics(:first).replies_count
-    topics(:first).increment! :replies_count
-    assert_equal 2, topics(:first, :reload).replies_count
-    
-    topics(:first).increment(:replies_count).increment!(:replies_count)
-    assert_equal 4, topics(:first, :reload).replies_count
+    assert_equal 50, accounts(:signals37).credit_limit
+    accounts(:signals37).increment! :credit_limit
+    assert_equal 51, accounts(:signals37, :reload).credit_limit    
+
+    accounts(:signals37).increment(:credit_limit).increment!(:credit_limit)
+    assert_equal 53, accounts(:signals37, :reload).credit_limit
   end
   
   def test_increment_nil_attribute
@@ -1237,14 +1285,13 @@ class BasicsTest < Test::Unit::TestCase
   end
   
   def test_decrement_attribute
-    topics(:first).increment(:replies_count).increment!(:replies_count)
-    assert_equal 3, topics(:first).replies_count
-    
-    topics(:first).decrement!(:replies_count)
-    assert_equal 2, topics(:first, :reload).replies_count
+    assert_equal 50, accounts(:signals37).credit_limit
 
-    topics(:first).decrement(:replies_count).decrement!(:replies_count)
-    assert_equal 0, topics(:first, :reload).replies_count
+    accounts(:signals37).decrement!(:credit_limit)
+    assert_equal 49, accounts(:signals37, :reload).credit_limit
+  
+    accounts(:signals37).decrement(:credit_limit).decrement!(:credit_limit)
+    assert_equal 47, accounts(:signals37, :reload).credit_limit
   end
   
   def test_toggle_attribute

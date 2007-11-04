@@ -196,11 +196,13 @@ module ActionController
   #
   # == Route globbing
   #
-  # Specifying <tt>*[string]</tt> as part of a rule like :
+  # Specifying <tt>*[string]</tt> as part of a rule like:
   #
   #  map.connect '*path' , :controller => 'blog' , :action => 'unrecognized?'
   #
-  # will glob all remaining parts of the route that were not recognized earlier. This idiom must appear at the end of the path. The globbed values are in <tt>params[:path]</tt> in this case.  
+  # will glob all remaining parts of the route that were not recognized earlier. This idiom
+  # must appear at the end of the path. The globbed values are in <tt>params[:path]</tt> in
+  # this case.
   #
   # == Reloading routes
   #
@@ -208,7 +210,8 @@ module ActionController
   #
   #  ActionController::Routing::Routes.reload
   #
-  # This will clear all named routes and reload routes.rb
+  # This will clear all named routes and reload routes.rb if the file has been modified from
+  # last load. To absolutely force reloading, use +reload!+.
   #
   # == Testing Routes
   #
@@ -255,11 +258,6 @@ module ActionController
     # The root paths which may contain controller files
     mattr_accessor :controller_paths
     self.controller_paths = []
-    
-    # Indicates whether or not optimise the generated named
-    # route helper methods
-    mattr_accessor :optimise_named_routes
-    self.optimise_named_routes = true
     
     # A helper module to hold URL related helpers.
     module Helpers
@@ -342,7 +340,7 @@ module ActionController
       # Indicates whether the routes should be optimised with the string interpolation
       # version of the named routes methods.
       def optimise?
-        @optimise && ActionController::Routing::optimise_named_routes
+        @optimise && ActionController::Base::optimise_named_routes
       end
       
       def segment_keys
@@ -718,8 +716,8 @@ module ActionController
         s << "\n#{expiry_statement}"
       end
   
-      def interpolation_chunk(value_code = "#{local_name}.to_s")
-        "\#{URI.escape(#{value_code}, ActionController::Routing::Segment::UNSAFE_PCHAR)}"
+      def interpolation_chunk(value_code = "#{local_name}")
+        "\#{URI.escape(#{value_code}.to_s, ActionController::Routing::Segment::UNSAFE_PCHAR)}"
       end
   
       def string_structure(prior_segments)
@@ -776,8 +774,8 @@ module ActionController
       end
 
       # Don't URI.escape the controller name since it may contain slashes.
-      def interpolation_chunk(value_code = "#{local_name}.to_s")
-        "\#{#{value_code}}"
+      def interpolation_chunk(value_code = "#{local_name}")
+        "\#{#{value_code}.to_s}"
       end
 
       # Make sure controller names like Admin/Content are correctly normalized to
@@ -799,8 +797,8 @@ module ActionController
       RESERVED_PCHAR = "#{Segment::RESERVED_PCHAR}/"
       UNSAFE_PCHAR = Regexp.new("[^#{URI::REGEXP::PATTERN::UNRESERVED}#{RESERVED_PCHAR}]", false, 'N').freeze
 
-      def interpolation_chunk(value_code = "#{local_name}.to_s")
-        "\#{URI.escape(#{value_code}, ActionController::Routing::PathSegment::UNSAFE_PCHAR)}"
+      def interpolation_chunk(value_code = "#{local_name}")
+        "\#{URI.escape(#{value_code}.to_s, ActionController::Routing::PathSegment::UNSAFE_PCHAR)}"
       end
 
       def default
@@ -1092,7 +1090,7 @@ module ActionController
           
           @module ||= Module.new
           @module.instance_methods.each do |selector|
-            @module.send :remove_method, selector
+            @module.class_eval { remove_method selector }
           end
         end
 
@@ -1132,7 +1130,9 @@ module ActionController
 
         def install(destinations = [ActionController::Base, ActionView::Base], regenerate = false)
           reset! if regenerate
-          Array(destinations).each { |dest| dest.send :include, @module }
+          Array(destinations).each do |dest|
+            dest.send! :include, @module
+          end
         end
 
         private
@@ -1154,12 +1154,12 @@ module ActionController
           
           def define_hash_access(route, name, kind, options)
             selector = hash_access_name(name, kind)
-            @module.send :module_eval, <<-end_eval # We use module_eval to avoid leaks
+            @module.module_eval <<-end_eval # We use module_eval to avoid leaks
               def #{selector}(options = nil)
                 options ? #{options.inspect}.merge(options) : #{options.inspect}
               end
+              protected :#{selector}
             end_eval
-            @module.send(:protected, selector)
             helpers << selector
           end
 
@@ -1182,7 +1182,7 @@ module ActionController
             #
             #   foo_url(bar, baz, bang, :sort_by => 'baz')
             #
-            @module.send :module_eval, <<-end_eval # We use module_eval to avoid leaks
+            @module.module_eval <<-end_eval # We use module_eval to avoid leaks
               def #{selector}(*args)
                 #{generate_optimisation_block(route, kind)}
 
@@ -1199,8 +1199,8 @@ module ActionController
 
                 url_for(#{hash_access_method}(opts))
               end
+              protected :#{selector}
             end_eval
-            @module.send(:protected, selector)
             helpers << selector
           end
       end
@@ -1232,7 +1232,7 @@ module ActionController
       end
       
       def install_helpers(destinations = [ActionController::Base, ActionView::Base], regenerate_code = false)
-        Array(destinations).each { |d| d.send :include, Helpers }
+        Array(destinations).each { |d| d.module_eval { include Helpers } }
         named_routes.install(destinations, regenerate_code)
       end
 
@@ -1251,12 +1251,12 @@ module ActionController
       alias reload! load!
       
       def reload
-        if @routes_last_modified
-          mtime=File.stat("#{RAILS_ROOT}/config/routes.rb").mtime
+        if @routes_last_modified && defined?(RAILS_ROOT)
+          mtime = File.stat("#{RAILS_ROOT}/config/routes.rb").mtime
           # if it hasn't been changed, then just return
           return if mtime == @routes_last_modified
           # if it has changed then record the new time and fall to the load! below
-          @routes_last_modified=mtime
+          @routes_last_modified = mtime
         end
         load!
       end
@@ -1264,7 +1264,7 @@ module ActionController
       def load_routes!
         if defined?(RAILS_ROOT) && defined?(::ActionController::Routing::Routes) && self == ::ActionController::Routing::Routes
           load File.join("#{RAILS_ROOT}/config/routes.rb")
-          @routes_last_modified=File.stat("#{RAILS_ROOT}/config/routes.rb").mtime
+          @routes_last_modified = File.stat("#{RAILS_ROOT}/config/routes.rb").mtime
         else
           add_route ":controller/:action/:id"
         end
@@ -1328,6 +1328,9 @@ module ActionController
         options = options_as_params(options)
         expire_on = build_expiry(options, recall)
 
+        if options[:controller]
+          options[:controller] = options[:controller].to_s
+        end
         # if the controller has changed, make sure it changes relative to the
         # current controller module, if any. In other words, if we're currently
         # on admin/get, and the new controller is 'set', the new controller
@@ -1362,7 +1365,7 @@ module ActionController
           if generate_all
             # Used by caching to expire all paths for a resource
             return routes.collect do |route|
-              route.send(method, options, merged, expire_on)
+              route.send!(method, options, merged, expire_on)
             end.compact
           end
           
@@ -1370,7 +1373,7 @@ module ActionController
           routes = routes_by_controller[controller][action][options.keys.sort_by { |x| x.object_id }]
 
           routes.each do |route|
-            results = route.send(method, options, merged, expire_on)
+            results = route.send!(method, options, merged, expire_on)
             return results if results && (!results.is_a?(Array) || results.first)
           end
         end
@@ -1455,5 +1458,15 @@ module ActionController
     end
 
     Routes = RouteSet.new
+
+    ::Inflector.module_eval do
+      def inflections_with_route_reloading(&block)
+        returning(inflections_without_route_reloading(&block)) {
+          ActionController::Routing::Routes.reload! if block_given?
+        }
+      end
+
+      alias_method_chain :inflections, :route_reloading
+    end
   end
 end

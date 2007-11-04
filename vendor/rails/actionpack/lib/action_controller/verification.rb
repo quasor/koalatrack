@@ -72,7 +72,7 @@ module ActionController #:nodoc:
       def verify(options={})
         filter_opts = { :only => options[:only], :except => options[:except] }
         before_filter(filter_opts) do |c|
-          c.send :verify_action, options
+          c.send! :verify_action, options
         end
       end
     end
@@ -95,13 +95,10 @@ module ActionController #:nodoc:
         response.headers.update(options[:add_headers]) if options[:add_headers]
         unless performed?
           render(options[:render]) if options[:render]
-          options[:redirect_to] = self.send(options[:redirect_to]) if options[:redirect_to].is_a? Symbol
+          options[:redirect_to] = self.send!(options[:redirect_to]) if options[:redirect_to].is_a? Symbol
           redirect_to(options[:redirect_to]) if options[:redirect_to]
         end
-        return false
       end
-
-      true
     end
     private :verify_action
   end
