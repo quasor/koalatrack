@@ -1,4 +1,4 @@
-<h1><%=h @playlist.title %></h1>
+<h2><%=h @playlist.title %></h2>
   <%=h @playlist.description %>
 <br />
 <div>
@@ -11,7 +11,11 @@
 </div>
 <% @playlist_test_cases =  @playlist.playlist_test_cases.sort_by(&:position) %>
 <% for playlist_test_case in @playlist_test_cases %>
-<h3 style="color:white;background-color:#666;font-family:'Lucida Grande', Tahoma, Arial;margin-top:8px"><%= playlist_test_case.test_case.title %> (Pri <%= playlist_test_case.test_case.priority_in_feature %>)</h3>
+
+<br /><br />
+<h3><%= playlist_test_case.test_case.title %> (Pri <%= playlist_test_case.test_case.priority_in_feature %>)</h3>
+<blockquote>
 <%= playlist_test_case.test_case.body %>
+</blockquote>
 <% end %>
 

@@ -54,7 +54,7 @@ class PlaylistsController < ApplicationController
     #.find(:all, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions=> @conditions)
     respond_to do |format|
       format.html # show.html.erb
-      format.doc
+      format.doc  { render :layout => true }
       format.xml  { render :xml => @playlist }
     end
   end

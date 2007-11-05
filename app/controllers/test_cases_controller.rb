@@ -75,6 +75,7 @@ class TestCasesController < ApplicationController
     respond_to do |format|
       if @test_case.save
         unless @uploaded_data.blank?
+          logger.info @uploaded_data.inspect
           @file_attachment = FileAttachment.new({:uploaded_data => @uploaded_data})
           @test_case.file_attachments << @file_attachment
         end        
