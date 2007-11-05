@@ -10,10 +10,12 @@ class MigrateAttachments < ActiveRecord::Migration
         id = match[2]
         if ids.include? id.to_i
           @test_case = TestCase.find_by_qatraq_id(qatraq_id.to_i)
-          file = File.new(f)
-          @file_attachment = FileAttachment.new({:uploaded_data => file})
-          @file_attachment.test_case_id = id
-          @file_attachment.save
+          if @test_case        
+            file = File.new(f)
+            @file_attachment = FileAttachment.new({:uploaded_data => file})
+            @file_attachment.test_case_id = @test_case.id
+            @file_attachment.save
+          end
         else
           puts "not found #{qatraq_id}"
           p base
