@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+<soap-env:Header>
+	<Interface xmlns="http://www.travelapi.com/expe/gap/v1" Name="GAP XML API" Version="2">
+		<PayloadInfo RequestID="1234" RequestorID="ECTEU" ResponderID="ECTWEB03">
+			<PayloadDescriptor Name="EXPE_AirSearchRS" Version="2"></PayloadDescriptor>
+		</PayloadInfo>
+	</Interface>
+</soap-env:Header>
+
+	<soap-env:Body>
+		<EXPE_AirSearchRS xmlns="http://www.travelapi.com/expe/gap/v1" TimeStamp="2007-05-17T16:25:00.00-08:00" Version="2">
+			<EchoInfo>sometext</EchoInfo>
+			
+			<Success/>
+			<OriginDestinationOptionsContainer>
+				<OriginDestinationOptions OriginDestinationID="0">
+					<OriginDestinationOption OptionID="0">
+						<FlightSegments>
+							<FlightSegment SegmentID="0">
+								<DepartureDateTime>2007-07-07T14:15:00.0Z</DepartureDateTime>
+								<ArrivalDateTime>2007-07-07T14:55:00.0Z</ArrivalDateTime>
+								<DepartureAirport LocationCode="AAR"/>
+								<ArrivalAirport LocationCode="STN"/>
+								<MarketingAirline FlightNumber="713" Code="FR"/>
+								<Equipment AirEquipType=""></Equipment>
+								<StopQuantity>0</StopQuantity>
+								<JourneyDuration>100</JourneyDuration>
+								<BookingClassInfos>
+									<BookingClassInfo BookingCode="" CabinClass="Economy"/>									
+								</BookingClassInfos>
+								<ETicketInd>false</ETicketInd>							
+							</FlightSegment>
+							
+						</FlightSegments>
+					</OriginDestinationOption>
+					
+				</OriginDestinationOptions><OriginDestinationOptions OriginDestinationID="1">
+					<OriginDestinationOption OptionID="0">
+						<FlightSegments>
+							<FlightSegment SegmentID="0">
+								<DepartureDateTime>2007-07-27T07:25:00.0Z</DepartureDateTime>
+								<ArrivalDateTime>2007-07-27T10:05:00.0Z</ArrivalDateTime>
+								<DepartureAirport LocationCode="STN"/>
+								<ArrivalAirport LocationCode="AAR"/>
+								<MarketingAirline FlightNumber="712" Code="FR"/>
+								<Equipment AirEquipType=""></Equipment>
+								<StopQuantity>0</StopQuantity>
+								<JourneyDuration>100</JourneyDuration>
+								<BookingClassInfos>
+									<BookingClassInfo BookingCode="" CabinClass="Economy"/>									
+								</BookingClassInfos>
+								<ETicketInd>false</ETicketInd>							
+							</FlightSegment>
+							
+						</FlightSegments>
+					</OriginDestinationOption>
+					<OriginDestinationOption OptionID="1">
+						<FlightSegments>
+							<FlightSegment SegmentID="0">
+								<DepartureDateTime>2007-07-27T19:45:00.0Z</DepartureDateTime>
+								<ArrivalDateTime>2007-07-27T22:20:00.0Z</ArrivalDateTime>
+								<DepartureAirport LocationCode="STN"/>
+								<ArrivalAirport LocationCode="AAR"/>
+								<MarketingAirline FlightNumber="714" Code="FR"/>
+								<Equipment AirEquipType=""></Equipment>
+								<StopQuantity>0</StopQuantity>
+								<JourneyDuration>95</JourneyDuration>
+								<BookingClassInfos>
+									<BookingClassInfo BookingCode="" CabinClass="Economy"/>									
+								</BookingClassInfos>
+								<ETicketInd>false</ETicketInd>							
+							</FlightSegment>
+							
+						</FlightSegments>
+					</OriginDestinationOption>
+					
+				</OriginDestinationOptions>
+			</OriginDestinationOptionsContainer>
+			<AirItineraryPricingInfos>
+				
+				
+				<AirItineraryPricingInfo ID="0">
+					<ItinTotalFare>
+					
+					
+						
+							
+								<GDSInfo GDS = "PARTNERS">
+									<CreditCardType = "VI"/>
+								</GDSInfo>
+							
+							
+					
+						<BaseFare CurrencyCode="GBP" Amount="50.37"/>
+						<Taxes>
+							<Tax CurrencyCode="GBP" Amount="38.98"/>
+						</Taxes>
+						
+						<Fees>
+							<Fee CurrencyCode="GBP" Amount="4.23"/>
+						</Fees>
+						
+						<TotalFare CurrencyCode="GBP" Amount="93.58"/>
+						
+					</ItinTotalFare>
+					<OriginDestinationOptionIDs>
+						<Option OriginDestinationID="0" OptionID="0"/>
+						<Option OriginDestinationID="1" OptionID="0"/>
+						
+					</OriginDestinationOptionIDs>					
+				</AirItineraryPricingInfo>
+				<AirItineraryPricingInfo ID="1">
+					<ItinTotalFare>
+					
+					
+						
+							
+								<GDSInfo GDS = "PARTNERS">
+									<CreditCardType = "VI"/>
+								</GDSInfo>
+							
+							
+					
+						<BaseFare CurrencyCode="GBP" Amount="73.36"/>
+						<Taxes>
+							<Tax CurrencyCode="GBP" Amount="38.98"/>
+						</Taxes>
+						
+						<Fees>
+							<Fee CurrencyCode="GBP" Amount="4.23"/>
+						</Fees>
+						
+						<TotalFare CurrencyCode="GBP" Amount="116.57"/>
+						
+					</ItinTotalFare>
+					<OriginDestinationOptionIDs>
+						<Option OriginDestinationID="0" OptionID="0"/>
+						<Option OriginDestinationID="1" OptionID="1"/>
+						
+					</OriginDestinationOptionIDs>					
+				</AirItineraryPricingInfo>
+			</AirItineraryPricingInfos>
+			
+		</EXPE_AirSearchRS>
+	</soap-env:Body>
+</soap-env:Envelope>
+
+
+
+
+

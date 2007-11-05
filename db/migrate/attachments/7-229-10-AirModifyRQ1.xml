@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Header>
+    <Interface Version="1.0">
+      <PayloadInfo RequestID="1234" TrackingId="1234567890" RequestorID="ECTEU">
+        <CommDescriptor>
+          <Authentication Username="admin" Password="MTTPower" />
+        </CommDescriptor>
+        <PayloadDescriptor Name="EXPE_AirModifyRQ" Version="1">
+        </PayloadDescriptor>
+      </PayloadInfo>
+    </Interface>
+  </soap-env:Header>
+  <soap-env:Body>
+    <EXPE_AirModifyRQ xmlns="http://www.travelapi.com/expe/gap/v1" UserID="15">
+
+      <EchoInfo>test</EchoInfo>
+
+      <GDS_Info Option="1">
+        <AmadeusGDS_Info PoolTypeID="EctEuPar"/>
+      </GDS_Info>
+
+      <BookingReferenceID>ADD PNR HERE</BookingReferenceID>
+
+
+
+      <AirItineraryInfo>
+        <OriginDestinations>
+          <OriginDestination OriginDestinationID="0">
+            <FlightSegments>
+              <FlightSegment SegmentID="0">
+                <DepartureDateTime>2007-07-05T13:15:00.0Z</DepartureDateTime>
+                <ArrivalDateTime>2007-07-05T15:15:00.0Z</ArrivalDateTime>
+                <DepartureAirport LocationCode="CDG"/>
+                <ArrivalAirport LocationCode="JFK"/>
+                <MarketingAirline FlightNumber="6" Code="AF"/>
+                <FareBasisCode>BDISTRIB</FareBasisCode>
+              </FlightSegment>
+              <FlightSegment SegmentID="1">
+                <DepartureDateTime>2007-07-12T17:00:00.0Z</DepartureDateTime>
+                <ArrivalDateTime>2007-07-13T06:00:00.0Z</ArrivalDateTime>
+                <DepartureAirport LocationCode="JFK"/>
+                <ArrivalAirport LocationCode="CDG"/>
+                <MarketingAirline FlightNumber="23" Code="AF"/>
+                <FareBasisCode>BDISTRIB</FareBasisCode>
+              </FlightSegment>
+            </FlightSegments>
+          </OriginDestination>
+        </OriginDestinations>
+
+
+      </AirItineraryInfo>
+
+      <QueueInfo QueueNumber="100">
+        <AmadeusQueueInfo OfficeID="PAREC38DD"/>
+      </QueueInfo>
+
+    </EXPE_AirModifyRQ>
+  </soap-env:Body>
+</soap-env:Envelope>
+

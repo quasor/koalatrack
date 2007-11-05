@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap-env:Header>
+		<Interface Version="2.0">
+			<PayloadInfo RequestID="1234" TrackingId="1234567890" RequestorID="ECTEU">
+				<CommDescriptor>
+					<Authentication Username="admin" Password="MTTPower" />
+				</CommDescriptor>
+				<PayloadDescriptor Name="EXPE_AirPriceRQ" Version="2">
+				</PayloadDescriptor>
+			</PayloadInfo>
+		</Interface>
+	</soap-env:Header>
+	<soap-env:Body>
+		<EXPE_AirPriceRQ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" CurrencyCode="USD" TimeStamp="2001-12-17T09:30:47.0Z" Version="3" LanguageID="1033" UserID="3">
+			<EchoInfo>String</EchoInfo>
+			
+      <!--<GDS_Info Option="1">
+				<AmadeusGDS_Info PoolTypeID="EctEuBru"/>
+			</GDS_Info>-->
+
+      <GDS_Info GDS="AMADEUS">
+        <PoolTypeID>EctEuPar</PoolTypeID>
+      </GDS_Info>
+
+      <AirItinerary>
+
+
+          <OriginDestinations>
+            
+
+            <OriginDestination OriginDestinationID="0">
+              <FlightSegments>
+
+                <FlightSegment SegmentID="0">
+                  <DepartureDateTime>2007-09-27T07:05:00.0Z</DepartureDateTime>
+                  <ArrivalDateTime>2007-09-27T08:23:00.0Z</ArrivalDateTime>
+                  <DepartureAirport LocationCode="SYR"/>
+                  <ArrivalAirport LocationCode="LGA"/>
+                  <MarketingAirline FlightNumber="4141" Code="US"/>
+                 
+                </FlightSegment>
+                <FlightSegment SegmentID="1">
+                  <DepartureDateTime>2007-09-27T09:00:00.0Z</DepartureDateTime>
+                  <ArrivalDateTime>2007-09-27T10:13:00.0Z</ArrivalDateTime>
+                  <DepartureAirport LocationCode="LGA"/>
+                  <ArrivalAirport LocationCode="BOS"/>
+                  <MarketingAirline FlightNumber="2120" Code="US"/>
+                  
+                </FlightSegment>
+                
+              </FlightSegments>
+            </OriginDestination>
+
+           
+          
+				</OriginDestinations>
+        
+			</AirItinerary>
+      
+			<TravelerInfoSummary>
+				<PassengerTypeQuantity Quantity="1" Code="ADT"/>
+			</TravelerInfoSummary>
+			<PricingConfigurations>			
+				<PricingConfiguration PricingConfigurationID="0">
+					<FareRestrictPref NoPenaltiesFares="false" RefundableOnlyFares="false" NoRestrictionsFares="false" NoAdvancePurchRequired="false"/>
+					<BookingClassSell>
+						<SegmentSell OriginDestinationID="0" BookingCode="U" SegmentID="0" CabinClass="Economy"/>
+						<SegmentSell OriginDestinationID="0" BookingCode="U" SegmentID="1" CabinClass="Economy"/>
+            
+					</BookingClassSell>
+					<RespectBookingClassOpt>false</RespectBookingClassOpt>
+					<FareNotesRetrievalOpt>false</FareNotesRetrievalOpt>
+					<FareListRetrievalOpt>false</FareListRetrievalOpt>
+				</PricingConfiguration>				
+			</PricingConfigurations>
+		</EXPE_AirPriceRQ>
+	</soap-env:Body>
+</soap-env:Envelope>
+		

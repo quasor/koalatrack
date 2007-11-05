@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap-env:Header>
+		<Interface Version="1.0">
+			<PayloadInfo RequestID="1234" TrackingId="1234567890" RequestorID="ECTEU">
+				<CommDescriptor>
+					<Authentication Username="admin" Password="MTTPower" />
+				</CommDescriptor>
+				<PayloadDescriptor Name="EXPE_AirBookRQ" Version="1">
+				</PayloadDescriptor>
+			</PayloadInfo>
+		</Interface>
+	</soap-env:Header>
+	<soap-env:Body>
+		<EXPE_AirBookRQ xmlns="http://www.travelapi.com/expe/gap/v1" LanguageID="1033" TimeStamp="2001-12-17T09:30:47.0Z" CurrencyCode="EUR" UserID="15">
+			<EchoInfo>using NegRates</EchoInfo>
+			<GDS_Info Option="1">
+				<AmadeusGDS_Info PoolTypeID="EctEuPar"/>
+			</GDS_Info>
+			<AirItineraryInfo>
+				<OriginDestinations>    
+         <OriginDestination OriginDestinationID="0">
+            <FlightSegments>
+							
+              <FlightSegment SegmentID="0">
+								<DepartureDateTime>2006-10-05T13:15:00.0Z</DepartureDateTime>
+								<ArrivalDateTime>2006-10-05T15:35:00.0Z</ArrivalDateTime>
+								<DepartureAirport LocationCode="CDG"/>
+								<ArrivalAirport LocationCode="EWR"/>
+								<MarketingAirline FlightNumber="18" Code="AF"/>
+                <FareBasisCode>YREMIT</FareBasisCode>
+                
+              </FlightSegment>
+            
+							
+						</FlightSegments>       
+          </OriginDestination>
+          <OriginDestination OriginDestinationID="1">
+            <FlightSegments>
+              
+              <FlightSegment SegmentID="0">
+                <DepartureDateTime>2006-10-12T19:25:00.0Z</DepartureDateTime>
+                <ArrivalDateTime>2006-10-13T08:40:00.0Z</ArrivalDateTime>
+                <DepartureAirport LocationCode="EWR"/>
+                <ArrivalAirport LocationCode="CDG"/>
+                <MarketingAirline FlightNumber="19" Code="AF"/>
+                <BookingClass BookingCode="Y" CabinClass="Economy"/>
+                <FareBasisCode>YREMIT</FareBasisCode>
+              </FlightSegment>                            
+
+            </FlightSegments>
+          </OriginDestination>
+        </OriginDestinations>
+
+
+        <FareCodePrefs FareCodesOnly="true">
+          <FareCodePref FareCodeType="CN" AccountCode="000774"/>
+        </FareCodePrefs>
+        
+			</AirItineraryInfo>
+    
+      
+			<TravelerInfo>
+				<AirTraveler BirthDate="1979-12-26" AccompaniedByInfant="false" PassengerTypeCode="ADT">
+					<PersonName NamePrefix="Ms" GivenName="Charulata" MiddleName="Navin" Surname="Thadani"/>
+				</AirTraveler>            
+			</TravelerInfo>
+      <TicketingInfo TicketingAirline="AF" TicketType="eTicket" TicketDate="2006-10-15T09:30:47.0Z" Indicator="String"/>
+			<CreditCardInfo ExpirationMonth="08" ExpirationYear="2008" Type="VI" Number="1234999987654321" CCV="123"/>
+			<AdditionalDataElements>
+        <AdditionalDataElement Category="RM" Type="##" Text="test remark" />      
+      </AdditionalDataElements>
+      <QueueInfo QueueNumber="30">
+        <AmadeusQueueInfo OfficeID="PAREC38FF"/>
+      </QueueInfo>
+      
+					
+		</EXPE_AirBookRQ>
+	</soap-env:Body>
+</soap-env:Envelope>
+	

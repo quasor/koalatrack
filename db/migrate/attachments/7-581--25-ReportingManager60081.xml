@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap-env:Header>
+        <Interface xmlns=" http://www.travelapi.com/expe/ectprovisioning /v1" Name="ECT Provisioning XML API" Version="1">
+            <PayloadInfo RequestID="12345678" RequestorID="ECT Europe">
+                <PayloadDescriptor Name="EXPE_CreateUserAccountRQ" Version="1"/>
+            </PayloadInfo>
+        </Interface>
+    </soap-env:Header>
+    <soap-env:Body>
+        <EXPE_CreateUserAccountRQ>
+            <TravelProductIdentifier>60081</TravelProductIdentifier>
+            <ExternalCompanyIdentifier>ABC60081</ExternalCompanyIdentifier>
+            <ExternalUserIdentifier>60081</ExternalUserIdentifier>
+            <UserFirstName>Aja</UserFirstName>
+            <UserMiddleName>Marie</UserMiddleName>
+            <UserLastName>Hammerly </UserLastName>
+            <UserEmailAddress>ajah@expedia.com</UserEmailAddress>
+            <UserEmailFormat>html</UserEmailFormat>
+            <UserRole>reporting manager</UserRole>
+            <UserLanguageIdentifier>2057</UserLanguageIdentifier>
+        </EXPE_CreateUserAccountRQ>
+    </soap-env:Body>
+</soap-env:Envelope>

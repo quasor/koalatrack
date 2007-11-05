@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap-env:Header>
+		<Interface Version="1.0">
+			<PayloadInfo RequestID="1234" TrackingId="1234567890" RequestorID="ECTEU">
+				<CommDescriptor>
+					<Authentication Username="admin" Password="MTTPower" />
+				</CommDescriptor>
+				<PayloadDescriptor Name="EXPE_AirBookRQ" Version="1">
+				</PayloadDescriptor>
+			</PayloadInfo>
+		</Interface>
+	</soap-env:Header>
+	<soap-env:Body>
+		<EXPE_AirBookRQ xmlns="http://www.travelapi.com/expe/gap/v1" LanguageID="1033" TimeStamp="2001-12-17T09:30:47.0Z" CurrencyCode="EUR" UserID="15">
+			<EchoInfo>string</EchoInfo>
+			<GDS_Info Option="1">
+				<AmadeusGDS_Info PoolTypeID="EctEuMuc"/>
+			</GDS_Info>
+			<AirItineraryInfo>
+				<OriginDestinations>
+
+          <OriginDestination OriginDestinationID="0">
+            <FlightSegments>
+              
+              <FlightSegment SegmentID="0">
+                <DepartureDateTime>2007-04-17T04:00:00.0Z</DepartureDateTime>
+                <ArrivalDateTime>2007-04-18T07:50:00.0Z</ArrivalDateTime>
+                <DepartureAirport LocationCode="SEA"/>
+                <ArrivalAirport LocationCode="TPE"/>
+                <MarketingAirline FlightNumber="31" Code="BR"/>
+                <BookingClass BookingCode="W" CabinClass="PremiumEconomy" />
+                <FareBasisCode>Y2</FareBasisCode>
+              </FlightSegment>
+              <FlightSegment SegmentID="1">
+                <DepartureDateTime>2007-04-18T09:15:00.0Z</DepartureDateTime>
+                <ArrivalDateTime>2007-04-18T10:55:00.0Z</ArrivalDateTime>
+                <DepartureAirport LocationCode="TPE"/>
+                <ArrivalAirport LocationCode="HKG"/>
+                <MarketingAirline FlightNumber="865" Code="BR"/>
+                <BookingClass BookingCode="W" CabinClass="PremiumEconomy" />
+                <FareBasisCode>Y2</FareBasisCode>
+              </FlightSegment>
+              <FlightSegment SegmentID="2">
+                <DepartureDateTime>2007-04-18T13:30:00.0Z</DepartureDateTime>
+                <ArrivalDateTime>2007-04-18T17:10:00.0Z</ArrivalDateTime>
+                <DepartureAirport LocationCode="HKG"/>
+                <ArrivalAirport LocationCode="SIN"/>
+                <MarketingAirline FlightNumber="859" Code="SQ"/>
+                <BookingClass BookingCode="Y" CabinClass="Economy" />
+                <FareBasisCode>Y2</FareBasisCode>
+              </FlightSegment>
+
+            </FlightSegments>
+            </OriginDestination>
+          
+        </OriginDestinations>							
+			</AirItineraryInfo>
+			<TravelerInfo>
+				<AirTraveler BirthDate="1979-12-26" AccompaniedByInfant="false" PassengerTypeCode="ADT">
+					<PersonName NamePrefix="Ms" GivenName="Charulata" MiddleName="Navin" Surname="Thadani"/>
+				</AirTraveler>            
+			</TravelerInfo>
+      <TicketingInfo TicketingAirline="SQ" TicketType="eTicket" TicketDate="2006-10-15T09:30:47.0Z" Indicator="String"/>
+		
+      <CreditCardInfo Type="VI" Number="4444333322221111" ExpirationMonth="12" ExpirationYear="2008" CCV="123"/>
+
+      <AdditionalDataElements>
+		
+        <AdditionalDataElement Category="FFN" CompanyId="SQ" Text="123456789" />
+      
+      </AdditionalDataElements>
+
+      <QueueInfo QueueNumber="30">        
+        <AmadeusQueueInfo OfficeID="MUCEC38DD"/>
+      </QueueInfo>
+      				
+		</EXPE_AirBookRQ>
+	</soap-env:Body>
+</soap-env:Envelope>
+	

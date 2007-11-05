@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap-env:Header>
+		<Interface Version="1.0">
+			<PayloadInfo RequestID="1234" TrackingId="1234567890" RequestorID="ECTEU">
+				<CommDescriptor>
+					<Authentication Username="admin" Password="MTTPower" />
+				</CommDescriptor>
+				<PayloadDescriptor Name="EXPE_PNR_RetrieveRQ" Version="1">
+				</PayloadDescriptor>
+			</PayloadInfo>
+		</Interface>
+	</soap-env:Header>
+	<soap-env:Body>
+		<EXPE_PNR_RetrieveRQ xmlns="http://www.travelapi.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<EchoInfo>string</EchoInfo>
+			<GDS_Info Option="1"> 
+				<AmadeusGDS_Info PoolTypeID="EctEuLon"/> 
+			</GDS_Info>     
+      <BookingReferenceID>YE99JD</BookingReferenceID>
+      </EXPE_PNR_RetrieveRQ>
+	</soap-env:Body>
+</soap-env:Envelope>
+				

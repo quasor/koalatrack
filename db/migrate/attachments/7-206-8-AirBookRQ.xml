@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Header>
+    <Interface Version="1.0">
+      <PayloadInfo RequestID="1234" TrackingId="1234567890" RequestorID="ECTEU">
+        <CommDescriptor>
+          <Authentication Username="admin" Password="MTTPower" />
+        </CommDescriptor>
+        <PayloadDescriptor Name="EXPE_AirBookRQ" Version="1">
+        </PayloadDescriptor>
+      </PayloadInfo>
+    </Interface>
+  </soap-env:Header>
+  <soap-env:Body>
+    <EXPE_AirBookRQ xmlns="http://www.travelapi.com/expe/gap/v1" LanguageID="1033" TimeStamp="2001-12-17T09:30:47.0Z" UserID="15">
+      <EchoInfo>String</EchoInfo>
+      <GDS_Info Option="1">
+        <AmadeusGDS_Info PoolTypeID="EctEuLon"/>
+
+      </GDS_Info>
+      <AirItineraryInfo>
+        <OriginDestinations>
+
+          <OriginDestination OriginDestinationID="0">
+            <FlightSegments>
+              <FlightSegment SegmentID="0">
+                <DepartureDateTime>2007-03-21T11:15:00.0Z</DepartureDateTime>
+                <ArrivalDateTime>2007-03-21T13:14:00.0Z</ArrivalDateTime>
+                <DepartureAirport LocationCode="ATL"/>
+                <ArrivalAirport LocationCode="BUF"/>
+                <MarketingAirline FlightNumber="1646" Code="DL "/>
+                <FareBasisCode>QUPBV</FareBasisCode>
+              </FlightSegment>
+            </FlightSegments>
+          </OriginDestination>
+
+          <OriginDestination OriginDestinationID="1">
+            <FlightSegments>
+              <FlightSegment SegmentID="0">
+                <DepartureDateTime>2007-03-23T11:52:00.0Z</DepartureDateTime>
+                <ArrivalDateTime>2007-03-23T13:58:00.0Z</ArrivalDateTime>
+                <DepartureAirport LocationCode="BUF"/>
+                <ArrivalAirport LocationCode="ATL"/>
+                <MarketingAirline FlightNumber="1149" Code="DL "/>
+                <FareBasisCode>QUPBV</FareBasisCode>
+              </FlightSegment>
+            </FlightSegments>
+          </OriginDestination>
+
+
+        </OriginDestinations>
+      </AirItineraryInfo>
+      <TravelerInfo>
+        <AirTraveler BirthDate="1979-12-26" AccompaniedByInfant="false" PassengerTypeCode="ADT">
+          <PersonName NamePrefix="Ms" GivenName="Charu" MiddleName="Navin" Surname="Thadani"/>
+        </AirTraveler>
+      </TravelerInfo>
+
+      <TicketingInfo TicketingAirline="DL" TicketType="eTicket" TicketDate="2006-10-17T09:30:47.0Z" Indicator="String"/>
+      <CreditCardInfo Type="VI" Number="4444333322221111" ExpirationMonth="10" ExpirationYear="2007" />
+
+      <AdditionalDataElements>
+        <AdditionalDataElement Category="RM" Text="test remark" />
+        <AdditionalDataElement Category="RF" Text="xxx" />
+        <AdditionalDataElement Category="APE" Text="a-cthadani@expedia.com"/>
+        <AdditionalDataElement Category="AP" Subject="3" Type="6" Text=" TEST AP - LONEX38BB 1161727/P-EXPEDIA TRAVEL 0116 261 8251" />
+        <AdditionalDataElement Category="OS" CompanyId="DL" Text="LONEX38BB 1161727/P-EXPEDIA TRAVEL 0116 261 8251" />
+        <AdditionalDataElement Category="PSPT" CompanyId="DL" Text="98765432-US-THADANI/CHARU MS-F-H" PaxReference="1" />
+        <AdditionalDataElement Category="DOCA" CompanyId="DL" Text="P-GBR-012345678-GBR-30JUN73-M-14APR09-THADANI-CHARULATA" SegReference="1" />
+        <AdditionalDataElement Category="FD" CompanyId="DL" Text="1234567"/>
+        <AdditionalDataElement Category="ML" Type="VGML" CompanyID="AF" PaxReference="1"/>
+        <AdditionalDataElement Category="STR" Type="NSSA" PaxReference="1" SegReference="1"/>
+        <AdditionalDataElement Category="FOID" CompanyId="DL" Text="CCVIXXXXXXXXXXX3448" />
+        <AdditionalDataElement Category="FFN" CompanyId="DL" Text="00300004" />
+        <AdditionalDataElement Category="FQTV" CompanyId="DL" Text="123456789" PaxReference="1" />
+
+        <!--<AdditionalDataElement Category="FS" Text="AXZECORPO" />  NOT WORKING-->
+      </AdditionalDataElements>
+
+      <QueueInfo QueueNumber="30">
+        <AmadeusQueueInfo OfficeID="LONEC38DD"/>
+      </QueueInfo>
+
+    </EXPE_AirBookRQ>
+  </soap-env:Body>
+</soap-env:Envelope>
+

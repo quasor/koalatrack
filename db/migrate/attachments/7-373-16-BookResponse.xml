@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+<soap-env:Header>
+	<Interface xmlns="http://www.travelapi.com/expe/gap/v1" Name="GAP XML API" Version="2">
+		<PayloadInfo RequestID="1234" RequestorID="ECTEU" ResponderID="ECTWEB03">
+			<PayloadDescriptor Name="EXPE_AirBookModifyRS" Version="2"></PayloadDescriptor>
+		</PayloadInfo>
+	</Interface>
+</soap-env:Header>
+
+	<soap-env:Body>
+		<EXPE_AirBookModifyRS xmlns="http://www.travelapi.com/expe/gap/v1" TimeStamp="2007-05-21T14:24:00.00-08:00" Version="2">
+			<EchoInfo>String</EchoInfo>
+			
+			<Success/>
+						
+			<AirReservation BookingReferenceID="XFAKEX">
+				<AirItineraryInfo>
+					<OriginDestinations>
+						
+						<OriginDestination OriginDestinationID="0">
+							<FlightSegments>
+								
+								<FlightSegment SegmentID="0">
+									<DepartureDateTime>2007-07-07T17:45:00.0Z</DepartureDateTime>
+									<ArrivalDateTime>2007-07-07T19:25:00.0Z</ArrivalDateTime>
+									<DepartureAirport LocationCode="HAM"/>
+									<ArrivalAirport LocationCode="GVA"/>
+									<MarketingAirline FlightNumber="1302" Code="U2"/>
+								</FlightSegment>
+								
+							</FlightSegments>
+						</OriginDestination>
+						
+					</OriginDestinations>
+				</AirItineraryInfo>
+				<AirItineraryPricingInfo>
+					<ItinTotalFare NegotiatedFare="false">
+					
+						
+						
+							<GDSInfo GDS = "PARTNERS">
+								<CreditCardType="VI"/>
+							</GDSInfo>
+						
+					
+						<BaseFare Amount="10.27" CurrencyCode="GBP"/>
+						<Taxes>
+							<Tax Amount="8.22" CurrencyCode="GBP"/>
+						</Taxes>
+						
+						<Fees>
+							<Fee Amount="5.14" CurrencyCode="GBP"/>
+						</Fees>
+						
+						<TotalFare Amount="23.63" CurrencyCode="GBP"/>
+					</ItinTotalFare>						
+				</AirItineraryPricingInfo>
+				<TravelerInfo>
+					
+					
+					<AirTraveler PassengerTypeCode="ADT">
+					
+						<PersonName NamePrefix="Mrs" GivenName="Charu" MiddleName="Navin" Surname="Thadani"/>
+					</AirTraveler>
+					
+				</TravelerInfo>
+ 			</AirReservation>
+			
+		</EXPE_AirBookModifyRS>
+	</soap-env:Body>
+</soap-env:Envelope>	

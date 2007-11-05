@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap-env:Header>
+        <Interface xmlns=" http://www.travelapi.com/expe/ectprovisioning /v1" Name="ECT Provisioning XML API" Version="1">
+            <PayloadInfo RequestID="12345678" RequestorID="ECT Europe">
+                <PayloadDescriptor Name="EXPE_CreateCompanyAccountRQ " Version="1"/>
+            </PayloadInfo>
+        </Interface>
+    </soap-env:Header>
+    <soap-env:Body>
+        <EXPE_CreateCompanyAccountRQ xmlns=" http://www.travelapi.com/expe/ectprovisioning/v1">
+            <TravelProductIdentifier>60081</TravelProductIdentifier>
+            <ExternalCompanyIdentifier>ABC60081</ExternalCompanyIdentifier>
+            <CompanyName>Aja Test Company - 60081</CompanyName>
+        </EXPE_CreateCompanyAccountRQ>
+    </soap-env:Body>
+</soap-env:Envelope>

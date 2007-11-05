@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+ 	<soap-env:Header>  
+		<Interface Version="2" > 
+			<PayloadInfo  RequestID="1234"  RequestorID="ECTEU"  > 
+				<PayloadDescriptor Name="EXPE_AirSearchRQ" Version="2" />
+			</PayloadInfo>
+		</Interface>
+	</soap-env:Header>
+	
+	<soap-env:Body>
+		 <EXPE_AirSearchRQ UserID = "-150" > 
+			<EchoInfo>sometext</EchoInfo>  			
+
+		   <GDS_Info GDS="AMADEUS">
+			 <PoolTypeID>EctEuMuc</PoolTypeID>
+		   </GDS_Info>
+
+		   <GDS_Info GDS="PARTNERS">
+			 <CreditCardType>VI</CreditCardType>
+		   </GDS_Info>
+
+		   <OriginDestinationInfos>
+			 <OriginDestinationInfo OriginDestinationInfoID="0">
+			   <DepartureDateTime TimeWindow="0">2007-08-07T09:00:00.0Z</DepartureDateTime>
+         <ArrivalDateTime TimeWindow="1">2007-08-07T20:00:00.0Z</ArrivalDateTime>
+         <OriginLocation LocationCode="STN" Radius="20" AirportCodeInd="true">
+           
+         </OriginLocation>
+         <DestinationLocation LocationCode="MUC" Radius="20" AirportCodeInd="true">
+         </DestinationLocation>
+         <!--<ConnectionInfo NonStopFlightsOnly="false">
+          <MaxNumberConnections>1</MaxNumberConnections>
+					 <ConnectionLocation LocationCode="JFK"/>
+        </ConnectionInfo>-->
+       </OriginDestinationInfo>
+
+         <OriginDestinationInfo OriginDestinationInfoID="1">
+           <DepartureDateTime TimeWindow="0">2007-08-27T09:00:00.0Z</DepartureDateTime>
+           <ArrivalDateTime TimeWindow="1">2007-08-27T20:00:00.0Z</ArrivalDateTime>
+           <OriginLocation LocationCode="MUC" Radius="20" AirportCodeInd="true">             
+           </OriginLocation>
+           <DestinationLocation LocationCode="STN" Radius="20" AirportCodeInd="true">
+           </DestinationLocation>       
+         </OriginDestinationInfo>
+       </OriginDestinationInfos>
+
+     <TravelPreferences>
+				 <!--<AirlinePref>
+           <IncludeAirlines IncludeAirlinesOnly="false">
+             <IncludeAirline AirlineCode="NW"/>
+           </IncludeAirlines>
+
+
+           <ExcludeAirlines>
+					 <ExcludeAirline AirlineCode="FR"/>
+				   </ExcludeAirlines>
+				   
+				 </AirlinePref>
+
+				 <FareRestrictPref RefundableOnlyFares="false" NoAdvancePurchRequired="false" NoPenaltiesFares="false" NoRestrictionsFares="false"/>-->
+        			 
+        
+        <FareCodePrefs FareCodesOnly="true">
+				   <FareCodePref FareCodeType="PB" />
+				 </FareCodePrefs>     
+        
+				 <CabinPref Cabin="Economy" NotCombinableInd="false"/>
+		   </TravelPreferences>
+
+		   <TravelerInfoSummary>
+			 <PassengerTypeQuantity Code="ADT" Quantity="1"/>
+		   </TravelerInfoSummary>
+
+		   <AvailabilitySearchInd>false</AvailabilitySearchInd>
+     </EXPE_AirSearchRQ>
+   </soap-env:Body>
+</soap-env:Envelope>
