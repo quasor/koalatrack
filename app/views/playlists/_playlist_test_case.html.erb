@@ -1,6 +1,6 @@
 <% if @category_id != playlist_test_case.test_case.category_id && params[:sort] == "category"%>
   	<tr style="background-color:<% reset_cycle("colors") -%>">
-			<td colspan="4"><b style="margin-bottom:0px;padding-bottom:0px"><%= (playlist_test_case.test_case.category.ancestors.reverse + [playlist_test_case.test_case.category]).collect(&:name).join(' \ ')%></b></td>
+			<td colspan="4"><b style="margin-bottom:0px;padding-bottom:0px"><%= playlist_test_case.test_case.category.ancestors_cache %> \ <%=playlist_test_case.test_case.category.name%></b></td>
 		</tr>
 	<% @category_id = playlist_test_case.test_case.category_id%>
 <% end %>
