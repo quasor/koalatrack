@@ -2,6 +2,7 @@ production:
   host: localhost
   port: 9010
   pid_file: log/ferret.pid
+  log_level: warn
 development:
   host: localhost
   port: 9010

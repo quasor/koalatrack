@@ -55,6 +55,7 @@
   <%=h @playlist.description %>
 </p>
 
+<% if true %>
 <table border="0" class="padded" cellspacing="0">
 	<caption><b>Execution Summary</b></caption>
 <tr>
@@ -73,7 +74,7 @@
 		</td>
 </tr>
 </table>
-
+<% end %>
 <table>
 	<tr>
 		<td>
@@ -118,8 +119,8 @@
 		<th>Tags</th>
 		<th></th>
   </tr>
-
-	<%= render :partial => 'playlist_test_case', :collection => @playlist_test_cases, :locals => { :test_case_execution => TestCaseExecution.new} unless @playlist_test_cases.empty?%>
+  <% category_id = 0%>
+	<%= render :partial => 'playlist_test_case', :collection => @playlist_test_cases, :locals => { :test_case_execution => TestCaseExecution.new, :category_id => category_id} unless @playlist_test_cases.empty?%>
 	
 </table>
 

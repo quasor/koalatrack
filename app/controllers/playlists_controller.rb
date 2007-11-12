@@ -38,7 +38,7 @@ class PlaylistsController < ApplicationController
                when "title"   then "title"
                when "assigned" then "users.login"
                when "results" then "last_result"
-               when "category" then "test_cases.category_id"
+               when "category" then "categories.ancestor_cache"
                else
                  "playlist_test_cases.position"
                end
@@ -50,7 +50,7 @@ class PlaylistsController < ApplicationController
           @playlist_test_cases = PlaylistTestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 50}, {:conditions => {:playlist_id => @playlist.id}})      
         else    
           @conditions = session[:filtering] ? "test_case_executions.updated_at IS NULL" : nil
-          @playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 50, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions => @conditions  
+          @playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 50, :include => [:test_case_executions,{:test_case => :category},:user], :order => sort, :conditions => @conditions  
         end
       end
       format.doc do
