@@ -42,7 +42,7 @@ class PlaylistsController < ApplicationController
                  when "title"   then "title"
                  when "assigned" then "users.login"
                  when "results" then "last_result"
-                 when "category" then "category_id"
+                 when "category" then "test_cases.category_id"
                  else
                    "playlist_test_cases.position"
                  end
