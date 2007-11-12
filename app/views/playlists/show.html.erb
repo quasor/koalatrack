@@ -119,8 +119,8 @@
 		<th>Tags</th>
 		<th></th>
   </tr>
-  <% category_id = 0%>
-	<%= render :partial => 'playlist_test_case', :collection => @playlist_test_cases, :locals => { :test_case_execution => TestCaseExecution.new, :category_id => category_id} unless @playlist_test_cases.empty?%>
+  <% @category_id = 0%>
+	<%= render :partial => 'playlist_test_case', :collection => @playlist_test_cases, :locals => { :test_case_execution => TestCaseExecution.new, :category_id => @category_id} unless @playlist_test_cases.empty?%>
 	
 </table>
 
