@@ -37,6 +37,8 @@ class PlaylistTestCase < ActiveRecord::Base
   def body
     test_case.body
   end
+  
+  after_create { |r| r.insert_at unless r.in_list? }
       
   validates_uniqueness_of :test_case_id, :scope => :playlist_id
   validates_presence_of :playlist_id, :test_case_id, :user_id

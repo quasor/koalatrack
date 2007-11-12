@@ -31,30 +31,32 @@ class PlaylistsController < ApplicationController
     if params[:show_all]
       session[:filtering] = false
     end
-    @playlist.playlist_test_cases.collect { |p| p.insert_at unless p.in_list? }
+    
+    sort = case params[:sort]
+               when "feature"  then "test_cases.priority_in_feature"
+               when "product"  then "test_cases.priority_in_product"
+               when "title"   then "title"
+               when "assigned" then "users.login"
+               when "results" then "last_result"
+               when "category" then "test_cases.category_id"
+               else
+                 "playlist_test_cases.position"
+               end
+    sort += " DESC" if params[:desc] == "true"
  
-    if params[:q] && !params[:q].blank?
-      @playlist_test_cases = PlaylistTestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 25}, {:conditions => {:playlist_id => @playlist.id}})      
-    else    
-      sort = case params[:sort]
-                 when "feature"  then "test_cases.priority_in_feature"
-                 when "product"  then "test_cases.priority_in_product"
-                 when "title"   then "title"
-                 when "assigned" then "users.login"
-                 when "results" then "last_result"
-                 when "category" then "test_cases.category_id"
-                 else
-                   "playlist_test_cases.position"
-                 end
-      sort += " DESC" if params[:desc] == "true"
-      @conditions = session[:filtering] ? "test_case_executions.updated_at IS NULL" : nil
-      @playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 25, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions => @conditions  
-    end
-  
-    #.find(:all, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions=> @conditions)
     respond_to do |format|
-      format.html # show.html.erb
-      format.doc  { render :layout => true }
+      format.html do # show.html.erb
+        if params[:q] && !params[:q].blank?
+          @playlist_test_cases = PlaylistTestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 50}, {:conditions => {:playlist_id => @playlist.id}})      
+        else    
+          @conditions = session[:filtering] ? "test_case_executions.updated_at IS NULL" : nil
+          @playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 50, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions => @conditions  
+        end
+      end
+      format.doc do
+        @playlist_test_cases = @playlist.playlist_test_cases.find :all, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions => @conditions          
+        render :layout => true
+      end
       format.xml  { render :xml => @playlist }
     end
   end

@@ -9,7 +9,6 @@
   	<%=h @playlist.milestone.name %>
 	<% end %>
 </div>
-<% @playlist_test_cases =  @playlist.playlist_test_cases.sort_by(&:position) %>
 <% for playlist_test_case in @playlist_test_cases %>
 
 <br /><br />

@@ -48,7 +48,7 @@
 		|
 		<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
 	</span>
-<%= link_to("Save as .doc", :format => :doc)%></span>
+<%= link_to("Save as .doc", :format => :doc, :desc => params[:desc], :sort => params[:sort])%></span>
 
 <h2><%=h @playlist.title %></h2>
 <p>
@@ -105,16 +105,16 @@
           <% else %>
 		<th></th>
 	  <% end # space for checkboxes %>
-    <th><%= link_to '#', playlist_path(@playlist, :desc => (params[:desc] != "false"))%></th>
-    <th><%= link_to 'Category', playlist_path(@playlist, :sort => :category, :desc => (params[:desc] != "false"))%></th>
+    <th><%= link_to '#', playlist_path(@playlist, :desc => (params[:desc] != "true"))%></th>
+    <th><%= link_to 'Category', playlist_path(@playlist, :sort => :category, :desc => (params[:desc] != "true"))%></th>
     <th>Title</th>
-    <th><%= link_to 'Assigned To', playlist_path(@playlist, :sort => :assigned, :desc => (params[:desc] != "false"))%></th>
+    <th><%= link_to 'Assigned To', playlist_path(@playlist, :sort => :assigned, :desc => (params[:desc] != "true"))%></th>
 		<th>Action</th>
-    <th><%= link_to 'Recent Results', playlist_path(@playlist, :sort => :results, :desc => (params[:desc] != "false")) %></th>
+    <th><%= link_to 'Recent Results', playlist_path(@playlist, :sort => :results, :desc => (params[:desc] != "true")) %></th>
     <th><%= "Bugs" unless params[:notrun] %></th>
     <th><%= "Last Run" unless params[:notrun] %></th>
-    <th><%= link_to 'Pri in feature', playlist_path(@playlist, :sort => :feature, :desc => (params[:desc] != "false"))%></th>
-    <!-- ><th><%= link_to 'Pri in product', playlist_path(@playlist, :sort => :product, :desc => (params[:desc] != "false"))%></th> -->
+    <th><%= link_to 'Pri in feature', playlist_path(@playlist, :sort => :feature, :desc => (params[:desc] != "true"))%></th>
+    <!-- ><th><%= link_to 'Pri in product', playlist_path(@playlist, :sort => :product, :desc => (params[:desc] != "true"))%></th> -->
 		<th>Tags</th>
 		<th></th>
   </tr>
