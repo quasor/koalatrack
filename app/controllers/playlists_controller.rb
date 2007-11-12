@@ -38,7 +38,7 @@ class PlaylistsController < ApplicationController
                when "title"   then "title"
                when "assigned" then "users.login"
                when "results" then "last_result"
-               when "category" then "categories.ancestor_cache"
+               when "category" then "categories.parent_id, categories.id"
                else
                  "playlist_test_cases.position"
                end
@@ -54,7 +54,7 @@ class PlaylistsController < ApplicationController
         end
       end
       format.doc do
-        @playlist_test_cases = @playlist.playlist_test_cases.find :all, :include => [:test_case_executions,:test_case,:user], :order => sort, :conditions => @conditions          
+        @playlist_test_cases = @playlist.playlist_test_cases.find :all, :include => [:test_case_executions,{:test_case => :category},:user], :order => sort, :conditions => @conditions          
         render :layout => true
       end
       format.xml  { render :xml => @playlist }
