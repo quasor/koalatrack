@@ -43,13 +43,14 @@ class PlaylistsController < ApplicationController
                  "playlist_test_cases.position"
                end
     sort += " DESC" if params[:desc] == "true"
+    @conditions = "test_cases.active = 1"
+    @conditions += " AND test_case_executions.updated_at IS NULL" if session[:filtering] 
  
     respond_to do |format|
       format.html do # show.html.erb
         if params[:q] && !params[:q].blank?
-          @playlist_test_cases = PlaylistTestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 50}, {:conditions => {:playlist_id => @playlist.id}})      
-        else    
-          @conditions = session[:filtering] ? "test_case_executions.updated_at IS NULL" : nil
+          @playlist_test_cases = PlaylistTestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 50}, {:include => [:test_case], :conditions => {:playlist_id => @playlist.id, 'test_cases.active' => true}})      
+        else              
           @playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 50, :include => [:test_case_executions,{:test_case => :category},:user], :order => sort, :conditions => @conditions  
         end
       end
@@ -172,7 +173,7 @@ class PlaylistsController < ApplicationController
 
   # PUT /playlists/1
   # PUT /playlists/1.xml
-  # Assign 1 or more test cases on this playlist
+  # Un assign 1 or more test cases on this playlist
   def remove
     @playlist = Playlist.find(params[:id])
     @ids = params[:remove][:test_case_ids]

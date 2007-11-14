@@ -35,8 +35,11 @@ class TestCase < ActiveRecord::Base
   has_many :file_attachments
   
   acts_as_ferret :fields => [:title, :body, :tag, :owner, :project_id], :remote => true
-  #add_index :fields => %w[title body tag] + ['user.login AS owner'] 
-  
-  
   validates_presence_of     :title#, :body
+
+  def logical_delete
+    self.active = false
+    save
+  end
+
 end

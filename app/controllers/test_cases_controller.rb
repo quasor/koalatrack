@@ -8,12 +8,12 @@ class TestCasesController < ApplicationController
         @category = Category.find(params[:category_id])
       end
       if params[:q].nil? && @category
-        @test_cases = TestCase.paginate_by_category_id @category.id, :page => params[:page], :per_page => 50  
+        @test_cases = TestCase.paginate_by_category_id @category.id, :page => params[:page], :per_page => 50, :conditions => { :active => true}  
       elsif params[:q]
         if @category.nil?
-          @test_cases = TestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 50}, {:order => 'category_id'})
+          @test_cases = TestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 50}, {:order => 'category_id', :conditions => { :active => true}})
         else
-          @test_cases = TestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 50}, {:order => 'category_id', :conditions => { :category_id => @category.self_and_descendants.collect(&:id).sort }})
+          @test_cases = TestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 50}, {:order => 'category_id', :conditions => { :active => true, :category_id => @category.self_and_descendants.collect(&:id).sort }})
         end
       else
         @test_cases = []
@@ -126,8 +126,9 @@ class TestCasesController < ApplicationController
   # DELETE /test_cases/1.xml
   def destroy
     @test_case = TestCase.find(params[:id])
-    @test_case.destroy
-
+#    @test_case.destroy
+    @test_case.logical_delete
+  
     respond_to do |format|
       format.html { redirect_to(test_cases_url) }
       format.xml  { head :ok }

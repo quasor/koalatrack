@@ -1,11 +1,12 @@
 # == Schema Information
-# Schema version: 36
+# Schema version: 38
 #
 # Table name: categories
 #
 #  id             :integer(11)   not null, primary key
 #  name           :string(255)   
 #  parent_id      :integer(11)   
+#  ancestor_cache :string(255)   
 #  created_at     :datetime      
 #  updated_at     :datetime      
 #  children_count :integer(11)   default(0)

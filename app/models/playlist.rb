@@ -23,7 +23,5 @@ class Playlist < ActiveRecord::Base
   def milestone_name
     self.milestone.name
   end
-  validates_presence_of :title
-  
-  
+  validates_presence_of :title  
 end
