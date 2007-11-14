@@ -5,7 +5,7 @@ require 'acts_as_ferret'
 config.cache_classes = true
 # config.action_view.cache_template_loading = true
 # Use a different logger for distributed setups
-config.logger = SyslogLogger.new
+# config.logger = SyslogLogger.new
 config.logger = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}.log", 10, 10000000)
 config.log_level = :info
 
