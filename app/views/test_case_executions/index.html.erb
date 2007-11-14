@@ -1,10 +1,11 @@
-<h1>Last 100 test case executions</h1>
+<h1><%=TestCaseExecution.count%> test case executions</h1>
 
 <% if false %>
 <% @test_case_execution = TestCaseExecution.find(:first) %>
 <span id='foo'>edit me</span>
 <%= in_place_editor(:foo,:url => @test_case_execution) %>
 <% end %>
+<%= will_paginate @test_case_executions %>
 <table class="padded">
   <tr>
     <th>Date</th>
@@ -16,6 +17,7 @@
   </tr>
 <%= render :partial => @test_case_executions %>
 </table>
+<%= will_paginate @test_case_executions %>
 
 <br />
 

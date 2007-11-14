@@ -5,7 +5,11 @@ class TestCaseExecutionsController < ApplicationController
   # GET /test_case_executions
   # GET /test_case_executions.xml
   def index
-    @test_case_executions = TestCaseExecution.find :all, :order => "id DESC", :limit => 100
+    @test_case_executions = TestCaseExecution.paginate :page => params[:page], :per_page => 50, :order => "id DESC"
+    respond_to do |format|
+        format.html # index.html.erb
+        format.xml  { render :xml => @test_case_executions }
+      end
   end
 
   # GET /test_case_executions/1
