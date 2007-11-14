@@ -60,7 +60,7 @@ set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml"
 
 task :after_update_code, :roles => :app do
    run "ln -nfs '#{shared_path}/file_attachments' '#{release_path}/public/file_attachments'"
-#   run "ln -nfs #{shared_path}/index        #{current_release}/index"
+   run "ln -nfs #{shared_path}/index        #{current_release}/index"
 end
 
  #barrett walter allen orr 
