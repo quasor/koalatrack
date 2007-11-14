@@ -28,6 +28,16 @@ namespace :deploy do
     ferret.stop
   end
 
+  desc "Set up the shared index"
+  task :after_setup, :roles => [:app, :web] do
+    run "mkdir -p -m 777 #{shared_path}/index"
+  end
+
+  desc "symlink the index"
+  task :after_update, :roles => [:app, :web] do
+    run "ln -nfs #{shared_path}/index        #{current_release}/index"
+  end
+
 end
 
 
