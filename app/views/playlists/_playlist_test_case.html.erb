@@ -1,3 +1,4 @@
+<% if playlist_test_case.test_case%>
 <% if @category_id != playlist_test_case.test_case.category_id && params[:sort] == "category"%>
   	<tr style="background-color:<% reset_cycle("colors") -%>">
 			<td colspan="4"><b style="margin-bottom:0px;padding-bottom:0px"><%= playlist_test_case.test_case.category.ancestor_cache %> \ <%=playlist_test_case.test_case.category.name%></b></td>
@@ -64,3 +65,4 @@
 	<%= render :partial => 'playlist_test_cases/results', :object => playlist_test_case %>
 	</td>
 </tr>
+<% end %>
