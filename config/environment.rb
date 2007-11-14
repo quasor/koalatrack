@@ -1,3 +1,5 @@
+# require 'acts_as_ferret'
+# require 'memcache'
 # Be sure to restart your web server when you modify this file.
 
 # Uncomment below to force Rails into production mode when
