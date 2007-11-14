@@ -46,6 +46,21 @@
 		<%= link_to file_attachment.filename, file_attachment.public_filename if file_attachment.filename%>	    
 	<% end %>
 </p>
+<% if @test_case.test_case_executions.size > 0 %>
+<b>Execution History:</b>
+<table class="padded">
+  <tr>
+    <th>Date</th>
+    <th>User</th>
+    <th>Result</th>
+    <th>Bug</th>
+    <th>Playlist</th>
+  </tr>
+<% @hide_test_case = true %>
+<%= render :partial => @test_case.test_case_executions %>
+</table>
+<% end %>
+
 <% if @test_case.versions.size > 1 %>
 <hr/>
 <%= link_to_function "Show/Hide Versions","$('versions').toggle();"%>

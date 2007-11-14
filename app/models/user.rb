@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
   
   # Associations
   has_many :test_cases
+  has_many :test_case_executions, :order => 'id DESC'
   has_many :edited_test_cases, :class_name => "TestCase" 
   has_many :playlists
   has_many :playlist_test_cases  

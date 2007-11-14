@@ -1,0 +1,12 @@
+<tr>
+  <td nowrap><%=test_case_execution.created_at.to_s(:short)%> (<%=time_ago_in_words test_case_execution.created_at %>  ago)</td>
+  <td><%=link_to test_case_execution.user.login, test_case_execution.user unless @hide_users %></td>
+  <td><%=result_to_html test_case_execution.result %></td>
+  <td><%=test_case_execution.bug_url %></td>
+  <td nowrap><%=link_to test_case_execution.playlist_test_case.playlist.title, test_case_execution.playlist_test_case.playlist%></td>
+  <td><%=link_to test_case_execution.test_case.title, test_case_execution.test_case unless test_case_execution.test_case.nil? || @hide_test_case%></td>
+</td>
+</tr>
+<tr>
+  <td colspan="2"></td><td colspan="3"><%="Comment: #{test_case_execution.comment}" if test_case_execution.comment && !test_case_execution.comment.blank?%></td>
+</tr>

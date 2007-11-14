@@ -17,6 +17,22 @@
 	</tr>
 <%end %>
 </table>
+<% if @user.test_case_executions.size > 0 && group_admin? %>
+<table class="padded">
+	<caption><b><%=@user.login.capitalize %>'s Execution History</b></caption>
+  <tr>
+    <th>Date</th>
+    <th>User</th>
+    <th>Result</th>
+    <th>Bug</th>
+    <th>Playlist</th>
+    <th>Test Case</th>
+  </tr>
+<% @hide_users = true %>
+<%= render :partial => @user.test_case_executions %>
+</table>
+<% end %>
+
 <h3>Settings</h3>
 <p>
 <%= link_to "Change My Password", edit_user_path(@user)%>

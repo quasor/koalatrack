@@ -1,32 +1,20 @@
 <h1>Last 100 test case executions</h1>
 
+<% if false %>
 <% @test_case_execution = TestCaseExecution.find(:first) %>
-<% if false %><span id='foo'>edit me</span>
+<span id='foo'>edit me</span>
 <%= in_place_editor(:foo,:url => @test_case_execution) %>
 <% end %>
 <table class="padded">
   <tr>
-    <th></th>
+    <th>Date</th>
     <th>User</th>
     <th>Result</th>
     <th>Bug</th>
     <th>Playlist</th>
     <th>Test case</th>
   </tr>
-<% for test_case_execution in @test_case_executions %>
-  <tr>
-    <td nowrap><%=time_ago_in_words test_case_execution.created_at %> ago</td>
-    <td><%=link_to test_case_execution.user.login, test_case_execution.user %></td>
-    <td><%=result_to_html test_case_execution.result %></td>
-    <td><%=test_case_execution.bug_url %></td>
-    <td nowrap><%=link_to test_case_execution.playlist_test_case.playlist.title, test_case_execution.playlist_test_case.playlist%></td>
-    <td><%=link_to test_case_execution.test_case.title, test_case_execution.test_case unless test_case_execution.test_case.nil? %></td>
-	</td>
-	</tr>
-	<tr>
-    <td colspan="2"></td><td colspan="4"><%="Comment: #{test_case_execution.comment}" if test_case_execution.comment && !test_case_execution.comment.blank?%></td>
-  </tr>
-<% end %>
+<%= render :partial => @test_case_executions %>
 </table>
 
 <br />
