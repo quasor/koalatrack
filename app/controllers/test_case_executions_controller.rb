@@ -5,7 +5,7 @@ class TestCaseExecutionsController < ApplicationController
   # GET /test_case_executions
   # GET /test_case_executions.xml
   def index
-    @test_case_executions = TestCaseExecution.find :all, :order => "id DESC", :limit => 10
+    @test_case_executions = TestCaseExecution.find :all, :order => "id DESC", :limit => 100
   end
 
   # GET /test_case_executions/1
