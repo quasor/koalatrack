@@ -11,7 +11,7 @@ class TestCasesController < ApplicationController
         @test_cases = TestCase.paginate_by_category_id @category.id, :page => params[:page], :per_page => 50, :conditions => { :active => true}  
       elsif params[:q]
         if @category.nil?
-          @test_cases = TestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 50}, {:order => 'category_id', :conditions => { :active => true}})
+          @test_cases = TestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 50}, {:order => 'category_id', :conditions => { :active => true}})                    
         else
           @test_cases = TestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 50}, {:order => 'category_id', :conditions => { :active => true, :category_id => @category.self_and_descendants.collect(&:id).sort }})
         end

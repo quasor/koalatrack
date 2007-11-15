@@ -16,6 +16,7 @@
 #
 
 class PlaylistTestCase < ActiveRecord::Base
+  acts_as_solr :fields => [:title, :bug_id, :assignedto, :body]
   belongs_to :playlist
   acts_as_list :scope => :playlist
 
@@ -23,8 +24,6 @@ class PlaylistTestCase < ActiveRecord::Base
   belongs_to :test_case
   has_many :test_case_executions
 
-#  add_index :fields => %w[test_case.title test_case_executions.bug_id] + ['user.login AS assignedto']  
-  acts_as_ferret :fields => [:title, :bug_id, :assignedto, :body], :remote => true
   def title
     test_case.title
   end

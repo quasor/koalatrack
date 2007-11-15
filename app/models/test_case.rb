@@ -34,7 +34,7 @@ class TestCase < ActiveRecord::Base
   has_many :test_case_executions
   has_many :file_attachments
   
-  acts_as_ferret :fields => [:title, :body, :tag, :owner, :project_id], :remote => true
+  acts_as_solr :fields => [:title, :body, :tag, :owner, :project_id]
   validates_presence_of     :title#, :body
 
   def logical_delete

@@ -1,4 +1,18 @@
 require 'vendor/plugins/acts_as_ferret/lib/ferret_cap_tasks'
+namespace :solr do
+  task :start, :roles => :app do
+      run "cd #{latest_release} && #{rake} solr:start RAILS_ENV=production 2>/dev/null"
+  end
+
+  task :stop, :roles => :app do
+      run "cd #{latest_release} && #{rake} solr:stop RAILS_ENV=production 2>/dev/null"
+  end
+
+  task :restart, :roles => :app do
+      solr.stop
+      solr.start
+  end
+end
 
 namespace :deploy do
   namespace :mongrel do
@@ -31,7 +45,7 @@ namespace :deploy do
 
   desc "Set up the shared index"
   task :after_setup, :roles => [:app, :web] do
-    run "mkdir -p -m 777 #{shared_path}/index"
+    run "mkdir -p -m 777 #{shared_path}/solr_data"
   end
   
 end
@@ -60,7 +74,7 @@ set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml"
 
 task :after_update_code, :roles => :app do
    run "ln -nfs '#{shared_path}/file_attachments' '#{release_path}/public/file_attachments'"
-   run "ln -nfs #{shared_path}/index        #{current_release}/index"
+   run "ln -nfs #{shared_path}/solr_data        #{release_path}/vendor/plugins/acts_as_solr/solr/solr/data"
 end
 
  #barrett walter allen orr 
