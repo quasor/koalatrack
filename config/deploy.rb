@@ -28,7 +28,7 @@ namespace :deploy do
   desc "Custom restart task for mongrel cluster"
   task :restart, :roles => :app, :except => { :no_release => true } do
     deploy.mongrel.restart
-    ferret.restart
+    #ferret.restart
   end
 
   desc "Custom start task for mongrel cluster"
