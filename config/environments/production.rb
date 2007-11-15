@@ -21,6 +21,6 @@ config.action_controller.perform_caching             = true
 require 'memcache'
 CACHE = MemCache.new '127.0.0.1:11211', :namespace => 'koala_track'
 
-config.action_controller.session_store = :mem_cache_store
+# config.action_controller.session_store = :mem_cache_store
 # config.action_controller.session_store = :active_record_store
 # config.action_controller.fragment_cache_store = :mem_cache_store
