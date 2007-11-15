@@ -45,7 +45,6 @@ class PlaylistsController < ApplicationController
     sort += " DESC" if params[:desc] == "true"
     @conditions = "test_cases.active = 1"
     @conditions += " AND test_case_executions.updated_at IS NULL" if session[:filtering] 
-    @test_case_executions = @playlist.recent_test_case_executions
  
     respond_to do |format|
       format.html do # show.html.erb

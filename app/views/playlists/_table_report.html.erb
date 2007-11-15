@@ -1,31 +1,44 @@
-<% d1 = Date.parse(params[:d1])%>
-<% d2 = Date.today%>
-<% d1 = (Date.today - 60) if (d2 - d1).abs > 60 %>
+<% @test_case_executions = @playlist.recent_test_case_executions %>
+<% unless @test_case_executions.empty? %>
+<% d1 = @test_case_executions[0].created_at.to_date %>
+<% d2 = @test_case_executions.last.created_at.to_date%>
+<% if (d2 - d1).abs > 60 
+	d2 = Date.today
+	d1 = d2 - 60 
+end %>
 <style>
 .r {color:#999999;}
+table.rpt td { border-top: 1px solid #EEE;}
+table.rpt th { border-left:1px solid #FFF;}
 </style>
-<table border="1" cellpadding="2" cellspacing="0" bordercolor="#EFEFEF">
+<table border="0" cellpadding="1" cellspacing="0" bordercolor="#EFEFEF" class='rpt'>
 	<tr>
-		<td>Date</td>
+		<td></td>
 <% for d in d1..d2%>
-<td style="font-size:10px"><%=d.to_s(:short)%></td>
+<th style="font-size:10px"><%=d.to_s(:short)%></th>
 <% end %>
 </tr>
   <% playlist_test_cases = @playlist.playlist_test_cases.sort_by(&:last_result).reverse %>
+	<% @tces = @test_case_executions.group_by(&:playlist_test_case_id)
+	@tces.collect do |k,v| %>
+	<% end %>
 	<% for playlist_test_case in playlist_test_cases %>
 	<tr><td nowrap style="font-size:6px"><%#= playlist_test_case.id%></td>
-	<% for d in d1..d2%>
-			<% 
-			recent_match = []
-			exact_match = @test_case_executions.to_a.find { |r| r.playlist_test_case_id == playlist_test_case.id  && r.created_at.to_date == d.to_date }
-			unless exact_match
-				recent_match = @test_case_executions.to_a.find_all { |r| r.playlist_test_case_id == playlist_test_case.id  && r.created_at.to_date < d.to_date }
-			end
+	<% recent_match = nil %>
+	<% exact_match = nil 
+			rows = @tces[playlist_test_case.id] 
+			rows = rows.group_by{ |r| r.created_at.to_date} if rows
+	%>
+	<% for d in d1..d2
+			exact_match = rows[d.to_date] if rows
 			%>
+			<%exact_match = exact_match[0] if exact_match %>
+			<%
+		  recent_match = exact_match unless exact_match.nil? %>
 			<% if exact_match %>
 			<%= "<td class=e#{exact_match.result }>"%>
-			<% elsif  recent_match && recent_match.last %>
-			<%= "<td class=r#{recent_match.last.result}" %>
+			<% elsif  recent_match %>
+			<%= "<td class=r#{recent_match.result}" %>
 			<% else %>
 			<td>
 			<% end %>
@@ -34,3 +47,5 @@
 <% end %>
 </tr>
 </table>
+
+<% end %>

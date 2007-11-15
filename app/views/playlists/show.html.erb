@@ -57,7 +57,7 @@
 
 <% if true %>
 <table border="0" class="padded" cellspacing="0">
-	<caption><b>Execution Summary</b></caption>
+	<caption><b><%= link_to 'Execution Summary', :show_report=>true%></b></caption>
 <tr>
 	<th>Status</th>
 	<th>Count</th>
@@ -76,7 +76,7 @@
 </table>
 <% end %>
 
-<% if params[:d1] %>
+<% if params[:show_report] %>
 	<%= render :partial => 'table_report' %>
 <% end %>
 
