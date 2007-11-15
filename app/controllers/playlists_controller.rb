@@ -5,7 +5,7 @@ class PlaylistsController < ApplicationController
   # GET /playlists.xml
   def index
     if params[:q] && !params[:q].blank?
-      @playlists = Playlist.paginate_search(params[:q], :per_page => 100, :page => params[:page])      
+      @playlists = Playlist.paginate_search(params[:q], {:per_page => 100, :page => params[:page]},{:include => [{:playlist_test_cases => :test_case_executions}]})      
       @my_playlists =  []
     elsif logged_in?
       @my_playlists = Playlist.find_all_by_user_id(current_user.id) 
