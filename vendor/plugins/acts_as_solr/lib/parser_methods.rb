@@ -69,6 +69,7 @@ module ActsAsSolr #:nodoc:
       ids = solr_data.docs.collect {|doc| doc["#{solr_configuration[:primary_key_field]}"]}.flatten
       logger.info "#################################################################################"
       conditions = {"#{self.table_name}.#{primary_key}" => ids }
+      find_options[:conditions] ||= {}
       find_options[:conditions].merge! conditions
       # need additional condition support
       if configuration[:format] == :objects
