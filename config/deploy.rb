@@ -65,7 +65,7 @@ set :deploy_to, "/var/www/#{application}"
 # set :scm, :subversion
 
 set :user, "acoldham"            # defaults to the currently logged in user
-
+set :use_sudo, false
 role :app, "koala.ectdev.com"
 role :web, "koala.ectdev.com"
 role :db,  "koala.ectdev.com", :primary => true

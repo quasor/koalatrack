@@ -75,6 +75,11 @@
 </tr>
 </table>
 <% end %>
+
+<% if params[:d1] %>
+	<%= render :partial => 'table_report' %>
+<% end %>
+
 <table>
 	<tr>
 		<td>
