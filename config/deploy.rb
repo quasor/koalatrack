@@ -34,7 +34,7 @@ namespace :deploy do
   desc "Custom start task for mongrel cluster"
   task :start, :roles => :app do
     deploy.mongrel.start
-    ferret.start
+    #ferret.start
   end
 
   desc "Custom stop task for mongrel cluster"
@@ -74,7 +74,7 @@ set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml"
 
 task :after_update_code, :roles => :app do
    run "ln -nfs '#{shared_path}/file_attachments' '#{release_path}/public/file_attachments'"
-   run "ln -nfs #{shared_path}/solr_data        #{release_path}/vendor/plugins/acts_as_solr/solr/solr/data"
+   run "ln -nfs '#{shared_path}/solr_data' '#{release_path}/vendor/plugins/acts_as_solr/solr/solr/data'"
 end
 
  #barrett walter allen orr 
