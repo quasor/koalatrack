@@ -17,9 +17,9 @@ module CategoriesHelper
       ret += "<li class='#{'has_children' if a.children.size > 0}_#{ session[:expanded_categories].include?(a.id).to_s}'>"
       if session[:expanded_categories].include?(a.id)
         # + "#category_#{a.id}"
-          ret += link_to("#{image_tag( a.children.size > 0 ? 'minus-small.jpg' : 'none-small.jpg')}#{a.name}", test_cases_path(:category_id => a.id), :class => (curr == a) ? 'selected' : 'unselected' )              
+          ret += link_to("#{image_tag( a.children.size > 0 ? 'minus-small.jpg' : 'none-small.jpg', :style => 'margin-left:-14px;') }#{a.name}", test_cases_path(:category_id => a.id), :class => (curr == a) ? 'selected' : 'unselected' )              
       else
-        ret += link_to("#{image_tag( a.children.size > 0 ? 'plus-small.jpg' : 'none-small.jpg') }#{a.name}", test_cases_path(:category_id => a.id), :class => (curr == a) ? 'selected' : 'unselected' )              
+        ret += link_to("#{image_tag( a.children.size > 0 ? 'plus-small.jpg' : 'none-small.jpg', :style => 'margin-left:-14px;') }#{a.name}", test_cases_path(:category_id => a.id), :class => (curr == a) ? 'selected' : 'unselected' )              
       end
       ret += renderCategoryTreeFastDriver(a.id,groups,curr) if session[:expanded_categories].include?(a.id)
     end if groups[i]

@@ -149,8 +149,7 @@ ul#category_tree {
 
 ul#category_tree a{
 	color:black;
-	text-decoration:none;
-	
+	text-decoration:none;	
 }
 ul#category_tree a img {
 	border: 0px;
@@ -168,8 +167,9 @@ ul#category_tree li.has_children_true {
 	list-style-image: url(/images/spaceit.gif);
 	margin:0px 0px 0px -30px;
 }
-.selected { font-weight:bold; color:black;}
-
+.selected { 
+	font-weight:bold; 
+}
 .current {
 	color:white;
 	background-color: #0F5080;

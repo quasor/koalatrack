@@ -66,7 +66,7 @@
 
 
   <% pte.test_case_id = test_case.id%>
-	<tr style="background-color:<%= cycle("#EBF3FE","#fff", :name => "colors") -%>">
+	<tr style="background-color:<%= cycle("#fff","#EBF3FE", :name => "colors") -%>">
 	<% if logged_in? %>
 		<td>
 				<%= check_box_tag 'pickme', test_case.id, false, :onClick => 'pick(this)', :class=>'cbTestCase'%>
