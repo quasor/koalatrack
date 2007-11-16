@@ -43,7 +43,7 @@
   </tr>
 
 <% for playlist in @my_playlists %>
-	<tr style="background-color:<%= cycle("#fff", "#E6E6E6", :name => "colors") -%>">
+	<tr style="background-color:<%= cycle("#fff", "#EBF3FE", :name => "colors") -%>">
     <td><%=link_to playlist.title, playlist %></td>
     <td><%=truncate (h playlist.description), 75 %></td>
     <td><%=h playlist.user.login %></td>
@@ -61,7 +61,7 @@
 -->
 <% end %>
 <% for playlist in @playlists %>
-	<tr style="background-color:<%= cycle("#fff", "#E6E6E6", :name => "colors") -%>">
+	<tr style="background-color:<%= cycle("#fff", "#EBF3FE", :name => "colors") -%>">
     <td><%=link_to playlist.title, playlist %></td>
     <td><%=truncate (h playlist.description), 75 %></td>
     <td><%=h playlist.user.login %></td>

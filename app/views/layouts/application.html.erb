@@ -10,54 +10,68 @@
   <%= javascript_include_tag "prototype", "effects", "application", "controls" %>
 </head>
 <body>
-	<table border="0" cellspacing="5" cellpadding="5">
-		<tr>
-			<% begin %>
-			<td valign="top" class='a-column'>
-				<table border="0">
-					<tr><td><%= image_tag 'logo-64.jpg'%></td><td style="font-size:18px">KoalaTrack<br/>
-						</td></tr>
-				</table>
-				<% form_tag test_cases_path, :method => 'get' do %>
-					<%= hidden_field_tag :category_id, @category.id unless @category.nil?%>
-				  Search:
-				  <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box, :type => :search %>
-				  <br/><span style='font-size:10px;margin-left:60px'>
-					<%= link_to 'Query Syntax Help', "/query.html", :target => '_blank' %>
-					</span>					
-				<% end %><br/>
-				<%= renderCategoryTree%>
-			</td>
-			<% end unless controller.controller_name == 'playlists' && params[:id]%>
-			<td valign="top">
-			  <div class="clearfix" style="border-bottom: 1px solid #333;min-width:600px">
-				<ul id="nav">
-				<% if logged_in? %>
-					<%= li_link_to_unless_current "Home", current_user %>
-				<% end %>
-				<%=	li_link_to_unless_current 'Test Cases', test_cases_path%>
-				<%=	li_link_to_unless_current 'Playlists', playlists_path%>
-				<% if group_admin? %>
-					<%=	li_link_to_unless_current 'Users', users_path %>
-					<%=	li_link_to_unless_current 'Categories', categories_path %>
-					<%=	li_link_to_unless_current 'Milestones', milestones_path %>
-					<%=	li_link_to_unless_current 'Quick Tags', tag_favorites_path %> 
-					<%=	li_link_to_unless_current 'Dashboard', dashboard_url %> 
-				<% end %>
-				<%= li_link_to_unless_current "Logout #{current_user.login}", logout_path if logged_in?%>
-				<%= li_link_to_unless_current "Login", login_path unless logged_in?%>
-				<%= li_link_to_unless_current "Create Account", signup_path unless logged_in?%>
-				<%=	li_link_to_unless_current 'Groups', groups_path if admin? %>
-				</ul>
-				</div>
+	<div id="container">
+		<% if controller.controller_name == 'playlists' && params[:id] %>
+		<style>
+		#content {
+			padding-top: 1em;
+			padding-left:0px;
+			margin: 0 0 0 -5px;
+		}		
+		body { 
+		    background: url(/images/spaceit.gif) 0 0 repeat-y;
+		}
+		
+		</style>
+		<% else %>		
+	   	<div id="navigation">
+			<table border="0">
+				<tr><td><%= image_tag 'logo-64.png'%></td><td style="font-size:18px">KoalaTrack<br/>
+					</td></tr>
+			</table>
+			<% form_tag test_cases_path, :method => 'get' do %>
+				<%= hidden_field_tag :category_id, @category.id unless @category.nil?%>
+			  Search:
+			  <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box, :type => :search %>
+			  <br/><span style='font-size:10px;margin-left:60px'>
+				<%= link_to 'Query Syntax Help', "/query.html", :target => '_blank' %>
+				</span>					
+			<% end %><br/>
+			<%= renderCategoryTree%>
+	   	</div>
+		<% end %>
+		<div id="banner">
+			<div id="nav">
+			<% if logged_in? %>
+				<%= li_link_to_unless_current "Home", current_user %>
+			<% end %>
+			<%=	li_link_to_unless_current 'Test Cases', test_cases_path%>
+			<%=	li_link_to_unless_current 'Playlists', playlists_path%>
+			<% if group_admin? %>
+				<%=	li_link_to_unless_current 'Users', users_path %>
+				<%=	li_link_to_unless_current 'Categories', categories_path %>
+				<%=	li_link_to_unless_current 'Milestones', milestones_path %>
+				<%=	li_link_to_unless_current 'Quick Tags', tag_favorites_path %> 
+				<%=	li_link_to_unless_current 'Dashboard', dashboard_url %> 
+			<% end %>
+			<%= li_link_to_unless_current "Logout #{current_user.login}", logout_path if logged_in?%>
+			<%= li_link_to_unless_current "Login", login_path unless logged_in?%>
+			<%= li_link_to_unless_current "Create Account", signup_path unless logged_in?%>
+			<%=	li_link_to_unless_current 'Groups', groups_path if admin? %>
+			</div>
+	   	</div>	
+	   	<div id="content">
+			<h1 style="border-bottom:1px solid #8B8B8B;"></h1>
+			<p style="color: green"><%= flash[:notice] %></p>
+			<p style="color: red"><%= flash[:warning] %></p>
+			<div style="padding-left:10px;padding-top:0px">
+			<%= yield  %>
+			</div>
+		</div>
+	</div>
+<script>
+//$('navigation').style.height = "100px";
 
-				<%#= link_to 'New test case', new_test_case_path(:category_id => params[:category_id]) %>			
-				<div class="clearfix"></div>
-				<p style="color: green"><%= flash[:notice] %></p>
-				<p style="color: red"><%= flash[:warning] %></p>
-				<%= yield  %>		
-			</td>
-		</tr>
-	</table>
+</script>
 </body>
 </html>

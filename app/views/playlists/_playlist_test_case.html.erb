@@ -6,7 +6,7 @@
 	<% @category_id = playlist_test_case.test_case.category_id%>
 <% end %>
 
-<tr id="playlist_test_case_<%=playlist_test_case.id%>" style="background-color:<%= background_color = cycle("#fff", "#E6E6E6", :name => "colors") %>">
+<tr id="playlist_test_case_<%=playlist_test_case.id%>" style="background-color:<%= background_color = cycle("#fff", "#EBF3FE", :name => "colors") %>">
 	<td>
 		<%#= playlist_test_case.id%>
 		<%= check_box_tag 'pickme', playlist_test_case.id, false, :onClick => 'pick(this)', :class => 'cbTestCase'%>

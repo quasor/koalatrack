@@ -1,11 +1,59 @@
-body { background-color: #fff; color: #333; padding:0px;margin:0px;}
+body { 
+    background: url(/images/blue.jpg) 0 0 repeat-y;
+	color: #333; 
+	padding:0px;
+	margin:0px;
+}
 
 body, p, ol, ul, td {
   font-family: 'lucida grande', arial, helvetica, sans-serif;
   font-size:   13px;
 }
 
+#container {
+	margin: 0;
+}
+
+#banner {
+	min-width:600px;
+}
+
+#banner h1 {
+	margin: 0;
+	padding: .5em;
+}
+
+#navigation {
+/*	background-color:#D5DDE5; */
+	float: left;
+	width: 210px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 1em;
+}
+
+#navigation p { margin-top: 0; }
+
+#content {
+	padding-top: 1em;
+	padding-left:15px;
+	margin: 0 0 0 205px;
+}
+
+#content h2 { margin-top: 0; }
+
+#footer {
+	clear: both;
+	background-color: #666;
+	padding: 1em;
+	text-align: right;
+	border-top: 1px solid #333;
+}
+
 form {margin:0; padding:0;}
+table.padded { 
+	margin-left:-10px;
+}
 table.padded td {padding:2px 8px 2px 8px;font-size:12px;}
 table.padded th {padding:2px 8px 2px 8px;}
 pre {
@@ -96,7 +144,16 @@ div.progressBar div.background {
 }
 ul#category_tree {
 	margin-top:0; margin-bottom:0; list-style-type:disc; list-style-position:outside;
-	font-size:11px;
+	font-size:12px;
+}
+
+ul#category_tree a{
+	color:black;
+	text-decoration:none;
+	
+}
+ul#category_tree a img {
+	border: 0px;
 }
 ul#category_tree li {
 	list-style-image: url(/images/spaceit.gif);
@@ -104,19 +161,14 @@ ul#category_tree li {
 	margin:0px 0px 0px -30px;
 }
 ul#category_tree li.has_children_false {
-	list-style-image: url(/images/plus-small.png);
+	list-style-image: url(/images/spaceit.gif);
 	margin:0px 0px 0px -30px;
 }
 ul#category_tree li.has_children_true {
-	list-style-image: url(/images/minus-small.png);
+	list-style-image: url(/images/spaceit.gif);
 	margin:0px 0px 0px -30px;
 }
 .selected { font-weight:bold; color:black;}
-ul#nav {
-list-style-type: none;
-padding: 0px;
-margin: 0px;
-}
 
 .current {
 	color:white;
@@ -124,13 +176,13 @@ margin: 0px;
 	padding: 0px 7px 0px 7px;
 	
 }
-ul#nav li.current a {
+div#nav span.current a {
 	color:white;
 	background-color: #0F5080;
 	padding: 0px 7px 0px 7px;
 }
 
-ul#nav li {
+div#nav span {
 	color:#FFF;
 	font-weight: bold;
 	float: left;
@@ -139,7 +191,7 @@ ul#nav li {
 	font-size: 12px;
 	text-decoration: none;
 }
-ul#nav li a {
+div#nav span a {
 	padding: 0px 7px 0px 7px;
 	color:white;
 	font-weight: bold;
@@ -151,7 +203,7 @@ ul#nav li a {
 	color: #0F5080;
 	border-right:1px solid #88a6c1;
 }
-ul#nav li a:hover {
+div#nav span a:hover {
 background-color:#FC6;
 }
 

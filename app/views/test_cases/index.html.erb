@@ -1,5 +1,5 @@
 <% if @category %>
-<h3><%= (@category.ancestors.reverse + [@category]).collect(&:name).join(' \ ') %></h3>
+<h3><%= (@category.ancestors.reverse + [@category]).collect {|c| link_to c.name, test_cases_path(:categories => c) }.join(' \ ') %></h3>
 	<% if params[:q] %>
 	<p style="border: 1px solid #90A0A2; padding:10px;background-color:#D4E4D0">
 	<span style="font-size:12px">Searching in <b><%= (@category.ancestors.reverse + [@category]).collect(&:name).join(' \ ') %></b>. <%= link_to "Search All Categories for <i>'#{params[:q]}'</i> ...", test_cases_path(:q => params[:q])%></span>
@@ -66,7 +66,7 @@
 
 
   <% pte.test_case_id = test_case.id%>
-	<tr style="background-color:<%= cycle("#E8E8E8","#fff", :name => "colors") -%>">
+	<tr style="background-color:<%= cycle("#EBF3FE","#fff", :name => "colors") -%>">
 	<% if logged_in? %>
 		<td>
 				<%= check_box_tag 'pickme', test_case.id, false, :onClick => 'pick(this)', :class=>'cbTestCase'%>
