@@ -9,11 +9,11 @@ class TestCasesController < ApplicationController
       end
       if params[:q].nil? && @category
         @test_cases = TestCase.paginate_by_category_id @category.id, :page => params[:page], :per_page => 50, :conditions => { :active => true}  
-      elsif params[:q]
+      elsif !params[:q].blank?
         if @category.nil?
-          @test_cases = TestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 50}, {:order => 'category_id', :conditions => { :active => true}})                    
+          @test_cases = TestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 20}, {:order => 'category_id', :conditions => { :active => true}})                    
         else
-          @test_cases = TestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 50}, {:order => 'category_id', :conditions => { :active => true, :category_id => @category.self_and_descendants.collect(&:id).sort }})
+          @test_cases = TestCase.paginate_search(params[:q] + " & ancestor_ids:#{@category.id}", {:page => params[:page], :per_page => 50}, {:order => 'category_id', :conditions => { :active => true }})
         end
       else
         @test_cases = []

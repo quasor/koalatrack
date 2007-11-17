@@ -24,6 +24,9 @@ class Category < ActiveRecord::Base
   def self_and_descendants  
     ( [self] + children + children.map(&:descendants_recurse).flatten ).uniq
   end
+  def self_and_ancestors  
+    ( [self] + ancestors).uniq
+  end
   def before_save
     self.ancestor_cache = ancestors.reverse.collect(&:name).join(' \ ')
   end

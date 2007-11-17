@@ -67,11 +67,11 @@ module ActsAsSolr #:nodoc:
       configuration.update(options) if options.is_a?(Hash)
 
       ids = solr_data.docs.collect {|doc| doc["#{solr_configuration[:primary_key_field]}"]}.flatten
-      logger.info "#################################################################################"
       conditions = {"#{self.table_name}.#{primary_key}" => ids }
       find_options[:conditions] ||= {}
       find_options[:conditions].merge! conditions
       # need additional condition support
+      count = self.count :all, find_options
       if configuration[:format] == :objects
         recs = self.find :all, find_options
         result =reorder( recs, ids) 
@@ -90,8 +90,9 @@ module ActsAsSolr #:nodoc:
       ordered_things = []
       ids.each do |id|
         record = things.find {|thing| record_id(thing).to_s == id.to_s} 
+        logger.debug "looking for #{id}..."
         # This may be valid if other query parameters are restricting the results
-        logger.debug "The id #{id} is in the Solr index but was not returned in the database query. Might be ok." unless record         
+        raise "The id #{id} is in the Solr index but was not returned in the database query. Might be ok." unless record         
         ordered_things << record if record
       end
       ordered_things

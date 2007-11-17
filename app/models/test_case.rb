@@ -27,6 +27,9 @@ class TestCase < ActiveRecord::Base
   def owner
     user.login
   end
+  def ancestor_ids
+    self.category.self_and_ancestors.collect(&:id).join(',')
+  end
   belongs_to :user
   belongs_to :category
   belongs_to :updater,  :class_name => 'User', :foreign_key => "updated_by"  
@@ -34,7 +37,7 @@ class TestCase < ActiveRecord::Base
   has_many :test_case_executions
   has_many :file_attachments
   
-  acts_as_solr :fields => [:title, :body, :tag, :owner, :project_id]
+  acts_as_solr :fields => [:title, :body, :tag, :owner, :project_id, :ancestor_ids]
   validates_presence_of     :title#, :body
 
   def logical_delete
