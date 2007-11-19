@@ -92,7 +92,7 @@ module ActsAsSolr #:nodoc:
         record = things.find {|thing| record_id(thing).to_s == id.to_s} 
         logger.debug "looking for #{id}..."
         # This may be valid if other query parameters are restricting the results
-        raise "The id #{id} is in the Solr index but was not returned in the database query. Might be ok." unless record         
+        logger.debug "The id #{id} is in the Solr index but was not returned in the database query. Might be ok." unless record         
         ordered_things << record if record
       end
       ordered_things
