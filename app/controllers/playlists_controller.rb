@@ -5,7 +5,9 @@ class PlaylistsController < ApplicationController
   # GET /playlists.xml
   def index
     if params[:q] && !params[:q].blank?
-      @playlists = Playlist.paginate_search(params[:q], {:per_page => 100, :page => params[:page]},{:include => [{:playlist_test_cases => :test_case_executions}]})      
+      @playlists = Playlist.paginate_search(params[:q], {:per_page => 50, :page => params[:page]} )      
+      @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','})) GROUP BY last_result"
+      @bugs =  TestCaseExecution.find_by_sql "SELECT bug_id FROM test_case_executions JOIN playlist_test_cases ON playlist_test_cases.id = test_case_executions.playlist_test_case_id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','}))"
       @my_playlists =  []
     elsif logged_in?
       @my_playlists = Playlist.find_all_by_user_id(current_user.id) 
@@ -14,7 +16,7 @@ class PlaylistsController < ApplicationController
       @playlists = Playlist.find(:all)
       @my_playlists =  []
     end
-    
+        
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @playlists }
@@ -49,7 +51,7 @@ class PlaylistsController < ApplicationController
     respond_to do |format|
       format.html do # show.html.erb
         if params[:q] && !params[:q].blank?
-          @playlist_test_cases = PlaylistTestCase.paginate_search(params[:q], {:page => params[:page], :per_page => 25}, {:include => [:test_case], :conditions => {:playlist_id => @playlist.id, 'test_cases.active' => true}})      
+          @playlist_test_cases = PlaylistTestCase.paginate_search(params[:q]+" AND playlistid:#{@playlist.id}", {:page => params[:page], :per_page => 25}, {:include => [:test_case], :conditions => {:playlist_id => @playlist.id, 'test_cases.active' => true}})      
         else              
           @playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 25, :include => [:test_case_executions,{:test_case => :category},:user], :order => sort, :conditions => @conditions  
         end
