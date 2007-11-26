@@ -5,9 +5,11 @@ class PlaylistsController < ApplicationController
   # GET /playlists.xml
   def index
     if params[:q] && !params[:q].blank?
-      @playlists = Playlist.paginate_search(params[:q], {:per_page => 50, :page => params[:page]} )      
-      @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','})) GROUP BY last_result"
-      @bugs =  TestCaseExecution.find_by_sql "SELECT bug_id FROM test_case_executions JOIN playlist_test_cases ON playlist_test_cases.id = test_case_executions.playlist_test_case_id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','}))"
+      @playlists = Playlist.paginate_search(params[:q], {:per_page => 50, :page => params[:page]} )
+      unless @playlists.empty?      
+        @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','})) GROUP BY last_result"
+        @bugs =  TestCaseExecution.find_by_sql "SELECT bug_id FROM test_case_executions JOIN playlist_test_cases ON playlist_test_cases.id = test_case_executions.playlist_test_case_id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','}))"
+      end
       @my_playlists =  []
     elsif logged_in?
       @my_playlists = Playlist.find_all_by_user_id(current_user.id) 
