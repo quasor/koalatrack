@@ -33,6 +33,10 @@ class PlaylistsController < ApplicationController
     if params[:show_all]
       session[:filtering] = false
     end
+
+    @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` = #{@playlist.id}) GROUP BY last_result"
+    @bugs =  TestCaseExecution.find_by_sql "SELECT bug_id FROM test_case_executions JOIN playlist_test_cases ON playlist_test_cases.id = test_case_executions.playlist_test_case_id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` = #{@playlist.id})"
+
     
     sort = case params[:sort]
                when "feature"  then "test_cases.priority_in_feature"
