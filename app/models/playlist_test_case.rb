@@ -16,7 +16,7 @@
 #
 
 class PlaylistTestCase < ActiveRecord::Base
-  acts_as_solr :fields => [:title, :bug_id, :assignedto, :body, :priority, :category, :playlistid]
+  acts_as_solr :fields => [:title, :bug, :assignedto, :body, :priority, :category, :playlistid]
   belongs_to :playlist
   acts_as_list :scope => :playlist
 
@@ -33,8 +33,8 @@ class PlaylistTestCase < ActiveRecord::Base
     playlist.id.to_i
   end
   
-  def bug_id
-    test_case_executions.bug_id
+  def bug
+    test_case_executions.collect(&:bug_id).uniq.reject { |r| r.blank? }.join ','
   end
   
   def assignedto

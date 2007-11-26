@@ -23,29 +23,29 @@ table.rpt th { border-left:1px solid #FFF;}
 	@tces.collect do |k,v| %>
 	<% end %>
 	<% for playlist_test_case in playlist_test_cases %>
-	<tr><td nowrap style="font-size:6px"><%#= playlist_test_case.id%></td>
-	<% recent_match = nil %>
-	<% exact_match = nil 
+		<tr><td nowrap style="font-size:6px"><%#= playlist_test_case.id%></td>
+		<% recent_match = nil %>
+		<% exact_match = nil 
 			rows = @tces[playlist_test_case.id] 
 			rows = rows.group_by{ |r| r.created_at.to_date} if rows
-	%>
-	<% for d in d1..d2
+			%>
+		<% for d in d1..d2
 			exact_match = rows[d.to_date] if rows
 			%>
 			<%exact_match = exact_match[0] if exact_match %>
 			<%
 		  recent_match = exact_match unless exact_match.nil? %>
 			<% if exact_match %>
-			<%= "<td class=e#{exact_match.result }>"%>
+				<%= "<td class=e#{exact_match.result }>"%>
 			<% elsif  recent_match %>
-			<%= "<td class=r#{recent_match.result}" %>
+				<%= "<td class=r#{recent_match.result}>" %>
 			<% else %>
 			<td>
 			<% end %>
 			</td>
+		<% end %>
+		</tr>
 	<% end %>
-<% end %>
-</tr>
 </table>
 
 <% end %>
