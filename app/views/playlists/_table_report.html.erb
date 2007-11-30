@@ -1,51 +1,52 @@
-<% @test_case_executions = @playlist.recent_test_case_executions %>
+<% @test_case_executions = @playlist.test_case_executions %>
 <% unless @test_case_executions.empty? %>
-<% d1 = @test_case_executions[0].created_at.to_date %>
-<% d2 = @test_case_executions.last.created_at.to_date%>
-<% if (d2 - d1).abs > 60 
-	d2 = Date.today
-	d1 = d2 - 60 
-end %>
-<style>
-.r {color:#999999;}
-table.rpt td { border-top: 1px solid #EEE;}
-table.rpt th { border-left:1px solid #FFF;}
-</style>
-<table border="0" cellpadding="1" cellspacing="0" bordercolor="#EFEFEF" class='rpt'>
-	<tr>
-		<td></td>
-<% for d in d1..d2%>
-<th style="font-size:10px"><%=d.to_s(:short)%></th>
-<% end %>
-</tr>
-  <% playlist_test_cases = @playlist.playlist_test_cases.sort_by(&:last_result).reverse %>
-	<% @tces = @test_case_executions.group_by(&:playlist_test_case_id)
-	@tces.collect do |k,v| %>
-	<% end %>
-	<% for playlist_test_case in playlist_test_cases %>
-		<tr><td nowrap style="font-size:6px"><%#= playlist_test_case.id%></td>
-		<% recent_match = nil %>
-		<% exact_match = nil 
-			rows = @tces[playlist_test_case.id] 
-			rows = rows.group_by{ |r| r.created_at.to_date} if rows
-			%>
-		<% for d in d1..d2
-			exact_match = rows[d.to_date] if rows
-			%>
-			<%exact_match = exact_match[0] if exact_match %>
-			<%
-		  recent_match = exact_match unless exact_match.nil? %>
-			<% if exact_match %>
-				<%= "<td class=e#{exact_match.result }>"%>
-			<% elsif  recent_match %>
-				<%= "<td class=r#{recent_match.result}>" %>
-			<% else %>
-			<td>
-			<% end %>
-			</td>
-		<% end %>
-		</tr>
-	<% end %>
-</table>
+
+<% 
+#weekdays = (d1..d2).reject { |d| [0,6].include? d.wday }
+%>
+<% 
+@results = []
+@categories = @passed = ""
+count = TestCaseExecution::RESULTS.size
+count.times do |idx|
+	@results[idx] = ""
+end
+@srow = ExecutionSummary.find_all_by_playlist_id(@playlist.id, :order => 'date') 
+@srow.each do |r| 
+	@categories += "<category name='#{r.date.to_s(:short)}' />\n"	
+	@results[1] += "<set value='#{r.passed}' />"
+	@results[2] += "<set value='#{r.failed}' />"
+	@results[3] += "<set value='#{r.blocked}' />"
+	@results[4] += "<set value='#{r.nyied}' />"
+end
+@total = @playlist.playlist_test_cases.count
+	@ymax = @total #((@total / 20) + 1) * 20 
+%>
+<%
+@xml = <<-XML
+<graph xAxisName='Date' yAxisName='Test Cases' hovercapbg='FEF7CA' hovercapborder='FEFEFE' formatNumberScale='0' 
+decimalPrecision='0' showvalues='0' animation='0' showShadow='1' numdivlines='6' numVdivlines='0' yaxisminvalue='0' yaxismaxvalue='#{ @ymax }' lineThickness='4' rotateNames='1'
+showAlternateHGridColor='1' AlternateHGridColor='7777FF' divLineColor='999999' divLineAlpha='30' alternateHGridAlpha='10' canvasBorderColor='666666' baseFontColor='666666'>
+    <categories>
+	  #{@categories}
+   </categories>
+
+   <dataset seriesname='#{TestCaseExecution::RESULTS[1]}' color='00CC00' showValue='0'>#{@results[1]}</dataset>
+   <dataset seriesname='#{TestCaseExecution::RESULTS[2]}' color='CC0000' showValue='0'>#{@results[2]}</dataset>
+   <dataset seriesname='#{TestCaseExecution::RESULTS[3]}' color='0000CC' showValue='0'>#{@results[3]}</dataset>
+   <dataset seriesname='#{TestCaseExecution::RESULTS[4]}' color='000000' showValue='0'>#{@results[4]}</dataset>
+</graph>
+XML
+
+width = 600
+height = 400
+%>
+
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="<%=width%>" height="<%=height%>" id="Column3D" style="float:left;">
+   <param name="movie" value="../FusionCharts/FCF_MSLine.swf?chartWidth=<%=width%>&chartHeight=<%=height%>" />
+   <param name="FlashVars" value="&dataXML=<%=@xml%>">
+   <param name="quality" value="high" />
+   <embed src="/Charts/FCF_MSLine.swf?chartWidth=<%=width%>&chartHeight=<%=height%>" flashVars="&dataXML=<%=@xml%>" quality="high" width="<%=width%>" height="<%=height%>" name="Column3D" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+</OBJECT>
 
 <% end %>

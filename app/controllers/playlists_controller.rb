@@ -1,5 +1,13 @@
 class PlaylistsController < ApplicationController
   before_filter :login_required, :except => [:index, :show]
+  rescue_from ActiveRecord::RecordNotFound do
+    flash[:warning] = "You do not have permission to #{action_name} that item."      
+    if @playlist
+      redirect_to @playlist 
+    else
+      redirect_to playlists_path
+    end
+  end
   
   # GET /playlists
   # GET /playlists.xml
@@ -27,7 +35,14 @@ class PlaylistsController < ApplicationController
 
   # GET /playlists/1
   # GET /playlists/1.xml
+  require 'memcache_util'
   def show
+    if Cache.get('SummaryUpdater').nil? && params[:show_report]
+      Cache.put 'SummaryUpdater', true, 120
+      ExecutionSummary.build_summary      
+      @refresh = true
+    end
+    
     @playlist = Playlist.find(params[:id])
     if params[:notrun]
        session[:filtering] = true
@@ -183,7 +198,8 @@ class PlaylistsController < ApplicationController
   # PUT /playlists/1.xml
   # Un assign 1 or more test cases on this playlist
   def remove
-    @playlist = Playlist.find(params[:id])
+    @playlist = Playlist.find(params[:id]) # find it
+    @playlist = current_user.group.playlists.find(params[:id]) # verify ownership 
     @ids = params[:remove][:test_case_ids]
       
     respond_to do |format|

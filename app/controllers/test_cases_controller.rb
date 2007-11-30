@@ -1,5 +1,10 @@
 class TestCasesController < ApplicationController
   before_filter :login_required, :except => [:index, :show]
+  rescue_from ActiveRecord::RecordNotFound do
+    redirect_to test_cases_path
+    flash[:warning] = "You do not have permission to #{action_name} that test case."      
+  end
+  
   
   # GET /test_cases
   # GET /test_cases.xml
@@ -75,7 +80,6 @@ class TestCasesController < ApplicationController
     respond_to do |format|
       if @test_case.save
         unless @uploaded_data.blank?
-          logger.info @uploaded_data.inspect
           @file_attachment = FileAttachment.new({:uploaded_data => @uploaded_data})
           @test_case.file_attachments << @file_attachment
         end        
@@ -89,18 +93,13 @@ class TestCasesController < ApplicationController
     end
   end
 
-  def update_tags
-    @tags = (params[:test_case][:tag_list] || "") + (params[:quick_tag_list] || "")
-    @tags = @tags.split(',').collect{ |t| t.strip }.uniq.join(', ')
-    params[:test_case][:tag_list] = @tags
-    @test_case.tag = params[:test_case][:tag_list]
-  end
-
   # PUT /test_cases/1
   # PUT /test_cases/1.xml
   def update
+    #@test_case = TestCase.find(params[:id])
+    @test_case = current_user.group.test_cases.find(params[:id])
+    
     @uploaded_data = params[:test_case].delete :uploaded_data
-    @test_case = TestCase.find(params[:id])
     @test_case = @test_case.clone if params[:clone]
     @test_case.updated_by = current_user.id if logged_in?
     
@@ -125,13 +124,21 @@ class TestCasesController < ApplicationController
   # DELETE /test_cases/1
   # DELETE /test_cases/1.xml
   def destroy
-    @test_case = TestCase.find(params[:id])
-#    @test_case.destroy
+    @test_case = current_user.test_cases.find(params[:id])
     @test_case.logical_delete
   
     respond_to do |format|
       format.html { redirect_to(test_cases_url) }
       format.xml  { head :ok }
     end
+  end
+
+protected
+  
+  def update_tags
+    @tags = (params[:test_case][:tag_list] || "") + (params[:quick_tag_list] || "")
+    @tags = @tags.split(',').collect{ |t| t.strip }.uniq.join(', ')
+    params[:test_case][:tag_list] = @tags
+    @test_case.tag = params[:test_case][:tag_list]
   end
 end

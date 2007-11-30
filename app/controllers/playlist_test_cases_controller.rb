@@ -1,5 +1,13 @@
 class PlaylistTestCasesController < ApplicationController
   before_filter :login_required, :except => [:index, :show]
+  rescue_from ActiveRecord::RecordNotFound do
+    flash[:warning] = "You do not have permission to #{action_name} that playlist test case."      
+    if @playlist
+      redirect_to @playlist 
+    else
+      redirect_to playlists_path
+    end
+  end
 
   # GET /playlist_test_cases
   # GET /playlist_test_cases.xml
@@ -88,8 +96,8 @@ class PlaylistTestCasesController < ApplicationController
   # DELETE /playlist_test_cases/1
   # DELETE /playlist_test_cases/1.xml
   def destroy
-    @playlist_test_case = PlaylistTestCase.find(params[:id])
-    @playlist = @playlist_test_case.playlist
+    @playlist = PlaylistTestCase.find(params[:id]).playlist
+    @playlist_test_case = current_user.playlist_test_cases.find(params[:id])
     @playlist_test_case.destroy
 
     respond_to do |format|

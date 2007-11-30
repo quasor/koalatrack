@@ -16,13 +16,13 @@ class Playlist < ActiveRecord::Base
   acts_as_solr :fields => [:title, :milestone_name, :user]
   belongs_to :milestone
   has_many :playlist_test_cases, :order => :position
-  has_many :recent_test_case_executions, :through => :playlist_test_cases, :source => :test_case_executions,
-    :select => 'DATE(test_case_executions.created_at) as created_at, playlist_test_case_id, result', 
-    :conditions => 'test_case_executions.id IN (SELECT MAX(id) as id FROM test_case_executions GROUP BY DATE(created_at), playlist_test_case_id)'
   has_many :test_cases, :through => :playlist_test_cases, :source => :test_case
+  has_many :test_case_executions, :through => :playlist_test_cases
   belongs_to :user
   def milestone_name
     self.milestone.name
   end
   validates_presence_of :title  
+  
 end
+

@@ -49,12 +49,12 @@ class TestCaseExecutionsController < ApplicationController
     @test_case_execution.test_case_version = @playlist_test_case.test_case_version || @playlist_test_case.test_case.version
     @test_case_execution.test_case_id = @playlist_test_case.test_case.id
 
-    def pass_by!(user_id)
-      @version = test_case_version || test_case.version
-      @tce = TestCaseExecution.create( :playlist_test_case_id => id, 
-        :test_case_id => test_case_id, :user_id => user_id, 
-        :test_case_version => @version,:result => 1)                                
-    end
+  def pass_by!(user_id)
+    @version = test_case_version || test_case.version
+    @tce = TestCaseExecution.create( :playlist_test_case_id => id, 
+      :test_case_id => test_case_id, :user_id => user_id, 
+      :test_case_version => @version,:result => 1)                                
+  end
     
     respond_to do |format|
       if @test_case_execution.save
