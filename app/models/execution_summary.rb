@@ -12,10 +12,10 @@ class ExecutionSummary < ActiveRecord::Base
     	      sum(case when result = 4 then 1 else 0 end) as nyied
     	  FROM test_case_executions as a
     	  inner join
-    	       (SELECT DATE(created_at) as created_at_date, playlist_test_case_id, MAX(id) as IDMax
+    	       (SELECT playlist_test_case_id, MAX(id) as IDMax
     	        FROM test_case_executions
-    	        GROUP BY DATE(created_at), playlist_test_case_id) AS B 
-    		on DATE(a.created_at) = B.created_at_date and a.playlist_test_case_id = B.playlist_test_case_id AND a.id = B.IDMax
+    	        GROUP BY playlist_test_case_id) AS B 
+    		on a.playlist_test_case_id = B.playlist_test_case_id AND a.id = B.IDMax
 
     	  inner join
     	       playlist_test_cases c on a.playlist_test_case_id = c.id
