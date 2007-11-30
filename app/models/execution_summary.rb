@@ -22,7 +22,7 @@ class ExecutionSummary < ActiveRecord::Base
     	  inner join
     	       playlists d on c.playlist_id = d.id
     	WHERE
-    	a.created_at < '#{date.to_s}'
+    	a.created_at <= '#{date.to_s}'
     	GROUP BY d.title
     	ORDER BY d.id,  d.title
       SQL
