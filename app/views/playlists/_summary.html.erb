@@ -1,3 +1,4 @@
+<% if @summary%>
 <table border="0">
 	<caption><b>Execution Summary</b></caption>
 	<tr>
@@ -31,3 +32,5 @@
 		<b>Bugs:</b><br><%= @bugs.collect{ |e| "#{e.bug_url} " } %>
 </div>
 <% end %>	
+
+<% end %>
