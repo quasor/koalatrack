@@ -1,6 +1,3 @@
-<% @test_case_executions = @playlist.test_case_executions %>
-<% unless @test_case_executions.empty? %>
-
 <% 
 #weekdays = (d1..d2).reject { |d| [0,6].include? d.wday }
 %>
@@ -11,22 +8,48 @@ count = TestCaseExecution::RESULTS.size
 count.times do |idx|
 	@results[idx] = ""
 end
-@srow = ExecutionSummary.find_all_by_playlist_id(@playlist.id, :order => 'date') 
+if @playlists
+	@srow = ExecutionSummary.find(:all, 
+		:select => 'date, SUM(passed) as passed, SUM(failed) as failed, SUM(blocked) AS blocked, SUM(nyied) as nyied', 
+		:conditions => {:playlist_id => @playlists.collect(&:id)}, 
+		:group => 'date',
+		:order => 'date') 
+	@ymax = total 
+else
+	@srow = ExecutionSummary.find(:all, :conditions => {:playlist_id => @playlist.id}, :order => 'date') 	
+	@total = @playlist.playlist_test_cases.count
+	@ymax = @total 
+end
+first = @srow[0].date
+last = @srow.last.date
+
 @srow.each do |r| 
-	@categories += "<category name='#{r.date.to_s(:short)}' />\n"	
+	@categories += "<category name='#{r.date.to_s(:short) if (first == r.date || last == r.date) || !mini_chart}' />\n"	
 	@results[1] += "<set value='#{r.passed}' />"
 	@results[2] += "<set value='#{r.failed}' />"
 	@results[3] += "<set value='#{r.blocked}' />"
 	@results[4] += "<set value='#{r.nyied}' />"
 end
-@total = @playlist.playlist_test_cases.count
-	@ymax = @total #((@total / 20) + 1) * 20 
+# 
 %>
 <%
+unless mini_chart
+	width = 700
+	height = 400
+	graph_header = "<graph xAxisName='Date' yAxisName='Test Cases' hovercapbg='FEF7CA' hovercapborder='FEFEFE' formatNumberScale='0' 
+	decimalPrecision='0' showvalues='0' animation='0' showShadow='1' numdivlines='6' numVdivlines='0' yaxisminvalue='0' yaxismaxvalue='#{ @ymax }' lineThickness='4' rotateNames='1'
+	showAlternateHGridColor='1' AlternateHGridColor='7777FF' divLineColor='999999' divLineAlpha='30' alternateHGridAlpha='10' canvasBorderColor='666666' baseFontColor='666666'>"
+else
+	width = 160
+	height = 100
+	graph_header = "<graph showAnchors='0' hovercapbg='FEF7CA' hovercapborder='FEFEFE' formatNumberScale='0' 
+	decimalPrecision='0' showvalues='0' animation='0' showShadow='0' numdivlines='2' numVdivlines='0' yaxisminvalue='0' yaxismaxvalue='#{ @ymax }' lineThickness='2' rotateNames='0'
+	showLegend='0' showAlternateHGridColor='1' AlternateHGridColor='7777FF' divLineColor='999999' divLineAlpha='30' alternateHGridAlpha='10' canvasBorderColor='666666' baseFontColor='666666'>"
+end
+
+
 @xml = <<-XML
-<graph xAxisName='Date' yAxisName='Test Cases' hovercapbg='FEF7CA' hovercapborder='FEFEFE' formatNumberScale='0' 
-decimalPrecision='0' showvalues='0' animation='0' showShadow='1' numdivlines='6' numVdivlines='0' yaxisminvalue='0' yaxismaxvalue='#{ @ymax }' lineThickness='4' rotateNames='1'
-showAlternateHGridColor='1' AlternateHGridColor='7777FF' divLineColor='999999' divLineAlpha='30' alternateHGridAlpha='10' canvasBorderColor='666666' baseFontColor='666666'>
+#{graph_header}
     <categories>
 	  #{@categories}
    </categories>
@@ -37,16 +60,11 @@ showAlternateHGridColor='1' AlternateHGridColor='7777FF' divLineColor='999999' d
    <dataset seriesname='#{TestCaseExecution::RESULTS[4]}' color='000000' showValue='0'>#{@results[4]}</dataset>
 </graph>
 XML
-
-width = 600
-height = 400
 %>
 
-<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="<%=width%>" height="<%=height%>" id="Column3D" style="float:left;">
+<OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="<%=width%>" height="<%=height%>" id="Column3D">
    <param name="movie" value="../FusionCharts/FCF_MSLine.swf?chartWidth=<%=width%>&chartHeight=<%=height%>" />
    <param name="FlashVars" value="&dataXML=<%=@xml%>">
    <param name="quality" value="high" />
    <embed src="/Charts/FCF_MSLine.swf?chartWidth=<%=width%>&chartHeight=<%=height%>" flashVars="&dataXML=<%=@xml%>" quality="high" width="<%=width%>" height="<%=height%>" name="Column3D" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
 </OBJECT>
-
-<% end %>

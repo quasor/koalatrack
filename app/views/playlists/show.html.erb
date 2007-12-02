@@ -52,54 +52,25 @@
 </span>
 
 <h3><%=h @playlist.title %></h3>
-<p>
-  <%=h @playlist.description %>
-</p>
+<p><%=h @playlist.description %></p>
 
-<% if @summary %>
-		<table border="0" cellspacing="0" cellpadding="4">
-		<caption><b>Execution Summary</b>	<%= link_to "Chart / Bugs", :show_report => (params[:show_report].nil?) %></caption>
-	<tr>
-		<% total = @playlist.playlist_test_cases.count %>
-		<% @summary.each do |summary| %>
-				<th><%= TestCaseExecution::RESULTS[summary.result] %></th>
-		<% end %>
-	</tr>
-	<tr>
-	<% @summary.each do |summary| %>
-			<td align="center"><b><%= summary.total%></b> <br/><%= (summary.total.to_i * 1.0 / total * 100 ).round 1%>%</td>
-	<% end %>
-</tr>
-	<% if params[:show_report] %>
-	</table>
-	<%= render :partial => 'table_report' %>
-	<div>
-			<b>Bugs:</b><br><%= @bugs.collect{ |e| "#{e.bug_url} " } %>
-	</div>
-	<% end %>
-	</table>
-	<br/>
-<% end %>
-<div style="clear:both"></div>
+<%= render :partial => "summary", :object => @summary %>
+
 <table>
 	<tr>
 		<td>
-<h3>Test Cases <span style="font-size:11px">
-<%= link_to "Show All", playlist_path(@playlist, :show_all=>true) if session[:filtering] %>
-<%= link_to "Hide cases that have been run", playlist_path(@playlist, :notrun => true) unless session[:filtering] or @playlist.playlist_test_cases.empty?%>
-</span>
-</h3>
-</td>
-<td>
-<% form_tag playlist_path(@playlist), :method => 'get' do %>
-  Search:
-  <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box, :type => :search %><%= link_to 'Show All', @playlist if params[:q]%>
-  <br/><span style='font-size:10px;margin-left:60px'>
-	<%= link_to 'Query Syntax Help', "/query.html", :target => '_blank' %>
-	</span>					
-<% end %>
-</td>
-</tr>
+			<h3>Test Cases <span style="font-size:11px"><%= link_to "Show All", playlist_path(@playlist, :show_all=>true) if session[:filtering] %><%= link_to "Hide cases that have been run", playlist_path(@playlist, :notrun => true) unless session[:filtering] or @playlist.playlist_test_cases.empty?%></span></h3>
+		</td>
+		<td>
+		<% form_tag playlist_path(@playlist), :method => 'get' do %>
+		  Search:
+		  <%= text_field_tag :q, params[:q], :size => 15, :id => :search_box, :type => :search %><%= link_to 'Show All', @playlist if params[:q]%>
+		  <br/><span style='font-size:10px;margin-left:60px'>
+			<%= link_to 'Query Syntax Help', "/query.html", :target => '_blank' %>
+			</span>					
+		<% end %>
+		</td>
+	</tr>
 </table>
 
 <%= will_paginate @playlist_test_cases unless @playlist_test_cases.empty?%>

@@ -1,5 +1,6 @@
 <h1>Playlists</h1>
-<table><tr><td valign=top>
+
+<table><tr><td valign="top">
 <%= link_to 'New playlist', new_playlist_path %>
 </td><td valign="top">&nbsp; or &nbsp;</td><td>
 <% form_tag playlists_path, :method => 'get' do %>
@@ -8,33 +9,36 @@
   <span style='font-size:10px;margin-left:10px'>
 	<%= link_to 'Query Syntax Help', "/query.html", :target => '_blank' %>
 	</span>					
-
 <% end %>
 </td></tr></table>
+
 <% if @summary %>
-		<table border="1">
-		<caption><b>Execution Summary</b></caption>
+	<table border="0" cellspacing="0" cellpadding="4">
+	<caption><b>Execution Summary</b></caption>
 	<tr>
-		<th>Status</th>
-		<th>Count</th>
+		<% total = 0
+		@summary.collect {|t| total += t.total.to_i}%>
+		<% @summary.each do |summary| %>
+				<th><%= TestCaseExecution::RESULTS[summary.result] %></th>
+		<% end %>
+		<th>Bugs</th>
 	</tr>
-	<% total = 0
-	@summary.collect {|t| total += t.total.to_i}%>
+	<tr>
 	<% @summary.each do |summary| %>
-	<tr>
-			<td><%= TestCaseExecution::RESULTS[summary.result] %></td>
-			<td width="20" align="center"><%= summary.total%></td>
-			<td><%= (summary.total.to_i * 1.0 / total * 100 ).round 1%>%</td>
-	</tr>
+			<td align="center" valign="top"><b><%= summary.total%></b> <br/><%= (summary.total.to_i * 1.0 / total * 100 ).round 1%>%</td>
 	<% end %>
-	<tr>
-		<td colspan=3 width="400">
-			<b>Bugs:</b><%= @bugs.collect{ |e| "#{e.bug_url} " } %>
-			</td>
+			<td align="center" valign="top"><b><%= @bugs.collect{ |e| e.bug_id.split ',' }.flatten.size %></b></td>
 	</tr>
-	</table>
-	<br/>
+</table>
+	<%= link_to render(:partial => 'table_report', :locals => {:total => total, :mini_chart => (params[:show_report].nil?)}), :q => params[:q], :show_report => (params[:show_report].nil?) %>
+	<% if params[:show_report]%>
+	<div>
+			<b>Bugs:</b><br><%= @bugs.collect{ |e| "#{e.bug_url} " } %>
+	</div>
+	<% end %>
+	
 <% end %>
+
 
 <table cellspacing="0" class="padded">
   <tr>
