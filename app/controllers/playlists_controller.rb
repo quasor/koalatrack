@@ -16,7 +16,7 @@ class PlaylistsController < ApplicationController
       @playlists = Playlist.paginate_search(params[:q], {:per_page => 50, :page => params[:page]} )
       unless @playlists.empty?      
         @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','})) GROUP BY last_result"
-        @bugs =  TestCaseExecution.find_by_sql "SELECT bug_id FROM test_case_executions JOIN playlist_test_cases ON playlist_test_cases.id = test_case_executions.playlist_test_case_id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','}))"
+        @bugs =  TestCaseExecution.find_by_sql "SELECT bug_id FROM test_case_executions JOIN playlist_test_cases ON playlist_test_cases.id = test_case_executions.playlist_test_case_id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','})  AND bug_id != '')"
       end
       @my_playlists =  []
     elsif logged_in?
@@ -38,7 +38,7 @@ class PlaylistsController < ApplicationController
   require 'memcache_util'
   def show
     if Cache.get('SummaryUpdater').nil? && params[:show_report]
-      Cache.put 'SummaryUpdater', true, 120
+      Cache.put 'SummaryUpdater', true, 1
       ExecutionSummary.build_summary      
       @refresh = true
     end
