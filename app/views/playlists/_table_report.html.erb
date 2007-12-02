@@ -20,9 +20,11 @@ else
 	@total = @playlist.playlist_test_cases.count
 	@ymax = @total 
 end
+
+unless @srow.empty?
+
 first = @srow[0].date
 last = @srow.last.date
-
 @srow.each do |r| 
 	@categories += "<category name='#{r.date.to_s(:short) if (first == r.date || last == r.date) || !mini_chart}' />\n"	
 	@results[1] += "<set value='#{r.passed}' />"
@@ -68,3 +70,5 @@ XML
    <param name="quality" value="high" />
    <embed src="/Charts/FCF_MSLine.swf?chartWidth=<%=width%>&chartHeight=<%=height%>" flashVars="&dataXML=<%=@xml%>" quality="high" width="<%=width%>" height="<%=height%>" name="Column3D" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
 </OBJECT>
+
+<% end %>
