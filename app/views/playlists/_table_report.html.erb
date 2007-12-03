@@ -1,7 +1,4 @@
 <% 
-#weekdays = (d1..d2).reject { |d| [0,6].include? d.wday }
-%>
-<% 
 @results = []
 @categories = @passed = ""
 count = TestCaseExecution::RESULTS.size
@@ -65,7 +62,7 @@ XML
 %>
 
 <OBJECT classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="<%=width%>" height="<%=height%>" id="Column3D">
-   <param name="movie" value="../FusionCharts/FCF_MSLine.swf?chartWidth=<%=width%>&chartHeight=<%=height%>" />
+   <param name="movie" value="/Charts/FCF_MSLine.swf?chartWidth=<%=width%>&chartHeight=<%=height%>" />
    <param name="FlashVars" value="&dataXML=<%=@xml%>">
    <param name="quality" value="high" />
    <embed src="/Charts/FCF_MSLine.swf?chartWidth=<%=width%>&chartHeight=<%=height%>" flashVars="&dataXML=<%=@xml%>" quality="high" width="<%=width%>" height="<%=height%>" name="Column3D" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
