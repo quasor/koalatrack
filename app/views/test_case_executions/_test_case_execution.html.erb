@@ -3,7 +3,7 @@
   <td><%=link_to test_case_execution.user.login, test_case_execution.user unless @hide_users %></td>
   <td><%=result_to_html test_case_execution.result %></td>
   <td><%=test_case_execution.bug_url %></td>
-  <td nowrap><%=link_to test_case_execution.playlist_test_case.playlist.title, playlist_path(test_case_execution.playlist_test_case.playlist, :show_report => true) if test_case_execution.playlist_test_case && test_case_execution.playlist_test_case.title%></td>
+  <td nowrap><%=link_to test_case_execution.playlist_test_case.playlist.title, playlist_path(test_case_execution.playlist_test_case.playlist, :show_report => true) if test_case_execution.playlist_test_case && test_case_execution.playlist_test_case.playlist%></td>
   <td><%=link_to test_case_execution.test_case.title, test_case_execution.test_case unless test_case_execution.test_case.nil? || @hide_test_case%></td>
 </td>
 </tr>
