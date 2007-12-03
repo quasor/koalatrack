@@ -23,7 +23,7 @@
 			</table>
 		</td>
 		<td>
-			<%= link_to render(:partial => 'table_report', :locals => {:total => total, :mini_chart => (params[:show_report].nil?)}), :q => params[:q], :show_report => (params[:show_report].nil?) %>
+			<%= render(:partial => 'table_report', :locals => {:total => total, :mini_chart => (params[:show_report].nil?)}) %>
 		</td>
 	</tr>
 </table>

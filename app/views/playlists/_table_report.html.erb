@@ -1,3 +1,4 @@
+<div style="text-align:center">
 <% 
 @results = []
 @categories = @passed = ""
@@ -43,7 +44,8 @@ else
 	height = 100
 	graph_header = "<graph showAnchors='0' hovercapbg='FEF7CA' hovercapborder='FEFEFE' formatNumberScale='0' 
 	decimalPrecision='0' showvalues='0' animation='0' showShadow='0' numdivlines='2' numVdivlines='0' yaxisminvalue='0' yaxismaxvalue='#{ @ymax }' lineThickness='2' rotateNames='0'
-	showLegend='0' showAlternateHGridColor='1' AlternateHGridColor='7777FF' divLineColor='999999' divLineAlpha='30' alternateHGridAlpha='10' canvasBorderColor='666666' baseFontColor='666666'>"
+	showLegend='0' showAlternateHGridColor='1' AlternateHGridColor='7777FF' divLineColor='999999' divLineAlpha='30' alternateHGridAlpha='10' canvasBorderColor='666666' baseFontColor='666666'
+	chartBottomMargin='0' chartTopMargin='5'>"
 end
 
 
@@ -68,4 +70,6 @@ XML
    <embed src="/Charts/FCF_MSLine.swf?chartWidth=<%=width%>&chartHeight=<%=height%>" flashVars="&dataXML=<%=@xml%>" quality="high" width="<%=width%>" height="<%=height%>" name="Column3D" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
 </OBJECT>
 
+<div style='font-size:9px'><%= link_to 'Zoom', :q => params[:q], :show_report => (params[:show_report].nil?) %></div>
 <% end %>
+</div>
