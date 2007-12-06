@@ -16,7 +16,7 @@
 #
 
 class PlaylistTestCase < ActiveRecord::Base
-  acts_as_solr :fields => [:title, :bug, :assignedto, :body, :priority, :category, :playlistid]
+  acts_as_solr :fields => [:title, :bug, :assignedto, :body, :priority, :category, :playlistid, :result]
   belongs_to :playlist
   acts_as_list :scope => :playlist
 
@@ -27,6 +27,9 @@ class PlaylistTestCase < ActiveRecord::Base
   #Solr helpers:
   def title
     test_case.title
+  end
+  def result
+    last_result
   end
 
   def playlistid
