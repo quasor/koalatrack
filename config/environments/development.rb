@@ -15,5 +15,8 @@ config.action_controller.perform_caching             = true
 config.action_view.cache_template_extensions         = false
 config.action_view.debug_rjs                         = true
 
+require 'memcache'
+CACHE = MemCache.new '127.0.0.1:11211', :namespace => 'koala_track'
+
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false

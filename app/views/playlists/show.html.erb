@@ -59,7 +59,7 @@
 <table>
 	<tr>
 		<td>
-			<h3>Test Cases <span style="font-size:11px"><%= link_to "Show All", playlist_path(@playlist, :show_all=>true) if session[:filtering] %><%= link_to "Hide cases that have been run", playlist_path(@playlist, :notrun => true) unless session[:filtering] or @playlist.playlist_test_cases.empty?%></span></h3>
+			<h3>Test Cases <span style="font-size:11px"><%= link_to "Show All", playlist_path(@playlist, :show_all=>true, :q => params[:q]) if session[:filtering] %><%= link_to "Hide cases that have been run", playlist_path(@playlist, :notrun => true, :q => params[:q]) unless session[:filtering] or @playlist.playlist_test_cases.empty?%></span></h3>
 		</td>
 		<td>
 		<% form_tag playlist_path(@playlist), :method => 'get' do %>
@@ -83,16 +83,16 @@
           <% else %>
 		<th></th>
 	  <% end # space for checkboxes %>
-    <th><%= link_to '#', playlist_path(@playlist, :desc => (params[:desc] != "true"))%></th>
-    <th><%= link_to 'Category', playlist_path(@playlist, :sort => :category, :desc => (params[:desc] != "true"))%></th>
+    <th><%= link_to '#', playlist_path(@playlist, :q => params[:q], :desc => (params[:desc] != "true"))%></th>
+    <th><%= link_to 'Category', playlist_path(@playlist, :q => params[:q], :sort => :category, :desc => (params[:desc] != "true"))%></th>
     <th>Title</th>
-    <th><%= link_to 'Assigned To', playlist_path(@playlist, :sort => :assigned, :desc => (params[:desc] != "true"))%></th>
+    <th><%= link_to 'Assigned To', playlist_path(@playlist, :q => params[:q], :sort => :assigned, :desc => (params[:desc] != "true"))%></th>
 		<th>Action</th>
-    <th><%= link_to 'Recent Results', playlist_path(@playlist, :sort => :results, :desc => (params[:desc] != "true")) %></th>
+    <th><%= link_to 'Recent Results', playlist_path(@playlist, :q => params[:q], :sort => :results, :desc => (params[:desc] != "true")) %></th>
     <th><%= "Bugs" unless params[:notrun] %></th>
     <th><%= "Last Run" unless params[:notrun] %></th>
-    <th><%= link_to 'Pri in feature', playlist_path(@playlist, :sort => :feature, :desc => (params[:desc] != "true"))%></th>
-    <!-- ><th><%= link_to 'Pri in product', playlist_path(@playlist, :sort => :product, :desc => (params[:desc] != "true"))%></th> -->
+    <th><%= link_to 'Pri in feature', playlist_path(@playlist, :q => params[:q], :sort => :feature, :desc => (params[:desc] != "true"))%></th>
+    <!-- ><th><%= link_to 'Pri in product', playlist_path(@playlist, :q => params[:q], :sort => :product, :desc => (params[:desc] != "true"))%></th> -->
 		<th>Tags</th>
 		<th></th>
   </tr>

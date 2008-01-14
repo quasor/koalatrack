@@ -15,7 +15,7 @@ class PlaylistsController < ApplicationController
     if params[:q] && !params[:q].blank?
       @playlists = Playlist.paginate_search(params[:q], {:per_page => 50, :page => params[:page]} )
       unless @playlists.empty?      
-        @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','})) GROUP BY last_result"
+        @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN test_cases ON playlist_test_cases.test_case_id = test_cases.id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`test_cases`.`active` = 1 AND `playlists`.`id` IN (#{@playlists.collect(&:id).join ','})) GROUP BY last_result"
         @bugs =  TestCaseExecution.find_by_sql "SELECT bug_id FROM test_case_executions JOIN playlist_test_cases ON playlist_test_cases.id = test_case_executions.playlist_test_case_id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','})  AND bug_id != '')"
       end
       @my_playlists =  []
@@ -51,7 +51,7 @@ class PlaylistsController < ApplicationController
       session[:filtering] = false
     end
 
-    @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` = #{@playlist.id}) GROUP BY last_result"
+    @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id JOIN test_cases ON playlist_test_cases.test_case_id = test_cases.id WHERE (`test_cases`.`active` = 1 AND   `playlists`.`id` = #{@playlist.id}) GROUP BY last_result"
     @bugs =  TestCaseExecution.find_by_sql "SELECT bug_id FROM test_case_executions JOIN playlist_test_cases ON playlist_test_cases.id = test_case_executions.playlist_test_case_id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` = #{@playlist.id})"
 
     
@@ -72,9 +72,15 @@ class PlaylistsController < ApplicationController
     respond_to do |format|
       format.html do # show.html.erb
         if params[:q] && !params[:q].blank?
-          @playlist_test_cases = PlaylistTestCase.paginate_search(params[:q]+" AND playlistid:#{@playlist.id}", {:page => params[:page], :per_page => 25}, {:include => [:test_case], :conditions => {:playlist_id => @playlist.id, 'test_cases.active' => true}})      
+          #@playlist_test_cases = PlaylistTestCase.paginate_search(params[:q]+" AND playlistid:#{@playlist.id}", {:page => params[:page], :per_page => 25}, {:include => [:test_case], :order => sort, :conditions => {:playlist_id => @playlist.id, 'test_cases.active' => true}})      
+          # new way, get the ids, then get the records :)
+          @playlist_test_case_ids = PlaylistTestCase.find_id_by_solr(params[:q]+" AND playlistid:#{@playlist.id}", :limit => 1000)
+          @conditions = {:playlist_id => @playlist.id, :id => @playlist_test_case_ids.docs, "test_case_executions.updated_at" => nil}
+           #if session[:filtering] 
+           @playlist_test_cases = PlaylistTestCase.paginate :page => params[:page], :per_page => 25, :include => [:test_case_executions,{:test_case => :category},:user], :order => sort, :conditions => @conditions  
+          
         else              
-          @playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 25, :include => [:test_case_executions,{:test_case => :category},:user], :order => sort, :conditions => @conditions  
+           @playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 25, :include => [:test_case_executions,{:test_case => :category},:user], :order => sort, :conditions => @conditions  
         end
       end
       format.doc do
