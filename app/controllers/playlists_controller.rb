@@ -76,7 +76,7 @@ class PlaylistsController < ApplicationController
           # new way, get the ids, then get the records :)
           @playlist_test_case_ids = PlaylistTestCase.find_id_by_solr(params[:q]+" AND playlistid:#{@playlist.id}", :limit => 1000)
           @conditions = {:playlist_id => @playlist.id, :id => @playlist_test_case_ids.docs}
-          @conditions.merge("test_case_executions.updated_at" => nil) if session[:filtering] 
+          @conditions.merge!("test_case_executions.updated_at" => nil) if session[:filtering] 
           @playlist_test_cases = PlaylistTestCase.paginate :page => params[:page], :per_page => 25, :include => [:test_case_executions,{:test_case => :category},:user], :order => sort, :conditions => @conditions  
           
         else              
