@@ -6,7 +6,7 @@
 		<th>Status of test cases assigned to <%=@user.login.capitalize%></th>
 	</tr>
 <% for playlist in @user.associated_playlists%>
-	<% playlist_test_cases = playlist.playlist_test_cases.find_all_by_user_id(@user.id) %>
+	<% playlist_test_cases = playlist.playlist_test_cases.find_all_by_user_id(@user.id, :conditions => {'test_cases.active' => 1 }, :include => :test_case ) %>
 	<tr>
 		<td><%= link_to playlist.title, playlist%></td>
 		<td>
@@ -29,7 +29,7 @@
     <th>Test Case</th>
   </tr>
 <% @hide_users = true %>
-<%= render :partial => @user.test_case_executions %>
+<%= render :partial =>  @user.test_case_executions.find(:all, :limit => 25) %>
 </table>
 <% end %>
 
