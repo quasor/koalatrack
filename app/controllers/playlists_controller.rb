@@ -57,7 +57,11 @@ class PlaylistsController < ApplicationController
     end
 
     @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id JOIN test_cases ON playlist_test_cases.test_case_id = test_cases.id WHERE (`test_cases`.`active` = 1 AND `playlists`.`id` = #{@playlist.id}) GROUP BY last_result"
-    @user_summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id JOIN test_cases ON playlist_test_cases.test_case_id = test_cases.id WHERE (`test_cases`.`active` = 1 AND `playlists`.`id` = #{@playlist.id} AND `playlist_test_cases`.`user_id` = #{current_user.id}) GROUP BY last_result"
+
+    if logged_in?
+      @user_summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id JOIN test_cases ON playlist_test_cases.test_case_id = test_cases.id WHERE (`test_cases`.`active` = 1 AND `playlists`.`id` = #{@playlist.id} AND `playlist_test_cases`.`user_id` = #{current_user.id}) GROUP BY last_result"
+    end
+  
     @bugs =  TestCaseExecution.find_by_sql "SELECT bug_id FROM test_case_executions JOIN playlist_test_cases ON playlist_test_cases.id = test_case_executions.playlist_test_case_id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` = #{@playlist.id})"
     if @playlist.playlist_test_cases.size > 0
       @last_date = @playlist.playlist_test_cases.find(:first, :order => 'updated_at DESC').updated_at 
