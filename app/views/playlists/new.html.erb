@@ -29,7 +29,15 @@
   </p>
 
   <p>
+		<% if params[:id] %>
+		
+    <%= f.submit "Clone Playlist", :id => 'submitbutton', :onclick => "$('submitbutton').hide();$('wait').show();" %>
+		<% else %>
     <%= f.submit "Create" %>
+		<% end %>
+		<div id="wait" class="notice" style="display:none">
+			<i>Cloning Test Case. Please Wait...</i>
+		</div>
   </p>
 <% end %>
 

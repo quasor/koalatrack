@@ -30,7 +30,8 @@ class User < ActiveRecord::Base
   has_many :edited_test_cases, :class_name => "TestCase" 
   has_many :playlists
   has_many :playlist_test_cases  
-  has_many :associated_playlists, :class_name => "Playlist", :through => :playlist_test_cases, :source => :playlist, :select => "DISTINCT playlists.*"
+  has_many :associated_playlists, :class_name => "Playlist", :through => :playlist_test_cases, :source => :playlist, :select => "DISTINCT playlists.*", :conditions => {:dead => false}
+  has_many :live_playlists, :class_name => "Playlist", :source => :playlist, :conditions => {:dead => false}
   belongs_to :group
   belongs_to :role
   

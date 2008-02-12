@@ -62,9 +62,14 @@ class PlaylistTestCase < ActiveRecord::Base
   validates_presence_of :playlist_id, :test_case_id, :user_id
   
   def pass_by!(user_id)
-    @version = test_case_version || test_case.version
+    @version = test_case.version
     @tce = TestCaseExecution.create( :playlist_test_case_id => id, 
       :test_case_id => test_case_id, :user_id => user_id, 
       :test_case_version => @version,:result => 1)                                
+  end
+  def freeze_version!
+    self.test_case_version = self.test_case.version 
+    self.save!
+    self.test_case_version
   end
 end

@@ -13,7 +13,7 @@
 #
 
 class Playlist < ActiveRecord::Base
-  acts_as_solr :fields => [:title, :milestone_name, :user]
+  acts_as_solr :fields => [:title, :milestone_name, :user, :dead]
   belongs_to :milestone
   has_many :playlist_test_cases, :order => :position, :dependent => :destroy
   has_many :test_cases, :through => :playlist_test_cases, :source => :test_case
@@ -23,6 +23,23 @@ class Playlist < ActiveRecord::Base
     self.milestone.name
   end
   validates_presence_of :title  
+  def to_param
+    "#{id}-#{title.downcase.gsub(/\s/,'-').gsub(/[^[:alnum:]|-]/,'')}".gsub(/-{2,}/,'-')
+  end  
+  
+  # send this playlist to the graveyard
+  # update all playlist_test_cases with their current version
+  def kill!()
+    s = ""
+    self.playlist_test_cases.each do |playlist_test_case|
+      s += playlist_test_case.freeze_version!.to_s
+      s += playlist_test_case.id.to_s
+      s += ", "
+    end
+    self.dead = true
+    self.save! 
+    s
+  end
   
 end
 

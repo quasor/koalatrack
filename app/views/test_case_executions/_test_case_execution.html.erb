@@ -4,7 +4,12 @@
   <td><%=result_to_html test_case_execution.result %></td>
   <td><%=test_case_execution.bug_url %></td>
   <td nowrap><%=link_to test_case_execution.playlist_test_case.playlist.title, playlist_path(test_case_execution.playlist_test_case.playlist, :show_report => true) if test_case_execution.playlist_test_case && test_case_execution.playlist_test_case.playlist%></td>
-  <td><%=link_to test_case_execution.test_case.title, test_case_execution.test_case unless test_case_execution.test_case.nil? || @hide_test_case%></td>
+<% unless test_case_execution.test_case.nil? || @hide_test_case %>
+  <td><%=link_to test_case_execution.test_case.title, test_case_execution.test_case%></td>
+<% end %>
+<% unless test_case_execution.test_case.nil? || @hide_test_case_version%>
+  <td><a href="<%=url_for :id => test_case_execution.test_case, :version => 1%>#version<%=test_case_execution.test_case_version%>">v<%=test_case_execution.test_case_version%></a></td>
+<% end %>
 </td>
 </tr>
 <tr>

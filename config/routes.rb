@@ -13,11 +13,11 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :playlist_test_cases, :member => { :up => :put, :down => :put }
 
-  map.resources :playlists, :member => {:assign => :put, :pass => :put, :remove => :delete, :sequence => :put}
+  map.resources :playlists, :member => {:assign => :put, :pass => :put, :remove => :delete, :sequence => :put, :kill => :put}
 
   map.resources :categories
 
-  map.resources :test_cases
+  map.resources :test_cases, :new => {:bulk => :post}
 
   map.resources :users
 

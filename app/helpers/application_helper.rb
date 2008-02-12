@@ -23,4 +23,7 @@ module ApplicationHelper
   def li_link_to_unless(cond, name, options)
     "<span#{" class='current'" if cond}>#{link_to_unless_current name, options}</span>"
   end
+  def link_to_bugs(bugs)
+    bugs.collect {|e| e.bug_id.split ',' if e.bug_id}.flatten.compact.uniq.sort.collect { |bug| "<a target=\"_blank\" href=\"http://expediaweb/test/bugs/bug.asp?BugID=#{bug.strip}\">#{bug.strip}</a>"}.join ' '
+  end
 end

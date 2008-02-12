@@ -2,7 +2,7 @@
 # migrations feature of ActiveRecord to incrementally modify your database, and
 # then regenerate this schema definition.
 
-ActiveRecord::Schema.define(:version => 44) do
+ActiveRecord::Schema.define(:version => 45) do
 
   create_table "categories", :force => true do |t|
     t.string   "name"
@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(:version => 44) do
     t.integer  "milestone_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "dead",         :default => false
   end
 
   create_table "roles", :force => true do |t|

@@ -1,20 +1,14 @@
-<h2><%=h @playlist.title %></h2>
+<h1><%=h @playlist.title %></h1>
   <%=h @playlist.description %>
-<br />
-<div>
+<p>
 	  <b>Owner:</b>
   <%=h @playlist.user.login %>
-	<% if @playlist.milestone %>
+	<% if @playlist.milestone -%>
   	<b>Milestone:</b>
   	<%=h @playlist.milestone.name %>
-	<% end %>
-</div>
-<% for playlist_test_case in @playlist_test_cases %>
-
-<br /><br />
-<h3><%= playlist_test_case.test_case.title %> (Pri <%= playlist_test_case.test_case.priority_in_feature %>)</h3>
-<blockquote>
-<%= playlist_test_case.test_case.body %>
-</blockquote>
-<% end %>
+	<% end -%>
+</p>
+<% for playlist_test_case in @playlist_test_cases -%>
+<% if params[:sort] == "category" && @category_id != playlist_test_case.test_case.category_id -%><h2><%= h playlist_test_case.test_case.category.ancestor_cache %> \ <%= h playlist_test_case.test_case.category.name%></h2><% @category_id = playlist_test_case.test_case.category_id -%>
+<% end -%><h3 style='margin-left:.5in'><%= playlist_test_case.test_case.title %> (Pri <%= playlist_test_case.test_case.priority_in_feature %>)</h3><div style='margin-left:1.0in'><%= playlist_test_case.test_case.body %></div><% end -%>
 

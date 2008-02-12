@@ -5,6 +5,7 @@
 		<td valign="top">
 			<table border="0" cellspacing="0" cellpadding="4">
 				<tr>
+					<th></th>
 					<% total = 0
 					@summary.collect {|t| total += t.total.to_i}%>
 					<% @summary.each do |summary| %>
@@ -12,12 +13,17 @@
 					<% end %>
 					<th>Bugs</th>
 				</tr>
-				<tr>
+				<tr><td><%= current_user.login%></td>
+					<% @user_summary.each do |summary| %>
+							<td align="center" valign="top"><b><%= summary.total%></b> <br/><%= (summary.total.to_i * 1.0 / total * 100 ).round 1%>%</td>
+					<% end %>					
+				</tr>
+				<tr><td>Total</td>
 				<% @summary.each do |summary| %>
 						<td align="center" valign="top"><b><%= summary.total%></b> <br/><%= (summary.total.to_i * 1.0 / total * 100 ).round 1%>%</td>
 				<% end %>
 						<td align="center" valign="top"><b>
-							<%= link_to @bugs.collect{ |e| e.bug_id.split ',' if e.bug_id }.flatten.size, :q => params[:q], :show_report => (params[:show_report].nil?) %>
+							<%= link_to @bugs.collect{ |e| e.bug_id.split ',' if e.bug_id }.flatten.compact.uniq.size, :q => params[:q], :show_report => (params[:show_report].nil?) %>
 						</b></td>
 				</tr>
 			</table>
@@ -29,7 +35,9 @@
 </table>
 <% if params[:show_report]%>
 <div>
-		<b>Bugs:</b><br><%= @bugs.collect{ |e| "#{e.bug_url} " } %>
+		<b>Bugs:</b><br>
+		<%= link_to_bugs(@bugs)%>
+		
 </div>
 <% end %>	
 

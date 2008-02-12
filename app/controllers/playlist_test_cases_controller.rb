@@ -110,7 +110,7 @@ class PlaylistTestCasesController < ApplicationController
   protected
   def process_result(result)
     @playlist_test_case = PlaylistTestCase.find(params[:id])
-    @version = @playlist_test_case.test_case_version || @playlist_test_case.test_case.version
+    @version = @playlist_test_case.test_case.version
     @tce = TestCaseExecution.create( :playlist_test_case_id => @playlist_test_case.id, 
     :test_case_id => @playlist_test_case.test_case_id, :user_id => current_user, 
     :test_case_version => @version,:result => result)                                

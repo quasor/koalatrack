@@ -3,6 +3,8 @@
 
 <%= error_messages_for :test_case %>
 
+<div id="normalnew">
+<%#= link_to_function "Bulk Import From Excel", "$('bulknew').show();$('normalnew').hide()"%>
 <% form_for(@test_case, :html => { :multipart => true }) do |f| %>
   <%= render :partial => 'form', :object => f%>
 	<p>
@@ -24,5 +26,12 @@
     <%= f.submit "Create" %>
   </p>
 <% end %>
-
+</div>
+<div id="bulknew" style="display:none">
+	<%= link_to_function "Manual Mode", "$('bulknew').hide();$('normalnew').show()"%>
+	<% form_for(@test_case, :url => bulk_new_test_case_path) do |f| %>
+	<%= text_area_tag "bulk"%>
+	<%= f.submit "Create" %>
+	<% end %>	
+</div>
 <%= link_to 'Back', test_cases_path %>

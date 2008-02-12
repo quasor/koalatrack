@@ -55,30 +55,35 @@
     <th>Result</th>
     <th>Bug</th>
     <th>Playlist</th>
+    <th>Version</th>
   </tr>
 <% @hide_test_case = true %>
+<% @show_test_case_version = false %>
 <%= render :partial => @test_case.test_case_executions %>
 </table>
 <% end %>
 
 <% if @test_case.versions.size > 1 %>
 <hr/>
-<%= link_to_function "Show/Hide Versions","$('versions').toggle();"%>
-<div id="versions" style="display:none;">
+<%= link_to_function "Show/Hide Versions","$('versions').toggle();"%><br><br>
+<div id="versions" style="<%= "display:none;" unless params[:version] %>">
 	<table border="0" cellspacing="5" cellpadding="5">
-		<tr>
-		    <th>Version</th>
-		    <th>Title</th>
-		    <th>Update date</th>
-		    <th>Updated by</th>
-	
-		</tr>
 	<% for test_case in @test_case.versions %>
+	<tr>
+	    <th>Version</th>
+	    <th>Title</th>
+	    <th>Update date</th>
+	    <th>Updated by</th>
+
+	</tr>
 		<tr>
 		<td><%=h test_case.version %></td>
 		<td><%=h test_case.title %></td>
 		<td><%=h test_case.updated_at %></td>
 	    <td><%=h User.find(test_case.updated_by).login if test_case.updated_by%></td>
+		</tr>
+		<tr>
+			<td></td><td colspan="3"><a name="version<%=h test_case.version %>"></a><%= test_case.body%></td>
 		</tr>
 	<% end  %>
 	</table>

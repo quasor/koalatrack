@@ -9,12 +9,12 @@ end
 if @playlists
 	@srow = ExecutionSummary.find(:all, 
 		:select => 'date, SUM(passed) as passed, SUM(failed) as failed, SUM(blocked) AS blocked, SUM(nyied) as nyied', 
-		:conditions => {:playlist_id => @playlists.collect(&:id)}, 
+		:conditions => ['playlist_id IN (?) AND date < ?', @playlists.collect(&:id),@last_date ], 
 		:group => 'date',
 		:order => 'date') 
 	@ymax = total 
 else
-	@srow = ExecutionSummary.find(:all, :conditions => {:playlist_id => @playlist.id}, :order => 'date') 	
+	@srow = ExecutionSummary.find(:all, :conditions => ["playlist_id = ? AND date < ?", @playlist.id,@last_date], :order => 'date') 	
 	@total = @playlist.playlist_test_cases.count
 	@ymax = @total 
 end
@@ -30,7 +30,7 @@ last = @srow.last.date
 	@results[3] += "<set value='#{r.blocked}' />"
 	@results[4] += "<set value='#{r.nyied}' />"
 end
-# 
+
 %>
 <%
 unless mini_chart

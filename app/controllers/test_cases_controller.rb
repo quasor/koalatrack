@@ -25,8 +25,8 @@ class TestCasesController < ApplicationController
       end
 
       if logged_in?
-        @playlists = current_user.playlists 
-        @playlist_collection = current_user.playlists.collect {|p| [ "#{p.title}", p.id ] }.reverse
+        @playlists = current_user.live_playlists 
+        @playlist_collection = current_user.live_playlists.collect {|p| [ "#{p.title}", p.id ] }.reverse
       end
 
     respond_to do |format|
@@ -38,8 +38,11 @@ class TestCasesController < ApplicationController
   # GET /test_cases/1
   # GET /test_cases/1.xml
   def show
-    @test_case = TestCase.find(params[:id])
-
+#    if params[:version]
+#      @test_case = TestCase.find_version(params[:id], params[:version])
+#    else
+      @test_case = TestCase.find(params[:id])
+#    end
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @test_case }
@@ -62,14 +65,14 @@ class TestCasesController < ApplicationController
   # GET /test_cases/1/edit
   def edit
     @test_case = TestCase.find(params[:id])
-    @test_case.title = "Copy of #{@test_case.title}" if params[:clone]
+    #@test_case.title = "Copy of #{@test_case.title}" if params[:clone]
     @tag_favorites = TagFavorite.find(:all)
   end
 
   # POST /test_cases
   # POST /test_cases.xml
   def create
-    @uploaded_data = params[:test_case].delete :uploaded_data
+    @uploaded_data = params[:test_case].delete :uploaded_data if params[:test_case]
     @test_case = TestCase.new(params[:test_case])
     @test_case.updated_by = current_user.id if logged_in?
 
@@ -96,7 +99,6 @@ class TestCasesController < ApplicationController
   # PUT /test_cases/1
   # PUT /test_cases/1.xml
   def update
-    #@test_case = TestCase.find(params[:id])
     @test_case = current_user.group.test_cases.find(params[:id])
     
     @uploaded_data = params[:test_case].delete :uploaded_data
@@ -132,13 +134,21 @@ class TestCasesController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def bulk
+    @rows = []
+    @rows = params[:bulk].split(/\r\n/).collect {|e| e.split(/\t/)}
+  end
 
 protected
   
   def update_tags
-    @tags = (params[:test_case][:tag_list] || "") + (params[:quick_tag_list] || "")
-    @tags = @tags.split(',').collect{ |t| t.strip }.uniq.join(', ')
-    params[:test_case][:tag_list] = @tags
-    @test_case.tag = params[:test_case][:tag_list]
+    if params[:test_case]
+      @tags = (params[:test_case][:tag_list] || "") + (params[:quick_tag_list] || "")
+      @tags = @tags.split(',').collect{ |t| t.strip }.uniq.join(', ')
+      params[:test_case][:tag_list] = @tags
+      @test_case.tag = params[:test_case][:tag_list]
+      @tag_favorites = TagFavorite.find(:all)    
+    end 
   end
 end

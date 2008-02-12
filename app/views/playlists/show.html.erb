@@ -36,9 +36,11 @@
 			
 	}	
 <% end %>
-
-<span style="font-size:12px;float:right;">
-	<span>
+<% if @playlist.dead%>
+	<span style="float:right;font-size:16px;padding:8px 32px 8px 32px;color:white;background-color:black;margin-right:16px;">RIP: Dead playlist</span>
+<%end%>
+<span style="font-size:12px;float:right">
+	<span style="margin-right:8px;">
 	  <b>Owner:</b>
 	  <%=h @playlist.user.login %>
 		<% if @playlist.milestone %>
@@ -47,7 +49,8 @@
 		<% end %>
 		|
 		<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
-	<%= link_to("Save as .doc", :format => :doc, :desc => params[:desc], :sort => params[:sort])%>
+		<%= link_to("Save as .doc", :format => :doc, :desc => params[:desc], :sort => params[:sort])%> |
+		<%= link_to("Send to Graveyard", kill_playlist_path(@playlist), :method => :put, :confirm => "Are you sure you want to send this playlist to the graveyard?") unless @playlist.dead%>
 	</span>
 </span>
 

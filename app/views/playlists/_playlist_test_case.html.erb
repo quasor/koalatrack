@@ -1,5 +1,5 @@
 <% if playlist_test_case.test_case%>
-<% if @category_id != playlist_test_case.test_case.category_id && params[:sort] == "category"%>
+<% if params[:sort] == "category" && @category_id != playlist_test_case.test_case.category_id %>
   	<tr style="background-color:<% reset_cycle("colors") -%>">
 			<td colspan="4"><b style="margin-bottom:0px;padding-bottom:0px"><%= playlist_test_case.test_case.category.ancestor_cache %> \ <%=playlist_test_case.test_case.category.name%></b></td>
 		</tr>

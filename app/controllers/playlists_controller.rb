@@ -12,18 +12,23 @@ class PlaylistsController < ApplicationController
   # GET /playlists
   # GET /playlists.xml
   def index
+    unless params[:dead] == "true"
+      @conditions = { :dead => false }
+    end
     if params[:q] && !params[:q].blank?
-      @playlists = Playlist.paginate_search(params[:q], {:per_page => 50, :page => params[:page]} )
+      @playlists = Playlist.paginate_search(params[:q], {:per_page => 50, :page => params[:page]}, :conditions => @conditions )
       unless @playlists.empty?      
         @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN test_cases ON playlist_test_cases.test_case_id = test_cases.id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`test_cases`.`active` = 1 AND `playlists`.`id` IN (#{@playlists.collect(&:id).join ','})) GROUP BY last_result"
         @bugs =  TestCaseExecution.find_by_sql "SELECT bug_id FROM test_case_executions JOIN playlist_test_cases ON playlist_test_cases.id = test_case_executions.playlist_test_case_id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','})  AND bug_id != '')"
+        @last_date_tces = @playlists.collect { |p| p.test_case_executions.last }.flatten.compact.sort_by { |t| t.created_at }
+        @last_date =@last_date_tces.last.created_at if @last_date_tces && @last_date_tces.last
       end
       @my_playlists =  []
     elsif logged_in?
-      @my_playlists = Playlist.find_all_by_user_id(current_user.id) 
-      @playlists = current_user.group.playlists.find(:all, :conditions => ["user_id != ?", current_user.id])
+      @my_playlists = current_user.playlists.find(:all, :conditions => @conditions).reverse 
+      @playlists = current_user.group.playlists.find(:all, :conditions => @conditions) - @my_playlists
     else
-      @playlists = Playlist.find(:all)
+      @playlists = Playlist.find(:all,:conditions => @conditions)
       @my_playlists =  []
     end
         
@@ -51,9 +56,13 @@ class PlaylistsController < ApplicationController
       session[:filtering] = false
     end
 
-    @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id JOIN test_cases ON playlist_test_cases.test_case_id = test_cases.id WHERE (`test_cases`.`active` = 1 AND   `playlists`.`id` = #{@playlist.id}) GROUP BY last_result"
+    @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id JOIN test_cases ON playlist_test_cases.test_case_id = test_cases.id WHERE (`test_cases`.`active` = 1 AND `playlists`.`id` = #{@playlist.id}) GROUP BY last_result"
+    @user_summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id JOIN test_cases ON playlist_test_cases.test_case_id = test_cases.id WHERE (`test_cases`.`active` = 1 AND `playlists`.`id` = #{@playlist.id} AND `playlist_test_cases`.`user_id` = #{current_user.id}) GROUP BY last_result"
     @bugs =  TestCaseExecution.find_by_sql "SELECT bug_id FROM test_case_executions JOIN playlist_test_cases ON playlist_test_cases.id = test_case_executions.playlist_test_case_id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` = #{@playlist.id})"
-
+    if @playlist.playlist_test_cases.size > 0
+      @last_date = @playlist.playlist_test_cases.find(:first, :order => 'updated_at DESC').updated_at 
+      @last_date += 2.days
+    end
     
     sort = case params[:sort]
                when "feature"  then "test_cases.priority_in_feature"
@@ -230,10 +239,21 @@ class PlaylistsController < ApplicationController
     redirect_to(@playlist)
   end
 
+  # PUT /playlists/1/kill
+  def kill
+    if admin?
+      @playlist = Playlist.find(params[:id])
+    else
+      @playlist = current_user.playlists.find(params[:id])
+    end
+    @playlist.kill!
+    redirect_to playlists_path(:dead => true)
+  end
+
   # DELETE /playlists/1
   # DELETE /playlists/1.xml
   def destroy
-    @playlist = Playlist.find(params[:id])
+    @playlist = current_user.playlists.find(params[:id])
     @playlist.destroy
 
     respond_to do |format|

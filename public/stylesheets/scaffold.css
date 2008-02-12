@@ -254,3 +254,8 @@ th a {color:white}
     border: 1px solid #eee;
     color: #ddd;
   }
+.deadtrue td, .deadtrue a
+{
+	background-color:#333;
+	color:#999;
+}

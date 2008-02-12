@@ -6,7 +6,7 @@
 
 <p>
   <label>Title:</label>
-  <%= form.text_field :title %>
+  <%= form.text_field :title, :size=>80 %>
 </p>
 
 <p>
@@ -45,7 +45,7 @@
 	<label>Quick Tags:</label>
 	<% for tag in @tag_favorites %>
 		<%=check_box_tag tag.tag.name, tag.tag.name, false,  :onClick => "toggleQTag(this)" %><%= tag.tag.name%>
-	<% end %>
+	<% end if @tag_favorites%>
 </p>
 <p>
 	<script>
