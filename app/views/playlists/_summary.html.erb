@@ -13,11 +13,13 @@
 					<% end %>
 					<th>Bugs</th>
 				</tr>
+				<% if @user_summary %>
 				<tr><td><%= current_user.login%></td>
 					<% @user_summary.each do |summary| %>
 							<td align="center" valign="top"><b><%= summary.total%></b> <br/><%= (summary.total.to_i * 1.0 / total * 100 ).round 1%>%</td>
 					<% end %>					
 				</tr>
+				<% end %>
 				<tr><td>Total</td>
 				<% @summary.each do |summary| %>
 						<td align="center" valign="top"><b><%= summary.total%></b> <br/><%= (summary.total.to_i * 1.0 / total * 100 ).round 1%>%</td>
