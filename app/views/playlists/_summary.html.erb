@@ -3,25 +3,35 @@
 	<caption><b>Execution Summary</b></caption>
 	<tr>
 		<td valign="top">
-			<table border="0" cellspacing="0" cellpadding="4">
+			<table border="1" cellspacing="0" cellpadding="4">
 				<tr>
 					<th></th>
 					<% total = 0
 					@summary.collect {|t| total += t.total.to_i}%>
-					<% @summary.each do |summary| %>
-							<th><%= TestCaseExecution::RESULTS[summary.result] %></th>
+					<% TestCaseExecution::RESULTS.each do |result_type| %>
+							<th><%= result_type %></th>
 					<% end %>
+
 					<th>Bugs</th>
 				</tr>
 				<% if @user_summary %>
 				<tr><td><%= current_user.login%></td>
-					<% @user_summary.each do |summary| %>
-							<td align="center" valign="top"><b><%= summary.total%></b> <br/><%= (summary.total.to_i * 1.0 / total * 100 ).round 1%>%</td>
-					<% end %>					
+					<% TestCaseExecution::RESULTS.each_index do |index| %>
+					<% summary = @user_summary.find {|s| s.result == index } %>					
+						<td align="center" valign="top">
+						<% if summary%>	
+							<b><%= summary.total%></b> <br/><%= (summary.total.to_i * 1.0 / total * 100 ).round 1%>%
+						<% else %>
+						 <b>0</b><br/>0%
+						<% end %>
+						</td>
+					<% end %>
+					<td></td>
 				</tr>
 				<% end %>
 				<tr><td>Total</td>
-				<% @summary.each do |summary| %>
+				<% TestCaseExecution::RESULTS.each_index do |index| %>
+				<% summary = @summary.find {|s| s.result == index } %>									
 						<td align="center" valign="top"><b><%= summary.total%></b> <br/><%= (summary.total.to_i * 1.0 / total * 100 ).round 1%>%</td>
 				<% end %>
 						<td align="center" valign="top"><b>

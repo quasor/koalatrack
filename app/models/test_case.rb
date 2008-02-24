@@ -41,8 +41,11 @@ class TestCase < ActiveRecord::Base
   validates_presence_of     :title#, :body
 #  validates_uniqueness_of    :title, :scope => :category_id, :message => "of this test case has already been used in this sub-category"
 
-  def stripped_body
-    body.gsub(/&ldquo;|&rdquo;/,'&quot;')
+  def body
+    s = super
+    s = s.gsub(/&ldquo;|&rdquo;/,'&quot;')
+    s = s.gsub(/<!--.*?-->/,'')
+    s
   end
 
   def logical_delete
