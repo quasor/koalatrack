@@ -43,8 +43,10 @@ class TestCase < ActiveRecord::Base
 
   def body
     s = super
-    s = s.gsub(/&ldquo;|&rdquo;/,'&quot;')
-    s = s.gsub(/<!--.*?-->/,'')
+    unless s.nil?
+      s = s.gsub(/&ldquo;|&rdquo;/,'&quot;')
+      s = s.gsub(/<!--.*?-->/,'')
+    end
     s
   end
 
