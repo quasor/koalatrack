@@ -1,0 +1,7 @@
+<%= debug @rows %>
+<%= link_to_function "Manual Mode", "$('bulknew').hide();$('normalnew').show()"%>
+<% form_for(:test_case, :url => bulk_new_test_case_path) do |f| %>
+<%= hidden_field_tag "bulk", params[:bulk]%>
+<%= f.submit "Confirm Bulk Import!" %>
+<% end %>	
+

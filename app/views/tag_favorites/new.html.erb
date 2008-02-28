@@ -4,7 +4,7 @@
 
 <% form_for(@tag_favorite) do |f| %>
   <p>
-    <b>Tag</b><br />
+    <label><b>Tag</b></label>
     <%= text_field_tag :tag %>
   </p>
 
@@ -13,6 +13,7 @@
 	<% end %>
 
   <p>
+    <label>&nbsp;</label>
     <%= f.submit "Create" %>
   </p>
 <% end %>

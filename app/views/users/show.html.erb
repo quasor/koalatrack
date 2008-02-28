@@ -1,6 +1,6 @@
 <h2><%=@user.login.capitalize %>'s Dashboard</h2>		
+<h3><%=@user.login.capitalize %>'s Execution Summary</h3
 <table border="0" class="padded" cellspacing="0">
-	<caption><b><%=@user.login.capitalize %>'s Execution Summary</b></caption>
 	<tr>
 		<th>Playlist</th>
 		<th>Status of test cases assigned to <%=@user.login.capitalize%></th>
@@ -17,9 +17,26 @@
 	</tr>
 <%end %>
 </table>
-<% if @user.test_case_executions.size > 0 && group_admin? %>
+
+<% @test_cases = @user.test_cases.find_tagged_with('Needs Automation') %>
+<% if @test_cases.size > 0 %>
+<h3>Test Cases Needing Automation</h3>
 <table class="padded">
-	<caption><b><%=@user.login.capitalize %>'s Execution History</b></caption>
+  <tr>
+    <th>Category</th>
+    <th>Test Case</th>
+	<% for test_case in @test_cases %>
+	<tr>
+		<td><%= test_case.category.ancestor_cache%></td>
+		<td><%= link_to test_case.title, test_case %></td>
+	</tr>
+	<% end %>
+</table>
+<% end %>
+
+<% if @user.test_case_executions.size > 0 && group_admin? %>
+<h3><%=@user.login.capitalize %>'s Execution History</h3>
+<table class="padded">
   <tr>
     <th>Date</th>
     <th>User</th>
