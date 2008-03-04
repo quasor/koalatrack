@@ -18,7 +18,9 @@
 <table cellspacing="0" class="padded">
   <tr>
     <th>Title</th>
+<% if logged_in? %>
     <th>Description</th>
+<% end %>
     <th>User</th>
     <th>Milestone</th>
 		<th></th>
@@ -48,10 +50,12 @@
 <% for playlist in @playlists %>
 	<tr class="dead<%=playlist.dead%>" style="background-color:<%= cycle("#fff", "#EBF3FE", :name => "colors") -%>">
     <td><%=link_to playlist.title, playlist %></td>
+		<% if logged_in? %>
     <td><%=truncate (h playlist.description), 75 %></td>
+		<% end %>
     <td><%=h playlist.user.login %></td>
     <td><%=h playlist.milestone.name if playlist.milestone %></td>
-		<% unless playlist.dead %>
+		<% if !playlist.dead && logged_in? %>
     <td><%= link_to 'Clone', new_playlist_path(:id => playlist.id) %></td>
     <td><%= link_to 'Graveyard', kill_playlist_path(playlist), :confirm => 'Are you sure?', :method => :put if admin?%></td>
 		<% end %>
