@@ -22,4 +22,10 @@ class Group < ActiveRecord::Base
   def after_create
     self.categories.find_or_create_by_name(:name => self.name)
   end
+  
+  #http://expediaweb/test/bugs/bug.asp?BugID=
+  def bugurl
+    bug_url || "http://expediaweb/test/bugs/bug.asp?BugID="
+  end
+  
 end

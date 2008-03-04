@@ -26,7 +26,7 @@ class TestCaseExecution < ActiveRecord::Base
   #TODO  validates_presence_of :bug_id
     
   def bug_url
-    (bug_id.split(',').collect { |bug| "<a target=\"_blank\" href=\"http://expediaweb/test/bugs/bug.asp?BugID=#{bug.strip}\">#{bug.strip}</a>"}.join ' ') unless bug_id.nil? || bug_id.blank?
+    (bug_id.split(',').collect { |bug| "<a target=\"_blank\" href=\"#{user.group.bugurl}#{bug.strip}\">#{bug.strip}</a>"}.join ' ') unless bug_id.nil? || bug_id.blank?
   end
   def siblings
     TestCaseExecution.find_all_by_test_case_id_and_playlist_test_case_id(test_case_id, playlist_test_case_id)
