@@ -45,7 +45,7 @@
 			<% if logged_in? %>
 				<%= li_link_to_unless_current "Home", current_user %>
 			<% end %>
-			<%=	li_link_to_unless_current 'Test Cases', test_cases_path%>
+			<%=	li_link_to_unless_current 'Test Cases', test_cases_path if logged_in? %>
 			<%=	li_link_to_unless_current 'Playlists', playlists_path%>
 			<% if group_admin? %>
 				<%=	li_link_to_unless_current 'Users', users_path %>

@@ -1,5 +1,5 @@
 class TestCasesController < ApplicationController
-  before_filter :login_required, :except => [:index, :show]
+  before_filter :login_required
   rescue_from ActiveRecord::RecordNotFound do
     redirect_to test_cases_path
     flash[:warning] = "You do not have permission to #{action_name} that test case."      

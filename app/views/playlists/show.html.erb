@@ -39,6 +39,9 @@
 <% if @playlist.dead%>
 	<span style="float:right;font-size:16px;padding:8px 32px 8px 32px;color:white;background-color:black;margin-right:16px;">RIP: Dead playlist</span>
 <%end%>
+
+
+<% if logged_in? %>
 <span style="font-size:12px;float:right">
 	<span style="margin-right:8px;">
 	  <b>Owner:</b>
@@ -53,12 +56,17 @@
 		<%= link_to("Send to Graveyard", kill_playlist_path(@playlist), :method => :put, :confirm => "Are you sure you want to send this playlist to the graveyard?") unless @playlist.dead%>
 	</span>
 </span>
+<% end %>
 
 <h3><%=h @playlist.title %></h3>
+<% if logged_in? %>
 <p><%=h @playlist.description %></p>
+
+<% end %>
 
 <%= render :partial => "summary", :object => @summary %>
 
+<% if logged_in? %>
 <table>
 	<tr>
 		<td>
@@ -75,17 +83,16 @@
 		</td>
 	</tr>
 </table>
+<% end %>
 
 <%= will_paginate @playlist_test_cases unless @playlist_test_cases.empty?%>
 
-<% unless @playlist.playlist_test_cases.empty?%>
+<% unless @playlist.playlist_test_cases.empty? %>
+<% if logged_in? %>
 <table border="0" cellspacing="0" class="padded" id='playlist'>
   <tr>
-	  <% if logged_in? %>
 		<th><%=check_box_tag :select_all, 1, false, :onClick => 'selectAll(this.checked)'%></th>
-          <% else %>
 		<th></th>
-	  <% end # space for checkboxes %>
     <th><%= link_to '#', playlist_path(@playlist, :q => params[:q], :desc => (params[:desc] != "true"))%></th>
     <th><%= link_to 'Category', playlist_path(@playlist, :q => params[:q], :sort => :category, :desc => (params[:desc] != "true"))%></th>
     <th>Title</th>
@@ -103,6 +110,7 @@
 	<%= render :partial => 'playlist_test_case', :collection => @playlist_test_cases, :locals => { :test_case_execution => TestCaseExecution.new, :category_id => @category_id} unless @playlist_test_cases.empty?%>
 	
 </table>
+<% end %>
 
 <div id="multi_action" style="display:none">
 	<% form_for(:playlist, :url => pass_playlist_path(@playlist), :html => {:method => :put, :style => 'float:left;'}) do |f| %>
@@ -131,3 +139,4 @@
   You've created an empty playlist. It's time to fill it.
 	<%= link_to "Go find test cases", test_cases_path%>
 <% end %>
+
