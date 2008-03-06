@@ -43,7 +43,7 @@ class PlaylistsController < ApplicationController
   require 'memcache_util'
   def show
     if Cache.get('SummaryUpdater').nil? && params[:show_report]
-      Cache.put 'SummaryUpdater', true, 1
+      Cache.put 'SummaryUpdater', true, 300
       ExecutionSummary.build_summary      
       @refresh = true
     end
