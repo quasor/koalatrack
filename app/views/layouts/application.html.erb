@@ -45,10 +45,10 @@
 		<div id="banner">
 			<div id="nav">
 			<% if logged_in? %>
-				<%= li_link_to_unless_current "Home", current_user %>
+				<%= li_link_to_unless_current 'Home', current_user %>
+				<%=	li_link_to_unless_current 'Test Cases', test_cases_path%>
+				<%=	li_link_to_unless_current 'Playlists', playlists_path%>
 			<% end %>
-			<%=	li_link_to_unless_current 'Test Cases', test_cases_path if logged_in? %>
-			<%=	li_link_to_unless_current 'Playlists', playlists_path%>
 			<% if group_admin? %>
 				<%=	li_link_to_unless_current 'Users', users_path %>
 				<%=	li_link_to_unless_current 'Categories', categories_path %>
