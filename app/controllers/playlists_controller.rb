@@ -28,6 +28,7 @@ class PlaylistsController < ApplicationController
       @my_playlists = current_user.playlists.find(:all, :conditions => @conditions).reverse 
       @playlists = current_user.group.playlists.find(:all, :conditions => @conditions) - @my_playlists
     else
+      login_required
       @playlists = [] # Playlist.find(:all,:conditions => @conditions)
       @my_playlists =  []
     end
