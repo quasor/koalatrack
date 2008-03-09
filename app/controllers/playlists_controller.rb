@@ -1,5 +1,5 @@
 class PlaylistsController < ApplicationController
-  before_filter :login_required, :except => [:show]
+  before_filter :login_required, :except => [:index, :show]
   rescue_from ActiveRecord::RecordNotFound do
     flash[:warning] = "You do not have permission to #{action_name} that item."      
     if @playlist
@@ -28,7 +28,7 @@ class PlaylistsController < ApplicationController
       @my_playlists = current_user.playlists.find(:all, :conditions => @conditions).reverse 
       @playlists = current_user.group.playlists.find(:all, :conditions => @conditions) - @my_playlists
     else
-      @playlists = Playlist.find(:all,:conditions => @conditions)
+      # @playlists = Playlist.find(:all,:conditions => @conditions)
       @my_playlists =  []
     end
         
