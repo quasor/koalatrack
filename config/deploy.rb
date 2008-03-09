@@ -66,9 +66,9 @@ set :deploy_to, "/var/www/#{application}"
 
 set :user, "acoldham"            # defaults to the currently logged in user
 set :use_sudo, false
-role :app, "koala.ectdev.com"
-role :web, "koala.ectdev.com"
-role :db,  "koala.ectdev.com", :primary => true
+role :app, "192.168.0.177"
+role :web, "192.168.0.177"
+role :db,  "192.168.0.177", :primary => true
 
 set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml" 
 
