@@ -1,4 +1,5 @@
 <h1>Playlists</h1>
+<% if logged_in? %>
 <table><tr><td valign="top">
 <%= link_to 'New playlist', new_playlist_path %>
 </td><td valign="top">&nbsp; or &nbsp;</td><td>
@@ -12,6 +13,7 @@
 	</span>		
 <% end %>
 </td></tr></table>
+<% end %>
 
 <%= render :partial => "summary", :object => @summary %>
 
