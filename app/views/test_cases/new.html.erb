@@ -1,4 +1,4 @@
-<%= javascript_include_tag "fckeditor/fckeditor" %>
+<%= javascript_include_tag "fckeditor/fckeditor" unless params[:simple] %>
 <h1>New test case</h1>
 
 <%= error_messages_for :test_case %>
