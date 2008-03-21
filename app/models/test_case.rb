@@ -45,6 +45,7 @@ class TestCase < ActiveRecord::Base
     s = super
     unless s.nil?
       s = s.gsub(/&ldquo;|&rdquo;/,'&quot;')
+      s = s.gsub(/Wingdings/,'Arial')
       s = s.gsub(/<!--.*?-->/,'')
     end
     s
