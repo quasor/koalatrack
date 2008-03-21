@@ -28,8 +28,11 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     @user.save!
     self.current_user = @user
-    redirect_back_or_default('/')
     flash[:notice] = "Thanks for signing up!"
+    # logout the user
+    cookies.delete :auth_token
+    reset_session
+    redirect_to '/'
   rescue ActiveRecord::RecordInvalid
     render :action => 'new'
   end
