@@ -77,7 +77,7 @@ class MilestonesController < ApplicationController
     @milestone.destroy
 
     respond_to do |format|
-      format.html { redirect_to(milestones_url) }
+      format.html { redirect_to(milestones_path) }
       format.xml  { head :ok }
     end
   end

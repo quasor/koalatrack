@@ -103,7 +103,7 @@ class TestCaseExecutionsController < ApplicationController
     @test_case_execution.destroy
 
     respond_to do |format|
-      format.html { redirect_to(test_case_executions_url) }
+      format.html { redirect_to(test_case_executions_path) }
       format.xml  { head :ok }
     end
   end

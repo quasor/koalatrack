@@ -50,7 +50,7 @@ class TagFavoritesController < ApplicationController
     respond_to do |format|
       if (current_user.admin? && @tag_favorite.save || current_user.group.tag_favorites << @tag_favorite )
         flash[:notice] = 'TagFavorite was successfully created.'
-        format.html { redirect_to(tag_favorites_url) }
+        format.html { redirect_to(tag_favorites_path) }
         format.xml  { render :xml => @tag_favorite, :status => :created, :location => @tag_favorite }
       else
         format.html { render :action => "new" }
@@ -83,7 +83,7 @@ class TagFavoritesController < ApplicationController
     @tag_favorite.destroy
 
     respond_to do |format|
-      format.html { redirect_to(tag_favorites_url) }
+      format.html { redirect_to(tag_favorites_path) }
       format.xml  { head :ok }
     end
   end

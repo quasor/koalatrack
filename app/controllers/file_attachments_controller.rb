@@ -83,7 +83,7 @@ class FileAttachmentsController < ApplicationController
     @file_attachment.destroy
 
     respond_to do |format|
-      format.html { redirect_to(@test_case || file_attachments_url) }
+      format.html { redirect_to(@test_case || file_attachments_path) }
       format.xml  { head :ok }
     end
   end

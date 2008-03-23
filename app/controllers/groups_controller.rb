@@ -78,7 +78,7 @@ class GroupsController < ApplicationController
     @group.destroy
 
     respond_to do |format|
-      format.html { redirect_to(groups_url) }
+      format.html { redirect_to(groups_path) }
       format.xml  { head :ok }
     end
   end

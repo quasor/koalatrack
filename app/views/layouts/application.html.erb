@@ -54,7 +54,7 @@
 				<%=	li_link_to_unless_current 'Categories', categories_path %>
 				<%=	li_link_to_unless_current 'Milestones', milestones_path %>
 				<%=	li_link_to_unless_current 'Quick Tags', tag_favorites_path %> 
-				<%=	li_link_to_unless_current 'Dashboard', dashboard_url %> 
+				<%=	li_link_to_unless_current 'Dashboard', dashboard_path %> 
 			<% end %>
 			<%= li_link_to_unless_current "Logout #{current_user.login}", logout_path if logged_in?%>
 			<%= li_link_to_unless_current "Login", login_path unless logged_in?%>

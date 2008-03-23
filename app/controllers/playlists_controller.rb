@@ -1,5 +1,6 @@
 class PlaylistsController < ApplicationController
   before_filter :login_required, :except => [:index, :show]
+
   rescue_from ActiveRecord::RecordNotFound do
     flash[:warning] = "You do not have permission to #{action_name} that item."      
     if @playlist
@@ -268,7 +269,7 @@ class PlaylistsController < ApplicationController
     @playlist.destroy
 
     respond_to do |format|
-      format.html { redirect_to(playlists_url) }
+      format.html { redirect_to(playlists_path) }
       format.xml  { head :ok }
     end
   end

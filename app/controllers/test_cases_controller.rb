@@ -130,7 +130,7 @@ class TestCasesController < ApplicationController
     @test_case.logical_delete
   
     respond_to do |format|
-      format.html { redirect_to(test_cases_url) }
+      format.html { redirect_to(test_cases_path) }
       format.xml  { head :ok }
     end
   end
