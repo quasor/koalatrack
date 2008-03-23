@@ -53,10 +53,10 @@ module SslRequirement
         redirect_to "https://" + request.host + request.request_uri
         flash.keep
         return false
-      elsif request.ssl? && !ssl_required?
-        redirect_to "http://" + request.host + request.request_uri
-        flash.keep
-        return false
+#      elsif request.ssl? && !ssl_required?
+#        redirect_to "http://" + request.host + request.request_uri
+#        flash.keep
+#        return false
       end
     end
 end
