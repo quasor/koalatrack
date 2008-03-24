@@ -7,6 +7,9 @@ class SessionsController < ApplicationController
   def new
   end
 
+  def new_insecure
+    render :action => :new
+  end
   def create
     self.current_user = User.authenticate(params[:login], params[:password])
     if logged_in?
