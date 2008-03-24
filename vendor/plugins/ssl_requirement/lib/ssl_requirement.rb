@@ -47,7 +47,7 @@ module SslRequirement
 
   private
     def ensure_proper_protocol
-      return true if ssl_allowed? || !logged_in? 
+      return true if ssl_allowed? || (!logged_in? && controller_name != "sessions") 
       
       if ssl_required? && !request.ssl? && request.host != "localhost"
         redirect_to "https://" + request.host + request.request_uri
