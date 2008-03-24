@@ -8,6 +8,7 @@ class SessionsController < ApplicationController
   end
 
   def new_insecure
+    session[:return_to] = nil
     render :action => :new
   end
   def create
