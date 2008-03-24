@@ -26,6 +26,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.signup '/signup', :controller => 'users', :action => 'new'
   map.login  '/login', :controller => 'sessions', :action => 'new'
+  map.login_without_ssl  '/login_without_ssl', :controller => 'sessions', :action => 'new_insecure'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.dashboard '/dash', :controller => 'test_case_executions', :action => 'index'
 #  map.home   '/home', :controller => 
