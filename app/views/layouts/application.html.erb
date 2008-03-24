@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
-  <title>KoalaTrack: <%= controller.controller_name %></title>
+  <title>KoalaTrack: <%= controller.controller_name %> <%= "--------- SSL REQUIRED --------- " if controller.ssl_required? && request.host == "localhost" %></title>
   <%= stylesheet_link_tag 'scaffold' %>
   <%= javascript_include_tag "prototype", "effects", "application", "controls" %>
 </head>
