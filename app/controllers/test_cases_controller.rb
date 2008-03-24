@@ -1,10 +1,11 @@
 class TestCasesController < ApplicationController
   before_filter :login_required
+  ssl_required :show, :index
+  
   rescue_from ActiveRecord::RecordNotFound do
     redirect_to test_cases_path
     flash[:warning] = "You do not have permission to #{action_name} that test case."      
   end
-  
   
   # GET /test_cases
   # GET /test_cases.xml

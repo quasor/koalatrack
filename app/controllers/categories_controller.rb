@@ -1,5 +1,6 @@
 class CategoriesController < ApplicationController
   before_filter :login_required, :except => [:index, :show]
+  ssl_required :index unless current_user.group
 
   # GET /categories
   # GET /categories.xml

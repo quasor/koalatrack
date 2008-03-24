@@ -1,7 +1,9 @@
 class UsersController < ApplicationController
   # Be sure to include AuthenticationSystem in Application Controller instead
-  include AuthenticatedSystem
+
   before_filter :login_required, :only => [:destroy]
+  ssl_required :show  
+  
   alias authorized? admin?
   
   def index

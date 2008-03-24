@@ -35,7 +35,7 @@ module SslRequirement
     end
   end
   
-  protected
+  public
     # Returns true if the current action is supposed to run as SSL
     def ssl_required?
       (self.class.read_inheritable_attribute(:ssl_required_actions) || []).include?(action_name.to_sym)
@@ -47,9 +47,9 @@ module SslRequirement
 
   private
     def ensure_proper_protocol
-      return true if ssl_allowed?
-
-      if ssl_required? && !request.ssl?
+      return true if ssl_allowed? || !logged_in? 
+      
+      if ssl_required? && !request.ssl? && request.host != "localhost"
         redirect_to "https://" + request.host + request.request_uri
         flash.keep
         return false
