@@ -1,6 +1,6 @@
 class PlaylistsController < ApplicationController
   before_filter :login_required, :except => [:index, :show]
-  ssl_required :show, :index
+#  ssl_required :show, :index
   
   rescue_from ActiveRecord::RecordNotFound do
     flash[:warning] = "You do not have permission to #{action_name} that item."      
