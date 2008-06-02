@@ -92,7 +92,6 @@
 <table border="0" cellspacing="0" class="padded" id='playlist'>
   <tr>
 		<th><%=check_box_tag :select_all, 1, false, :onClick => 'selectAll(this.checked)'%></th>
-		<th></th>
     <th><%= link_to '#', playlist_path(@playlist, :q => params[:q], :desc => (params[:desc] != "true"))%></th>
     <th><%= link_to 'Category', playlist_path(@playlist, :q => params[:q], :sort => :category, :desc => (params[:desc] != "true"))%></th>
     <th>Title</th>
