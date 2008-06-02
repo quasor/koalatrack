@@ -79,7 +79,7 @@ class TestCasesController < ApplicationController
 
     @tag_favorites = current_user.group.tag_favorites + TagFavorite.find_all_by_group_id() + []
     
-    update_tags
+    # update_tags # update the tagged attributes
     
     respond_to do |format|
       if @test_case.save
@@ -106,7 +106,7 @@ class TestCasesController < ApplicationController
     @test_case = @test_case.clone if params[:clone]
     @test_case.updated_by = current_user.id if logged_in?
     
-    update_tags
+#    update_tags
     
     respond_to do |format|
       if @test_case.update_attributes(params[:test_case])
