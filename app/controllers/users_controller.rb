@@ -46,8 +46,8 @@ class UsersController < ApplicationController
     if !(current_user.group_admin? || current_user.admin?) && @user.id != current_user.id 
       return redirect_to users_path
     end
-    if (current_user.role_id > params[:user][:role_id].to_i) #prevent user escalation
-      return redirect_to users_path
+    unless current_user.admin? #(current_user.role_id > params[:user][:role_id].to_i) #prevent user escalation
+      params[:user].delete :role_id
     end 
     respond_to do |format|
       if @user.update_attributes(params[:user])
