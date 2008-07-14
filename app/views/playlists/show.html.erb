@@ -52,7 +52,8 @@
 		<% end %>
 		|
 		<%= link_to 'Edit', edit_playlist_path(@playlist) %> |
-		<%= link_to("Save as .doc", :format => :doc, :desc => params[:desc], :sort => params[:sort])%> |
+		<%= link_to("Save as .doc", :format => :doc, :desc => params[:desc], :sort => params[:sort])%> 
+		<%= link_to("(titles only)", :format => :doc, :desc => params[:desc], :sort => params[:sort], :titles_only => true)%> |
 		<%= link_to("Send to Graveyard", kill_playlist_path(@playlist), :method => :put, :confirm => "Are you sure you want to send this playlist to the graveyard?") unless @playlist.dead%>
 	</span>
 </span>
