@@ -5,7 +5,15 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
-  <title>KoalaTrack: <%= controller.controller_name %> <%= "--------- SSL REQUIRED --------- " if controller.ssl_required? && request.host == "localhost" %></title>
+  <title>KoalaTrack: <%= controller.controller_name %> <%= "--------- SSL REQUIRED --------- " if controller.ssl_required? && request.host == "localhost<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+	var pageTracker = _gat._getTracker("UA-1637048-3");
+	pageTracker._initData();
+	pageTracker._trackPageview();
+	</script>" %></title>
   <%= stylesheet_link_tag 'scaffold' %>
   <%= javascript_include_tag "prototype", "effects", "application", "controls" %>
 </head>
@@ -71,9 +79,14 @@
 			</div>
 		</div>
 	</div>
-<script>
-//$('navigation').style.height = "100px";
-
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-1637048-3");
+pageTracker._initData();
+pageTracker._trackPageview();
 </script>
 </body>
 </html>
