@@ -13,6 +13,7 @@ class TestCasesController < ApplicationController
       if params[:category_id]
         @category = Category.find(params[:category_id])
       end
+      session[:last_cat_id] = params[:category_id]      
       if params[:q].nil? && @category
         @test_cases = TestCase.paginate_by_category_id @category.id, :page => params[:page], :per_page => 50, :conditions => { :active => true}  
       elsif !params[:q].blank?
@@ -29,11 +30,6 @@ class TestCasesController < ApplicationController
         @playlists = current_user.live_playlists 
         @playlist_collection = current_user.live_playlists.collect {|p| [ "#{p.title}", p.id ] }.reverse
       end
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @test_cases }
-    end
   end
 
   # GET /test_cases/1
@@ -137,8 +133,37 @@ class TestCasesController < ApplicationController
   end
   
   def bulk
-    @rows = []
-    @rows = params[:bulk].split(/\r\n/).collect {|e| e.split(/\t/)}
+    flash[:notice] = 'Bulk Edit Complete'
+    ids = params[:test_case][:ids1] || params[:test_case][:ids2] || params[:test_case][:ids3]
+    ids = ids.split(',')
+    @test_cases = TestCase.find :all, :conditions => {:id => ids}
+    if params[:commit] == "Bulk Add Tag" && !params[:tag].blank? && logged_in?
+      @test_cases.each do |test_case|
+        test_case.updated_by = current_user.id
+        test_case.tag_list.push params[:tag]
+        test_case.tag_list.uniq!
+        test_case.save
+      end
+      redirect_to test_cases_path(:category_id => session[:last_cat_id])
+    elsif params[:commit] == "Bulk Add Project" && !params[:project].blank? && logged_in?
+      @test_cases.each do |test_case|
+        test_case.updated_by = current_user.id
+        if test_case.project_id
+          test_case.project_id = test_case.project_id.split(',').collect { |c| c.strip}.push(params[:project]).join(', ') unless test_case.project_id.split(',').collect { |c| c.strip}.include? params[:project]
+        else
+          test_case.project_id = params[:project]
+        end 
+        test_case.save
+      end
+      redirect_to test_cases_path(:category_id => session[:last_cat_id])
+    elsif params[:commit] == "Bulk Move" && !params[:test_case][:category_id].blank? && logged_in?
+      @test_cases.each do |test_case|
+        test_case.updated_by = current_user.id
+        test_case.category_id = params[:test_case][:category_id] 
+        test_case.save
+      end
+      redirect_to test_cases_path(:category_id => params[:test_case][:category_id])
+    end
   end
 
 protected

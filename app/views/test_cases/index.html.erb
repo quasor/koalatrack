@@ -17,8 +17,10 @@
 <% form_tag test_cases_path, :method => 'get' do %>
   <%= hidden_field_tag :category_id, @category.id unless @category.nil?%>
   <%= text_field_tag :q, params[:q], :size => 55, :id => :search_box_big, :type => :search, :style => 'font-size:22px; padding:4px' %>
+	<%= submit_tag 'Search'%>
   <span style='font-size:10px;margin-left:10px'>
 	<%= link_to 'Query Syntax Help', "/query.html", :target => '_blank' %>
+		
 	</span>					
 <% end %>
 
@@ -28,12 +30,24 @@
 
 <%= will_paginate @test_cases %>
 <div id="multi_action" style="display:none">
-	<% form_for(PlaylistTestCase.new, :loading=>"Element.toggle('spinner_multi')",:complete => "Element.toggle('spinner_multi')") do |f| %>
+	<% if logged_in? %>
+		<% form_for(PlaylistTestCase.new, :loading=>"Element.toggle('spinner_multi')",:complete => "Element.toggle('spinner_multi')") do |f| %>
 	    Add selected test cases to playlist:
 	    <%= f.select(:playlist_id, @playlist_collection ) %>
-	    <%= hidden_field( :playlist_test_case, :ids ) %><%= f.submit "Add to playlist" %>
-		<%=image_tag 'spinner.gif', :id => "spinner_multi", :style => "display:none"%>	
-	<% end if logged_in?%>
+	    <%= hidden_field( :playlist_test_case, :ids ) %>
+			<%= f.submit "Add to playlist" %>
+			<%=image_tag 'spinner.gif', :id => "spinner_multi", :style => "display:none"%>	
+		<% end%>
+		<% form_for(:test_case, :url => {:controller => :test_cases, :action => :bulk}) do |f| %>
+			<%= hidden_field( :test_case, :ids1 ) %><br>Add <%= text_field_tag :tag %><%= submit_tag 'Bulk Add Tag'%>
+		<% end%>		
+		<% form_for(:test_case, :url => {:controller => :test_cases, :action => :bulk}) do |f| %>
+			<%= hidden_field( :test_case, :ids2 ) %><br>Add <%= text_field_tag :project %><%= submit_tag 'Bulk Add Project'%>
+		<% end%>		
+		<% form_for(:test_case, :url => {:controller => :test_cases, :action => :bulk}) do |f| %>
+			<%= hidden_field( :test_case, :ids3 ) %><br>Move to 	<%= f.select(:category_id, Category.find(:all).collect {|p| [ (p.ancestors.reverse + [p]).collect(&:name).join(' \ '), p.id ] }.sort ) %><%= submit_tag 'Bulk Move'%>
+		<% end%>		
+	<% end %>
 </div>
 
 <table class="padded" cellspacing="0">
@@ -114,6 +128,9 @@
 			multiple_ids = multiple_ids.without(o.value);
 		}
 		$('playlist_test_case_ids').value = multiple_ids;
+		$('test_case_ids1').value = multiple_ids;
+		$('test_case_ids2').value = multiple_ids;
+		$('test_case_ids3').value = multiple_ids;
 		if (multiple_ids != '')
 		{
 			$('multi_action').show();
