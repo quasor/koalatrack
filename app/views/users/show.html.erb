@@ -5,7 +5,7 @@
 		<th>Playlist</th>
 		<th>Status of test cases assigned to <%=@user.login.capitalize%></th>
 	</tr>
-<% if false %>
+<% if true %>
 <% for playlist in @user.associated_playlists%>
 	<% playlist_test_cases = playlist.playlist_test_cases.find_all_by_user_id(@user.id, :conditions => {'test_cases.active' => 1 }, :include => :test_case ) %>
 	<tr>
