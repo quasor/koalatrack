@@ -1,4 +1,4 @@
-class AddTestCaseVersions < ActiveRecord::Migration
+class AddTestCaseVersions1 < ActiveRecord::Migration
   def self.up
     TestCase.create_versioned_table
   end

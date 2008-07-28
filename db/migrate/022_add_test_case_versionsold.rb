@@ -1,4 +1,4 @@
-class AddTestCaseVersions < ActiveRecord::Migration
+class AddTestCaseVersionsold < ActiveRecord::Migration
   def self.up
     TestCase.drop_versioned_table
     TestCase.reset_column_information
