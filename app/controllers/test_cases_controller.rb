@@ -41,7 +41,14 @@ class TestCasesController < ApplicationController
       @test_case = TestCase.find(params[:id])
 #    end
     respond_to do |format|
-      format.html # show.html.erb
+      
+      format.html do
+        if params[:layout] != "false" 
+          render
+        else
+          render :inline => "<%=@test_case.body.blank? ? '~':@test_case.body%>"
+        end
+      end
       format.xml  { render :xml => @test_case }
     end
   end

@@ -1,25 +1,34 @@
-# require 'acts_as_ferret'
-# require 'memcache'
-# Be sure to restart your web server when you modify this file.
+# Be sure to restart your server when you modify this file
 
 # Uncomment below to force Rails into production mode when
 # you don't control web/app server and can't set it the proper way
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '1.2.3' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.1.0' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
-  # Settings in config/environments/* take precedence over those specified here
+  # Settings in config/environments/* take precedence over those specified here.
+  # Application configuration should go into files in config/initializers
+  # -- all .rb files in that directory are automatically loaded.
+  # See Rails::Configuration for more options.
 
-  # Skip frameworks you're not going to use (only works if using vendor/rails)
-  # config.frameworks -= [ :active_resource, :action_mailer ]
+  # Skip frameworks you're not going to use. To use Rails without a database
+  # you must remove the Active Record framework.
+  # config.frameworks -= [ :active_record, :active_resource, :action_mailer ]
 
-  # Only load the plugins named here, in the order given. By default all plugins in vendor/plugins are loaded, in alphabetical order
-  # :all can be used as a placeholder for all plugins not explicitly named.
+  # Specify gems that this application depends on. 
+  # They can then be installed with "rake gems:install" on new installations.
+  # config.gem "bj"
+  # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
+  # config.gem "aws-s3", :lib => "aws/s3"
+
+  # Only load the plugins named here, in the order given. By default, all plugins 
+  # in vendor/plugins are loaded in alphabetical order.
+  # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
   # Add additional load paths for your own custom dirs
@@ -29,16 +38,23 @@ Rails::Initializer.run do |config|
   # (by default production uses :info, the others :debug)
   # config.log_level = :debug
 
+  # Make Time.zone default to the specified zone, and make Active Record store time values
+  # in the database in UTC, and return them converted to the specified local zone.
+  # Run "rake -D time" for a list of tasks for finding time zone names. Uncomment to use default local time.
+  config.time_zone = 'UTC'
+
   # Your secret key for verifying cookie session data integrity.
   # If you change this key, all old sessions will become invalid!
+  # Make sure the secret is at least 30 characters and all random, 
+  # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
-    :session_key => '_tcm_session',
-    :secret      => 'b0ee8dc3f2e31a4788f4fca143b17e8e'
+    :session_key => '_tcm21_session',
+    :secret      => '38c3f4c1a8f0553dc059705891b6a3bb7d906a22f4dc713c270282d35138e9aa0943fb2815f5678e9923a45c0e5b5fd03aea69a5a7ad003b269521c4f7c89668'
   }
 
   # Use the database for sessions instead of the cookie-based default,
   # which shouldn't be used to store highly confidential information
-  # (create the session table with 'rake db:sessions:create')
+  # (create the session table with "rake db:sessions:create")
   # config.action_controller.session_store = :active_record_store
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
@@ -48,70 +64,4 @@ Rails::Initializer.run do |config|
 
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
-
-  # config.active_record.observers = :user_observer
-  
-  # Make Active Record use UTC-base instead of local time
-  # config.active_record.default_timezone = :utc
-
-  # See Rails::Configuration for more options
-
-  # Application configuration should go into files in config/initializers
-  # -- all .rb files in that directory is automatically loaded
 end
-
-
-
-# 
-# class ModelBaseRead < ActiveRecord::Base 
-#   self.abstract_class = true 
-#   establish_connection "qatraq"
-# 
-#   @@read_connection = self.connection 
-#   def self.read_connection 
-#     @@read_connection 
-#   end 
-# 
-#   def self.use_read_connection 
-#     use_connection(read_connection()) 
-#   end 
-# 
-#   def self.using_read_connection(&blk) 
-#     using_connection(read_connection, &blk) 
-#   end 
-# end 
-# 
-# class ModelBase < ModelBaseRead 
-#   self.abstract_class = true 
-#   establish_connection RAILS_ENV if defined? RAILS_ENV 
-# 
-#   @@write_connection = self.connection 
-#   def self.write_connection 
-#     @@write_connection 
-#   end 
-# 
-#   def self.use_write_connection 
-#     use_connection(write_connection()) 
-#   end 
-# 
-#   def self.using_write_connection(&blk) 
-#     using_connection(write_connection, &blk) 
-#   end 
-# end 
-# 
-# # Then define some model as 
-# class SomeModel < ModelBase 
-#   # some stuff 
-# end 
-# 
-# Then you can do nifty things like this: 
-#ModelBase.using_read_connection() do 
-#  s = SomeModel.find(:all) 
-#end 
-# or if you like... 
-#ModelBase.use_read_connection() 
-#s = SomeModel.find(:all) 
-#ModelBase.use_write_connection()
-
-
-# connection.execute("some sql where * etc;").

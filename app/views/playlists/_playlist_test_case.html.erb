@@ -20,6 +20,14 @@
 	</td>
   <td>
 		<%=link_to playlist_test_case.test_case.title, playlist_test_case.test_case %>
+		<% unless playlist_test_case.test_case.body.blank?%>
+		<%= link_to_function('...', "if($('tcprev_#{playlist_test_case.test_case.id}').innerHTML == ''){" + remote_function( 
+				:url => test_case_path(playlist_test_case.test_case, :layout => false), 
+				:update => { :success => "tcprev_#{playlist_test_case.test_case.id}"},
+				:complete => visual_effect(:highlight, "tcprev_#{playlist_test_case.test_case.id}", :duration => 0.3),
+				:method => :get) + ";}else{ $('tcprev_#{playlist_test_case.test_case.id}').innerHTML = '';}" )-%>
+		<div id="tcprev_<%=playlist_test_case.test_case.id%>" style=""></div>
+		<% end %>
 	</td>
   <td><%=h playlist_test_case.user.login if playlist_test_case.user_id %></td>
 	<td>

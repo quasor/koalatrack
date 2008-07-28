@@ -45,10 +45,12 @@ class PlaylistsController < ApplicationController
   # GET /playlists/1.xml
   require 'memcache_util'
   def show
-    if Cache.get('SummaryUpdater').nil? && params[:show_report]
-      Cache.put 'SummaryUpdater', true, 300
+    Rails.cache.fetch('RecentSummaryUpdater', :expires_in => 5) do 
       ExecutionSummary.build_summary      
       @refresh = true
+    end
+    Rails.cache.fetch('OnceDailySummaryUpdater', :expires_in => 24.hours) do 
+      ExecutionSummary.build_full_summary      
     end
     
     @playlist = Playlist.find(params[:id])
@@ -59,7 +61,7 @@ class PlaylistsController < ApplicationController
       session[:filtering] = false
     end
 
-    @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id JOIN test_cases ON playlist_test_cases.test_case_id = test_cases.id WHERE (`test_cases`.`active` = 1 AND `playlists`.`id` = #{@playlist.id}) GROUP BY last_result"
+    @summary = TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id JOIN test_cases ON playlist_test_cases.test_case_id = test_cases.id WHERE (`test_cases`.`active` = 1 AND `playlists`.`id` = #{@playlist.id}) GROUP BY last_result"
 
     if logged_in?
       @user_summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN playlists ON playlist_test_cases.playlist_id = playlists.id JOIN test_cases ON playlist_test_cases.test_case_id = test_cases.id WHERE (`test_cases`.`active` = 1 AND `playlists`.`id` = #{@playlist.id} AND `playlist_test_cases`.`user_id` = #{current_user.id}) GROUP BY last_result"
@@ -166,7 +168,6 @@ class PlaylistsController < ApplicationController
     @assign = params[:assign]
     @user_id = params[:playlist][:user_id]
     unless (@assign.nil? and @user_id.nil?)
-      
     end
     respond_to do |format|
       if @playlist.update_attributes(params[:playlist])
@@ -178,6 +179,18 @@ class PlaylistsController < ApplicationController
         format.xml  { render :xml => @playlist.errors, :status => :unprocessable_entity }
       end
     end
+  end
+  
+  def bulk_update
+    @playlist = Playlist.find(params[:id])
+    
+    if params[:q] && !params[:q].blank?
+      @playlist_test_case_ids = PlaylistTestCase.find_id_by_solr(params[:q]+" AND playlistid:#{@playlist.id}", :limit => 10000)
+    else
+      # grab everything
+      @playlist_test_case_ids = @playlist.playlist_test_cases.collect(&:id)
+    end
+    # commit"=>"Bulk Add Tag", "project"=>"add this project", "tag"=>"add this tag"    
   end
   
   # PUT /playlists/1
