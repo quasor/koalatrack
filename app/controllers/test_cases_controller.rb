@@ -46,7 +46,7 @@ class TestCasesController < ApplicationController
         if params[:layout] != "false" 
           render
         else
-          render :inline => "<%=@test_case.body.blank? ? '~':@test_case.body%>"
+          render :inline => "<%=@test_case.body.blank? ? '':@test_case.body%>"
         end
       end
       format.xml  { render :xml => @test_case }
