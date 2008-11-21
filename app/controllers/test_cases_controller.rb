@@ -1,6 +1,6 @@
 class TestCasesController < ApplicationController
   before_filter :login_required
-  ssl_required :show, :edit
+###  ssl_required :show, :edit
   
   rescue_from ActiveRecord::RecordNotFound do
     redirect_to test_cases_path
