@@ -26,8 +26,11 @@
 		<% else %>		
 	   	<div id="navigation">
 			<table border="0">
-				<tr><td><%= image_tag 'logo-64.png'%></td><td style="font-size:18px">KoalaTrack<br/>
-					</td></tr>
+				<% if logged_in? && %w(sanuras gzhao squick acoldham).include?(current_user.login) %>
+					<tr><td><%= image_tag 'walrus-64.png'%></td><td style="font-size:18px">WalrusTrack<br/></td></tr>
+				<% else %>
+					<tr><td><%= image_tag 'logo-64.png'%></td><td style="font-size:18px">KoalaTrack<br/></td></tr>
+				<% end %>
 			</table>
 			<% if logged_in? %>
 			<% form_tag test_cases_path, :method => 'get' do %>
