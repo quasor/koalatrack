@@ -16,7 +16,7 @@
 #
 
 class PlaylistTestCase < ActiveRecord::Base
-  acts_as_solr :fields => [:title, :bug, :assignedto, :body, :priority, :category, :playlistid, :result]
+#  acts_as_solr :fields => [:title, :bug, :assignedto, :body, :priority, :category, :playlistid, :result]
   belongs_to :playlist
   acts_as_list :scope => :playlist
 

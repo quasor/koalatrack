@@ -40,7 +40,7 @@ class TestCase < ActiveRecord::Base
   has_many :test_case_executions
   has_many :file_attachments
   
-  acts_as_solr :fields => [:title, :body, :tag, :owner, :project_id, :ancestor_ids]
+#  acts_as_solr :fields => [:title, :body, :tag, :owner, :project_id, :ancestor_ids]
   validates_presence_of     :title#, :body
 #  validates_uniqueness_of    :title, :scope => :category_id, :message => "of this test case has already been used in this sub-category"
 

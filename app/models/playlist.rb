@@ -13,7 +13,7 @@
 #
 
 class Playlist < ActiveRecord::Base
-  acts_as_solr :fields => [:title, :milestone_name, :user, :dead]
+#  acts_as_solr :fields => [:title, :milestone_name, :user, :dead]
   belongs_to :milestone
   has_many :playlist_test_cases, :order => :position, :dependent => :destroy
   has_many :test_cases, :through => :playlist_test_cases, :source => :test_case
