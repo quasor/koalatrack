@@ -43,14 +43,16 @@ class PlaylistsController < ApplicationController
 
   # GET /playlists/1
   # GET /playlists/1.xml
-  require 'memcache_util'
+  # require 'memcache_util'
   def show
+    if false
     Rails.cache.fetch('RecentSummaryUpdater', :expires_in => 5) do 
       ExecutionSummary.build_summary      
       @refresh = true
     end
     Rails.cache.fetch('OnceDailySummaryUpdater', :expires_in => 24.hours) do 
       ExecutionSummary.build_full_summary      
+    end
     end
     
     @playlist = Playlist.find(params[:id])
