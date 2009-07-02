@@ -1,80 +1,41 @@
-require 'vendor/plugins/acts_as_ferret/lib/ferret_cap_tasks'
-namespace :solr do
-  task :start, :roles => :app do
-      run "cd #{latest_release} && #{rake} solr:start RAILS_ENV=production 2>/dev/null"
-  end
-
-  task :stop, :roles => :app do
-      run "cd #{latest_release} && #{rake} solr:stop RAILS_ENV=production 2>/dev/null"
-  end
-
-  task :restart, :roles => :app do
-      solr.stop
-      solr.start
-  end
-end
-
-namespace :deploy do
-  namespace :mongrel do
-    [ :stop, :start, :restart ].each do |t|
-      desc "#{t.to_s.capitalize} the mongrel appserver"
-      task t, :roles => :app do
-        #invoke_command checks the use_sudo variable to determine how to run the mongrel_rails command
-        invoke_command "mongrel_rails cluster::#{t.to_s} -C #{mongrel_conf}", :via => run_method 
-      end
-    end
-  end
-
-  desc "Custom restart task for mongrel cluster"
-  task :restart, :roles => :app, :except => { :no_release => true } do
-    deploy.mongrel.restart
-    #ferret.restart
-  end
-
-  desc "Custom start task for mongrel cluster"
-  task :start, :roles => :app do
-    deploy.mongrel.start
-    #ferret.start
-  end
-
-  desc "Custom stop task for mongrel cluster"
-  task :stop, :roles => :app do
-    deploy.mongrel.stop
-    ferret.stop
-  end
-
-  desc "Set up the shared index"
-  task :after_setup, :roles => [:app, :web] do
-    run "mkdir -p -m 777 #{shared_path}/solr_data"
-  end
-  
-end
-
-
 set :application, "koalatrack"
-set :repository,  "svn+ssh://qm@youreasyhome.com/home/qm/svn/tcm/trunk"
+set :scm, :git
+set :repository,  "git@github.com:quasor/koalatrack.git"
+set :branch, "master"
 set :deploy_via, :remote_cache
+set :user, 'user'
+set :ssh_options, { :forward_agent => true }
+
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
+
 set :deploy_to, "/var/www/#{application}"
 
 # If you aren't using Subversion to manage your source code, specify
 # your SCM below:
 # set :scm, :subversion
 
-set :user, "acoldham"            # defaults to the currently logged in user
 set :use_sudo, false
-role :app, "192.168.0.177"
-role :web, "192.168.0.177"
-role :db,  "192.168.0.177", :primary => true
 
-set :mongrel_conf, "#{current_path}/config/mongrel_cluster.yml" 
+role :app, 'koalatrack.gotdns.com'
+role :web, 'koalatrack.gotdns.com'
+role :db,  'koalatrack.gotdns.com', :primary => true
+
+namespace :deploy do
+  desc "Restarting mod_rails with restart.txt"
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "touch #{current_path}/tmp/restart.txt"
+  end
+
+  [:start, :stop].each do |t|
+    desc "#{t} task is a no-op with mod_rails"
+    task t, :roles => :app do ; end
+  end
+end
 
 task :after_update_code, :roles => :app do
    run "ln -nfs '#{shared_path}/file_attachments' '#{release_path}/public/file_attachments'"
    run "ln -nfs '#{shared_path}/solr_data' '#{release_path}/vendor/plugins/acts_as_solr/solr/solr/data'"
 end
-
- #barrett walter allen orr 
