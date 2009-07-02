@@ -43,5 +43,5 @@ production:
   encoding: utf8
   database: tcm_production
   username: root
-  password: 
-  host: localhost
+  password: root
+  host: 127.0.0.1
