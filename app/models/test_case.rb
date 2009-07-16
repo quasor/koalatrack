@@ -24,7 +24,7 @@
 class TestCase < ActiveRecord::Base
   acts_as_taggable
   
-  set_cached_tag_list_column_name "tag"
+  #set_cached_tag_list_column_name "tag"
   
   acts_as_versioned 
   def owner
