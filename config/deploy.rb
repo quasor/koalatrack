@@ -3,7 +3,7 @@ set :scm, :git
 set :repository,  "git@github.com:quasor/koalatrack.git"
 set :branch, "master"
 set :deploy_via, :remote_cache
-set :user, 'user'
+set :user, 'andrew'
 set :ssh_options, { :forward_agent => true }
 
 
@@ -19,9 +19,9 @@ set :deploy_to, "/var/www/#{application}"
 
 set :use_sudo, false
 
-role :app, 'koalatrack.gotdns.com'
-role :web, 'koalatrack.gotdns.com'
-role :db,  'koalatrack.gotdns.com', :primary => true
+role :app, '172.30.145.57'
+role :web, '172.30.145.57'
+role :db,  '172.30.145.57', :primary => true
 
 namespace :deploy do
   desc "Restarting mod_rails with restart.txt"
@@ -37,5 +37,5 @@ end
 
 task :after_update_code, :roles => :app do
    run "ln -nfs '#{shared_path}/file_attachments' '#{release_path}/public/file_attachments'"
-   run "ln -nfs '#{shared_path}/solr_data' '#{release_path}/vendor/plugins/acts_as_solr/solr/solr/data'"
+#  run "ln -nfs '#{shared_path}/solr_data' '#{release_path}/vendor/plugins/acts_as_solr/solr/solr/data'"
 end
