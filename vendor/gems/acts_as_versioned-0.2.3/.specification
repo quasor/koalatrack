@@ -1,0 +1,92 @@
+--- !ruby/object:Gem::Specification 
+name: acts_as_versioned
+version: !ruby/object:Gem::Version 
+  version: 0.2.3
+platform: ruby
+authors: 
+- Rick Olson
+autorequire: acts_as_versioned
+bindir: bin
+cert_chain: 
+date: 2005-11-13 00:00:00 -08:00
+default_executable: 
+dependencies: 
+- !ruby/object:Gem::Dependency 
+  name: activerecord
+  type: :runtime
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: 1.10.1
+    version: 
+- !ruby/object:Gem::Dependency 
+  name: activesupport
+  type: :runtime
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: 1.1.1
+    version: 
+description: 
+email: technoweenie@gmail.com
+executables: []
+
+extensions: []
+
+extra_rdoc_files: []
+
+files: 
+- lib/acts_as_versioned.rb
+- test/abstract_unit.rb
+- test/database.yml
+- test/fixtures
+- test/migration_test.rb
+- test/schema.rb
+- test/versioned_test.rb
+- test/fixtures/locked_pages.yml
+- test/fixtures/locked_pages_revisions.yml
+- test/fixtures/migrations
+- test/fixtures/page.rb
+- test/fixtures/page_versions.yml
+- test/fixtures/pages.yml
+- test/fixtures/widget.rb
+- test/fixtures/migrations/1_add_versioned_tables.rb
+- README
+- MIT-LICENSE
+- CHANGELOG
+- RUNNING_UNIT_TESTS
+has_rdoc: true
+homepage: http://techno-weenie.net
+licenses: []
+
+post_install_message: 
+rdoc_options: []
+
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">"
+    - !ruby/object:Gem::Version 
+      version: 0.0.0
+  version: 
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+requirements: []
+
+rubyforge_project: 
+rubygems_version: 1.3.2
+signing_key: 
+specification_version: 1
+summary: Simple versioning with active record models
+test_files: 
+- test/migration_test.rb
+- test/versioned_test.rb
