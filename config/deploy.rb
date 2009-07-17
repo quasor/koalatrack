@@ -27,6 +27,7 @@ namespace :deploy do
   desc "Restarting mod_rails with restart.txt"
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "touch #{current_path}/tmp/restart.txt"
+    restart_sphinx
   end
 
   [:start, :stop].each do |t|
