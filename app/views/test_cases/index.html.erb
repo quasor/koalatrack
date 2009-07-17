@@ -45,8 +45,13 @@
 			<%= hidden_field( :test_case, :ids2 ) %><br>Add <%= text_field_tag :project %><%= submit_tag 'Bulk Add Project'%>
 		<% end%>		
 		<% form_for(:test_case, :url => {:controller => :test_cases, :action => :bulk}) do |f| %>
-			<%= hidden_field( :test_case, :ids3 ) %><br>Move to 	<%= f.select(:category_id, Category.find(:all).collect {|p| [ (p.ancestors.reverse + [p]).collect(&:name).join(' \ '), p.id ] }.sort ) %><%= submit_tag 'Bulk Move'%>
-		<% end%>		
+		<%
+		category_options = Rails.cache.fetch("category_dropdown_list" + Category.count.to_s) do
+			Category.find(:all).collect {|p| [ (p.ancestors.reverse + [p]).collect(&:name).join(' \ '), p.id ] }.sort 
+		end
+		%>
+			<%= hidden_field( :test_case, :ids3 ) %><br>Move to <%= f.select(:category_id, category_options ) %><%= submit_tag 'Bulk Move'%>
+		<% end %>		
 	<% end %>
 </div>
 

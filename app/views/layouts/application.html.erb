@@ -41,7 +41,9 @@
 				<%= link_to 'Query Syntax Help', "/query.html", :target => '_blank' %>
 				</span>					
 			<% end %><br/>
+			<% cache(:key => ['all_categories_tree', Category.count].join(':')) do %>
 			<%= renderCategoryTree%>
+			<% end %>
 			<% end %>
 	   	</div>
 		<% end %>

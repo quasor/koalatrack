@@ -22,7 +22,7 @@
 #
 
 class TestCase < ActiveRecord::Base
-  acts_as_taggable
+  acts_as_taggable_on :tags
   
   #set_cached_tag_list_column_name "tag"
   
@@ -41,6 +41,14 @@ class TestCase < ActiveRecord::Base
   has_many :file_attachments
   
 #  acts_as_solr :fields => [:title, :body, :tag, :owner, :project_id, :ancestor_ids]
+
+	define_index do
+		indexes :title
+		indexes :body
+		has category_id, user_id, active
+	end
+	
+
   validates_presence_of     :title#, :body
 #  validates_uniqueness_of    :title, :scope => :category_id, :message => "of this test case has already been used in this sub-category"
 

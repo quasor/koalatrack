@@ -33,9 +33,28 @@ namespace :deploy do
     desc "#{t} task is a no-op with mod_rails"
     task t, :roles => :app do ; end
   end
+
+
 end
 
 task :after_update_code, :roles => :app do
    run "ln -nfs '#{shared_path}/file_attachments' '#{release_path}/public/file_attachments'"
-#  run "ln -nfs '#{shared_path}/solr_data' '#{release_path}/vendor/plugins/acts_as_solr/solr/solr/data'"
+   run "ln -nfs #{shared_path}/db/sphinx #{release_path}/db/sphinx"
+end
+
+
+desc "Stop the sphinx server"
+task :stop_sphinx , :roles => :app do
+  run "cd #{current_path} && rake thinking_sphinx:stop RAILS_ENV=production"
+end
+
+desc "Start the sphinx server" 
+task :start_sphinx, :roles => :app do
+  run "cd #{current_path} && rake thinking_sphinx:configure RAILS_ENV=production && rake thinking_sphinx:start RAILS_ENV=production"
+end
+
+desc "Restart the sphinx server"
+task :restart_sphinx, :roles => :app do
+  stop_sphinx
+  start_sphinx
 end
