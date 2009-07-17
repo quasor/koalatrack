@@ -62,4 +62,6 @@ end
 desc "Restart the sphinx server"
 task :restart_sphinx, :roles => :app do
 	i_sphinx
+	stop_sphinx
+	start_sphinx
 end

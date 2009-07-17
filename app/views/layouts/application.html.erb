@@ -49,7 +49,8 @@
 		<% end %>
 		<div id="banner">
 			<div id="nav">
-			<% if logged_in? %>
+			DO NOT EXECUTE TEST CASES HERE
+			<% if logged_in? && false %>
 				<%= li_link_to_unless_current 'Home', current_user %>
 				<%=	li_link_to_unless_current 'Test Cases', test_cases_path%>
 				<%=	li_link_to_unless_current 'Playlists', playlists_path%>
