@@ -16,7 +16,7 @@ development:
   encoding: utf8
   database: tcm_development
   username: root
-  password: 
+  password: root
   host: localhost
 
 qatraq:

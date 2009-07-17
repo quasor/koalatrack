@@ -56,7 +56,7 @@
 	<% if playlist_test_case.last_result == 0%>
 		Not Run
 	<% else %>
-		<%= link_to_function 'History', "$$('.playlist_test_case_#{playlist_test_case.id}').invoke('toggle');"%>
+		<%= link_to_function 'History', "$$('.playlist_test_case_#{playlist_test_case.id}').invoke('show');"%>
 	<% end %>
 	</td>
 	<td id="playlist_test_case_<%=playlist_test_case.id%>_bugs">

@@ -105,7 +105,7 @@ class PlaylistsController < ApplicationController
           else              
             #@playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 25, :include => [:test_case_executions,{:test_case => :category},:user], :order => sort, :conditions => @conditions if logged_in?
 						#@playlist_test_cases = PlaylistTestCase.find :all, :include => [:test_case_executions,:user, {:test_case => :category}], :order => sort if logged_in?
-						@playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 25
+						@playlist_test_cases = @playlist.playlist_test_cases
           end
         end
         format.doc do

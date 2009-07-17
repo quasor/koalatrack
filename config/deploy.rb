@@ -54,8 +54,12 @@ task :start_sphinx, :roles => :app do
   run "cd #{current_path} && rake thinking_sphinx:configure RAILS_ENV=production && rake thinking_sphinx:start RAILS_ENV=production"
 end
 
+desc "index the sphinx server" 
+task :i_sphinx, :roles => :app do
+  run "cd #{current_path} && rake thinking_sphinx:index RAILS_ENV=production"
+end
+
 desc "Restart the sphinx server"
 task :restart_sphinx, :roles => :app do
-  stop_sphinx
-  start_sphinx
+	i_sphinx
 end
