@@ -21,12 +21,8 @@ class PlaylistTestCase < ActiveRecord::Base
   acts_as_list :scope => :playlist
 
   belongs_to :user
-  belongs_to :test_case
+  belongs_to :test_case, :class_name => "KoalaTestCase"
   has_many :test_case_executions
-
-	def test_case
-		TestCase.find(self.test_case_id)
-	end
 
   #Solr helpers:
   def title

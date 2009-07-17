@@ -15,13 +15,13 @@ class TestCasesController < ApplicationController
       end
       session[:last_cat_id] = params[:category_id]      
       if params[:q].nil? && @category
-        @test_cases = TestCase.paginate_by_category_id @category.id, :page => params[:page], :per_page => 50, :conditions => { :active => true}  
+        @test_cases = KoalaTestCase.paginate_by_category_id @category.id, :page => params[:page], :per_page => 50, :conditions => { :active => true}  
       elsif !params[:q].blank?
         if @category.nil?
 					logger.info "SEARCHING......................"
-          @test_cases = TestCase.search(params[:q], :page => params[:page], :per_page => 20, :group_by => 'category_id', :group_function => :attr, :conditions => { :active => true} )                    
+          @test_cases = KoalaTestCase.search(params[:q], :page => params[:page], :per_page => 20, :group_by => 'category_id', :group_function => :attr, :conditions => { :active => true} )                    
         else
-          @test_cases = TestCase.paginate_search(params[:q] + " & ancestor_ids:#{@category.id}", {:page => params[:page], :per_page => 50}, {:order => 'category_id', :conditions => { :active => true }})
+          @test_cases = KoalaTestCase.paginate_search(params[:q] + " & ancestor_ids:#{@category.id}", {:page => params[:page], :per_page => 50}, {:order => 'category_id', :conditions => { :active => true }})
         end
       else
         @test_cases = []
@@ -37,9 +37,9 @@ class TestCasesController < ApplicationController
   # GET /test_cases/1.xml
   def show
 #    if params[:version]
-#      @test_case = TestCase.find_version(params[:id], params[:version])
+#      @test_case = KoalaTestCase.find_version(params[:id], params[:version])
 #    else
-      @test_case = TestCase.find(params[:id])
+      @test_case = KoalaTestCase.find(params[:id])
 #    end
     respond_to do |format|
       
@@ -57,7 +57,7 @@ class TestCasesController < ApplicationController
   # GET /test_cases/new
   # GET /test_cases/new.xml
   def new
-    @test_case = TestCase.new( :user_id => current_user.id, :category_id => params[:category_id] )
+    @test_case = KoalaTestCase.new( :user_id => current_user.id, :category_id => params[:category_id] )
 
     @tag_favorites = current_user.group.tag_favorites + TagFavorite.find_all_by_group_id() + []
     
@@ -69,7 +69,7 @@ class TestCasesController < ApplicationController
 
   # GET /test_cases/1/edit
   def edit
-    @test_case = TestCase.find(params[:id])
+    @test_case = KoalaTestCase.find(params[:id])
     #@test_case.title = "Copy of #{@test_case.title}" if params[:clone]
     @tag_favorites = TagFavorite.find(:all)
   end
@@ -78,7 +78,7 @@ class TestCasesController < ApplicationController
   # POST /test_cases.xml
   def create
     @uploaded_data = params[:test_case].delete :uploaded_data if params[:test_case]
-    @test_case = TestCase.new(params[:test_case])
+    @test_case = KoalaTestCase.new(params[:test_case])
     @test_case.updated_by = current_user.id if logged_in?
 
     @tag_favorites = current_user.group.tag_favorites + TagFavorite.find_all_by_group_id() + []
@@ -91,7 +91,7 @@ class TestCasesController < ApplicationController
           @file_attachment = FileAttachment.new({:uploaded_data => @uploaded_data})
           @test_case.file_attachments << @file_attachment
         end        
-        flash[:notice] = 'TestCase was successfully created.'
+        flash[:notice] = 'KoalaTestCase was successfully created.'
         format.html { redirect_to(@test_case) }
         format.xml  { render :xml => @test_case, :status => :created, :location => @test_case }
       else
@@ -106,7 +106,7 @@ class TestCasesController < ApplicationController
   def update
     @test_case = current_user.group.test_cases.find(params[:id])
     
-    @uploaded_data = params[:test_case].delete :uploaded_data
+    @uploaded_data = params[:koala_test_case].delete :uploaded_data
     @test_case = @test_case.clone if params[:clone]
     @test_case.updated_by = current_user.id if logged_in?
     
@@ -118,7 +118,7 @@ class TestCasesController < ApplicationController
           @file_attachment = FileAttachment.new({:uploaded_data => @uploaded_data})
           @test_case.file_attachments << @file_attachment
         end        
-        flash[:notice] = 'TestCase was successfully updated.'
+        flash[:notice] = 'KoalaTestCase was successfully updated.'
         format.html { redirect_to(@test_case) }
         format.xml  { head :ok }
       else
@@ -144,7 +144,7 @@ class TestCasesController < ApplicationController
     flash[:notice] = 'Bulk Edit Complete'
     ids = params[:test_case][:ids1] || params[:test_case][:ids2] || params[:test_case][:ids3]
     ids = ids.split(',')
-    @test_cases = TestCase.find :all, :conditions => {:id => ids}
+    @test_cases = KoalaTestCase.find :all, :conditions => {:id => ids}
     if params[:commit] == "Bulk Add Tag" && !params[:tag].blank? && logged_in?
       @test_cases.each do |test_case|
         test_case.updated_by = current_user.id

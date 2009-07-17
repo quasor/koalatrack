@@ -18,16 +18,12 @@
 class TestCaseExecution < ActiveRecord::Base
   RESULTS = ['Not Run','Passed', 'Failed', 'Blocked', 'Not implemented'] 
 
-  belongs_to :test_case
+  belongs_to :test_case, :class_name => "KoalaTestCase"
   belongs_to :user
   belongs_to :playlist_test_case, :counter_cache => :test_case_executions_count
   
   validates_presence_of :playlist_test_case_id, :test_case_id, :test_case_version, :user_id, :result
   #TODO  validates_presence_of :bug_id
-
-	def test_case
-		TestCase.find(self.test_case_id)
-	end
     
   def bug_url
     (bug_id.split(',').collect { |bug| "<a target=\"_blank\" href=\"#{user.group.bugurl}#{bug.strip}\">#{bug.strip}</a>"}.join ' ') unless bug_id.nil? || bug_id.blank?

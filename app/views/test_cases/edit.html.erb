@@ -7,7 +7,7 @@
 
 <%= error_messages_for :test_case %>
 
-<% form_for(@test_case, :html => { :multipart => true }) do |f| %>
+<% form_for(@test_case, :url => test_case_path(@test_case), :html => { :multipart => true }) do |f| %>
 	<%= render :partial => 'form', :object => f%>
 	<%= hidden_field_tag :clone, 1 if params[:clone]%>
 	<p>
@@ -32,5 +32,5 @@
 <% end %>
 <p>
 </p>
-<%= link_to 'Show', @test_case %> |
+<%= link_to 'Show', test_case_path(@test_case) %> |
 <%= link_to 'Back', test_cases_path %>

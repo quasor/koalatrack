@@ -19,7 +19,7 @@
 		<%#= (playlist_test_case.test_case.category.ancestors.reverse + [playlist_test_case.test_case.category]).collect(&:name).join(' \ ') if playlist_test_case.test_case.category%>
 	</td>
   <td>
-		<%=link_to playlist_test_case.test_case.title, playlist_test_case.test_case %>
+		<%=link_to playlist_test_case.test_case.title, test_case_path(playlist_test_case.test_case) %>
 		<% unless playlist_test_case.test_case.body.blank?%>
 		<%= link_to_function('...', "if($('tcprev_#{playlist_test_case.test_case.id}').innerHTML == ''){" + remote_function( 
 				:url => test_case_path(playlist_test_case.test_case, :layout => false), 

@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   ROLE_USER = 3
   
   # Associations
-  has_many :test_cases
+  has_many :test_cases, :class_name => "KoalaTestCase"
   has_many :test_case_executions, :order => 'id DESC'
   has_many :edited_test_cases, :class_name => "TestCase" 
   has_many :playlists

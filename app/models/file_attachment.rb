@@ -18,5 +18,5 @@
 
 class FileAttachment < ActiveRecord::Base
   has_attachment :storage => :file_system
-  belongs_to :test_case
+  belongs_to :test_case, :class_name => "KoalaTestCase", :foreign_key => :test_case_id
 end
