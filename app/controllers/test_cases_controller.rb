@@ -22,8 +22,7 @@ class TestCasesController < ApplicationController
           @test_cases = KoalaTestCase.search(params[:q], :page => params[:page], :per_page => 20, :group_by => 'category_id', :group_function => :attr, :conditions => { :active => true} )                    
         else
 					flash[:notice] = "Please search from the top level"
-	        @test_cases = []
-          #@test_cases = KoalaTestCase.search(params[:q], :page => params[:page], :per_page => 20, :group_by => 'category_id', :group_function => :attr, :with => {ancestor_ids:}, :conditions => { :active => true} )                    
+          @test_cases = KoalaTestCase.search(params[:q], :page => params[:page], :per_page => 20, :group_by => 'category_id', :group_function => :attr, :with => {:category_id => @category.self_and_descendants.map(&:id)}, :conditions => { :active => true} )                    
           #@test_cases = KoalaTestCase.paginate_search(params[:q] + " & ancestor_ids:#{@category.id}", {:page => params[:page], :per_page => 50}, {:order => 'category_id', :conditions => { :active => true }})
         end
       else
