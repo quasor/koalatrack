@@ -24,6 +24,17 @@ class PlaylistTestCase < ActiveRecord::Base
   belongs_to :test_case, :class_name => "KoalaTestCase"
   has_many :test_case_executions
 
+	define_index do
+		indexes test_case.title, :as => :title
+		indexes user.login, :as => :assignedto		
+		indexes test_case.body, :as => :body
+		indexes test_case.category.name, :as => :category
+		indexes test_case.priority_in_feature, :as => :priority
+		
+		has playlist_id, user_id
+	end
+
+
   #Solr helpers:
   def title
     test_case.title

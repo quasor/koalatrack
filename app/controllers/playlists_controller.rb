@@ -18,7 +18,7 @@ class PlaylistsController < ApplicationController
       @conditions = { :dead => false }
     end
     if params[:q] && !params[:q].blank?
-      @playlists = Playlist.paginate_search(params[:q], {:per_page => 50, :page => params[:page]}, :conditions => @conditions )
+      #@playlists = Playlist.search(params[:q], {:per_page => 50, :page => params[:page]}, :conditions => @conditions )
       unless @playlists.empty?      
         @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN test_cases ON playlist_test_cases.test_case_id = koala_test_cases.id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`test_cases`.`active` = 1 AND `playlists`.`id` IN (#{@playlists.collect(&:id).join ','})) GROUP BY last_result"
         @bugs =  TestCaseExecution.find_by_sql "SELECT bug_id FROM test_case_executions JOIN playlist_test_cases ON playlist_test_cases.id = test_case_executions.playlist_test_case_id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','})  AND bug_id != '')"
@@ -98,10 +98,15 @@ class PlaylistsController < ApplicationController
           if params[:q] && !params[:q].blank?
             # @playlist_test_cases = PlaylistTestCase.paginate_search(params[:q]+" AND playlistid:#{@playlist.id}", {:page => params[:page], :per_page => 25}, {:include => [:test_case], :order => sort, :conditions => {:playlist_id => @playlist.id, 'koala_test_cases.active' => true}})      
             # new way, get the ids, then get the records :)
-            @playlist_test_case_ids = PlaylistTestCase.find_id_by_solr(params[:q]+" AND playlistid:#{@playlist.id}", :limit => 1000)
+            
+						if false
+						@playlist_test_case_ids = PlaylistTestCase.find_id_by_solr(params[:q]+" AND playlistid:#{@playlist.id}", :limit => 1000)
             @conditions = {:playlist_id => @playlist.id, :id => @playlist_test_case_ids.docs}
             @conditions.merge!("test_case_executions.updated_at" => nil) if session[:filtering] 
             @playlist_test_cases = PlaylistTestCase.paginate :page => params[:page], :per_page => 25, :include => [:test_case_executions,{:test_case => :category},:user], :order => sort, :conditions => @conditions if logged_in?           
+						else
+							@playlist_test_cases = PlaylistTestCase.search(params[:q], :page => params[:page], :per_page => 25, :include => [:test_case_executions,{:test_case => :category},:user], :with => {:playlist_id => @playlist.id})
+						end
           else              
             #@playlist_test_cases = @playlist.playlist_test_cases.paginate :page => params[:page], :per_page => 25, :include => [:test_case_executions,{:test_case => :category},:user], :order => sort, :conditions => @conditions if logged_in?
 						#@playlist_test_cases = PlaylistTestCase.find :all, :include => [:test_case_executions,:user, {:test_case => :category}], :order => sort if logged_in?
