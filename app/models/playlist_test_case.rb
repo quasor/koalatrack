@@ -30,8 +30,7 @@ class PlaylistTestCase < ActiveRecord::Base
 		indexes test_case.body, :as => :body
 		indexes test_case.category.name, :as => :category
 		indexes test_case.priority_in_feature, :as => :priority
-		
-		has playlist_id, user_id
+		has playlist_id, user_id, test_case_executions_count
 	end
 
 
