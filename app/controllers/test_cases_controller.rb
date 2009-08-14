@@ -77,8 +77,8 @@ class TestCasesController < ApplicationController
   # POST /test_cases
   # POST /test_cases.xml
   def create
-    @uploaded_data = params[:test_case].delete :uploaded_data if params[:test_case]
-    @test_case = KoalaTestCase.new(params[:test_case])
+    @uploaded_data = params[:koala_test_case].delete :uploaded_data if params[:koala_test_case]
+    @test_case = KoalaTestCase.new(params[:koala_test_case])
     @test_case.updated_by = current_user.id if logged_in?
 
     @tag_favorites = current_user.group.tag_favorites + TagFavorite.find_all_by_group_id() + []
@@ -113,7 +113,7 @@ class TestCasesController < ApplicationController
 #    update_tags
     
     respond_to do |format|
-      if @test_case.update_attributes(params[:test_case])
+      if @test_case.update_attributes(params[:koala_test_case])
         unless @uploaded_data.blank?
           @file_attachment = FileAttachment.new({:uploaded_data => @uploaded_data})
           @test_case.file_attachments << @file_attachment
@@ -142,7 +142,7 @@ class TestCasesController < ApplicationController
   
   def bulk
     flash[:notice] = 'Bulk Edit Complete'
-    ids = params[:test_case][:ids1] || params[:test_case][:ids2] || params[:test_case][:ids3]
+    ids = params[:koala_test_case][:ids1] || params[:koala_test_case][:ids2] || params[:koala_test_case][:ids3]
     ids = ids.split(',')
     @test_cases = KoalaTestCase.find :all, :conditions => {:id => ids}
     if params[:commit] == "Bulk Add Tag" && !params[:tag].blank? && logged_in?
@@ -164,24 +164,24 @@ class TestCasesController < ApplicationController
         test_case.save
       end
       redirect_to test_cases_path(:category_id => session[:last_cat_id])
-    elsif params[:commit] == "Bulk Move" && !params[:test_case][:category_id].blank? && logged_in?
+    elsif params[:commit] == "Bulk Move" && !params[:koala_test_case][:category_id].blank? && logged_in?
       @test_cases.each do |test_case|
         test_case.updated_by = current_user.id
-        test_case.category_id = params[:test_case][:category_id] 
+        test_case.category_id = params[:koala_test_case][:category_id] 
         test_case.save
       end
-      redirect_to test_cases_path(:category_id => params[:test_case][:category_id])
+      redirect_to test_cases_path(:category_id => params[:koala_test_case][:category_id])
     end
   end
 
 protected
   
   def update_tags
-    if params[:test_case]
-      @tags = (params[:test_case][:tag_list] || "") + (params[:quick_tag_list] || "")
+    if params[:koala_test_case]
+      @tags = (params[:koala_test_case][:tag_list] || "") + (params[:quick_tag_list] || "")
       @tags = @tags.split(',').collect{ |t| t.strip }.uniq.join(', ')
-      params[:test_case][:tag_list] = @tags
-      @test_case.tag = params[:test_case][:tag_list]
+      params[:koala_test_case][:tag_list] = @tags
+      @test_case.tag = params[:koala_test_case][:tag_list]
       @tag_favorites = TagFavorite.find(:all)    
     end 
   end

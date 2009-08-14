@@ -140,8 +140,12 @@ ActiveRecord::Schema.define(:version => 20090717180150) do
     t.datetime "updated_at"
   end
 
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version"
+  end
+
   create_table "sessions", :force => true do |t|
-    t.string   "session_id", :null => false
+    t.string   "session_id", :default => "", :null => false
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"

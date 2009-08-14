@@ -1,7 +1,12 @@
 
 <p>
   <label>Category:</label>
-	<%= form.select(:category_id, Category.find(:all).collect {|p| [ (p.ancestors.reverse + [p]).collect(&:name).join(' \ '), p.id ] }.sort ) %>
+<%
+	category_options = Rails.cache.fetch("category_dropdown_list" + Category.count.to_s) do
+		Category.find(:all).collect {|p| [ (p.ancestors.reverse + [p]).collect(&:name).join(' \ '), p.id ] }.sort 
+	end
+%>
+	<%= form.select(:category_id, category_options ) %>
 </p>
 
 <p>
@@ -12,7 +17,7 @@
 <p>
   <label>Body:</label>
 	<div id="<%= fckeditor_div_id('test_case', 'body') %>">
-      <%= fckeditor_textarea( "test_case", "body" , :width => 800, :height => 400) %> 
+      <%= fckeditor_textarea( "koala_test_case", "body" , :width => 800, :height => 400) %> 
   </div>
 </p>
 
@@ -44,14 +49,14 @@
 <p>
 	<label>Quick Tags:</label>
 	<% for tag in @tag_favorites %>
-		<%=check_box_tag tag.tag.name, tag.tag.name, false,  :onClick => "toggleQTag(this)" %><%= tag.tag.name%>
+		<%=check_box_tag tag.tag.name, tag.tag.name, @test_case.tags.find(:all, :conditions => {:id =>tag.tag.id}).size > 0,  :onClick => "toggleQTag(this)" %><%= tag.tag.name%>
 	<% end if @tag_favorites%>
 </p>
 <p>
 	<script>
 	function toggleQTag(cb)
 	{
-		ar = $('test_case_tag_list').value;
+		ar = $('koala_test_case_tag_list').value;
 		ar = ar.replace(/\s,/g, ',');
 		ar = ar.replace(/,\s/g, ',');		
 		if (ar.length)
@@ -71,7 +76,7 @@
 			ar = ar.without(cb.value);
 		}
 		val = ar.compact().uniq().join(",");
-		$('test_case_tag_list').value = val;
+		$('koala_test_case_tag_list').value = val;
 	}
 	</script>
   <label>Tags:</label>

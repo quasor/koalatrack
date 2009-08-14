@@ -18,6 +18,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :categories
 
   map.resources :test_cases, :new => {:bulk => :post}
+	map.resources :koala_test_cases, :as => :test_cases
 
   map.resources :users
 

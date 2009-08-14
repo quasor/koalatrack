@@ -9,7 +9,9 @@ module CategoriesHelper
       end
     end
     Group.find(:all).collect do |group|
-      groups = group.categories.find(:all).group_by {| l | l.parent_id }
+	    groups = Rails.cache.fetch("All_categories_as_tree_#{group.id}_#{Category.count}") do 
+				group.categories.find(:all).group_by {| l | l.parent_id }
+			end
       renderCategoryTreeFastDriver(nil,groups,@category)    
     end
   end
@@ -32,7 +34,9 @@ module CategoriesHelper
   end
 
   def categoryTree
-    groups = Category.find(:all).group_by {| l | l.parent_id }
+    groups = Rails.cache.fetch("All_categories_as_tree#{Category.count}") do 
+			Category.find(:all).group_by {| l | l.parent_id }
+		end
     categoryTreeFastDriver(nil,groups,@category)    
   end
   

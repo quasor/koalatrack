@@ -99,7 +99,7 @@
 		</td>
 -->
 		<td	>
-			<%=link_to (h test_case.title), test_case %></td>
+			<%=link_to (h test_case.title), test_case_path(test_case) %></td>
     <td><%=h test_case.user.login if test_case.user %></td>
     <td><%=h test_case.tag %></td>
 	<% unless params[:q]%>
