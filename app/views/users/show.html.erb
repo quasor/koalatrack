@@ -7,7 +7,7 @@
 	</tr>
 <% if true %>
 <% for playlist in @user.associated_playlists%>
-	<% playlist_test_cases = playlist.playlist_test_cases.find_all_by_user_id(@user.id, :conditions => {'test_cases.active' => 1 }, :include => :test_case ) %>
+	<% playlist_test_cases = playlist.playlist_test_cases.find_all_by_user_id(@user.id, :conditions => {'koala_test_cases.active' => 1 }, :include => :test_case ) %>
 	<tr>
 		<td><%= link_to playlist.title, playlist%></td>
 		<td>
