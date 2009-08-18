@@ -8,7 +8,7 @@
 <%= error_messages_for :test_case %>
 
 <% form_for(@test_case, :url => test_case_path(@test_case), :html => { :multipart => true }) do |f| %>
-	<%= render :partial => 'form', :object => f%>
+	<%= render :partial => 'form', :object => f, :locals => {:koala_test_case => @test_case}%>
 	<%= hidden_field_tag :clone, 1 if params[:clone]%>
 	<p>
 	  <label>Attachments:</label>

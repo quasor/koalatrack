@@ -1,18 +1,17 @@
 # == Schema Information
-# Schema version: 38
 #
 # Table name: test_case_executions
 #
-#  id                    :integer(11)   not null, primary key
-#  playlist_test_case_id :integer(11)   
-#  test_case_id          :integer(11)   
-#  test_case_version     :integer(11)   
-#  user_id               :integer(11)   
-#  result                :integer(11)   
-#  bug_id                :string(255)   
-#  comment               :text          
-#  created_at            :datetime      
-#  updated_at            :datetime      
+#  id                    :integer(4)      not null, primary key
+#  playlist_test_case_id :integer(4)
+#  test_case_id          :integer(4)
+#  test_case_version     :integer(4)
+#  user_id               :integer(4)
+#  result                :integer(4)
+#  bug_id                :string(255)
+#  comment               :text
+#  created_at            :datetime
+#  updated_at            :datetime
 #
 
 class TestCaseExecution < ActiveRecord::Base

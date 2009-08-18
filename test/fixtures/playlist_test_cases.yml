@@ -1,18 +1,17 @@
 # == Schema Information
-# Schema version: 38
 #
 # Table name: playlist_test_cases
 #
-#  id                         :integer(11)   not null, primary key
-#  playlist_id                :integer(11)   
-#  test_case_id               :integer(11)   
-#  test_case_version          :integer(11)   
-#  user_id                    :integer(11)   
-#  created_at                 :datetime      
-#  updated_at                 :datetime      
-#  test_case_executions_count :integer(11)   default(0)
-#  last_result                :integer(11)   default(0)
-#  position                   :integer(11)   
+#  id                         :integer(4)      not null, primary key
+#  playlist_id                :integer(4)
+#  test_case_id               :integer(4)
+#  test_case_version          :integer(4)
+#  user_id                    :integer(4)
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  test_case_executions_count :integer(4)      default(0)
+#  last_result                :integer(4)      default(0)
+#  position                   :integer(4)
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

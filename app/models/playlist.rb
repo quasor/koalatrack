@@ -1,15 +1,15 @@
 # == Schema Information
-# Schema version: 38
 #
 # Table name: playlists
 #
-#  id           :integer(11)   not null, primary key
-#  title        :string(255)   
-#  description  :text          
-#  user_id      :integer(11)   
-#  milestone_id :integer(11)   
-#  created_at   :datetime      
-#  updated_at   :datetime      
+#  id           :integer(4)      not null, primary key
+#  title        :string(255)
+#  description  :text
+#  user_id      :integer(4)
+#  milestone_id :integer(4)
+#  created_at   :datetime
+#  updated_at   :datetime
+#  dead         :boolean(1)
 #
 
 class Playlist < ActiveRecord::Base
@@ -19,6 +19,16 @@ class Playlist < ActiveRecord::Base
   has_many :test_cases, :through => :playlist_test_cases, :source => :test_case
   has_many :test_case_executions, :through => :playlist_test_cases, :dependent => :destroy
   belongs_to :user
+
+	define_index do
+		indexes :title
+		indexes milestone.name, :as => :milestone_name
+		indexes user.login, :as => :user
+		indexes :description		
+		has milestone_id, user_id, dead
+	end
+
+
   def milestone_name
     self.milestone.name
   end

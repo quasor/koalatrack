@@ -14,13 +14,14 @@ class PlaylistsController < ApplicationController
   # GET /playlists
   # GET /playlists.xml
   def index
+		@conditions = {}
     unless params[:dead] == "true"
       @conditions = { :dead => false }
     end
     if params[:q] && !params[:q].blank?
-      #@playlists = Playlist.search(params[:q], {:per_page => 50, :page => params[:page]}, :conditions => @conditions )
+      @playlists = Playlist.search(params[:q], :page => params[:page], :per_page => 50, :with => {:dead => params[:dead] == "true"} )
       unless @playlists.empty?      
-        @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN test_cases ON playlist_test_cases.test_case_id = koala_test_cases.id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`test_cases`.`active` = 1 AND `playlists`.`id` IN (#{@playlists.collect(&:id).join ','})) GROUP BY last_result"
+        @summary =  TestCaseExecution.find_by_sql "SELECT last_result as result, count(last_result) as total FROM playlist_test_cases JOIN koala_test_cases ON playlist_test_cases.test_case_id = koala_test_cases.id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`koala_test_cases`.`active` = 1 AND `playlists`.`id` IN (#{@playlists.collect(&:id).join ','})) GROUP BY last_result"
         @bugs =  TestCaseExecution.find_by_sql "SELECT bug_id FROM test_case_executions JOIN playlist_test_cases ON playlist_test_cases.id = test_case_executions.playlist_test_case_id JOIN playlists ON playlist_test_cases.playlist_id = playlists.id WHERE (`playlists`.`id` IN (#{@playlists.collect(&:id).join ','})  AND bug_id != '')"
         @last_date_tces = @playlists.collect { |p| p.test_case_executions.last }.flatten.compact.sort_by { |t| t.created_at }
         @last_date =@last_date_tces.last.created_at if @last_date_tces && @last_date_tces.last

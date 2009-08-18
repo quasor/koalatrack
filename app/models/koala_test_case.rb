@@ -1,24 +1,25 @@
 # == Schema Information
-# Schema version: 38
 #
-# Table name: test_cases
+# Table name: koala_test_cases
 #
-#  id                  :integer(11)   not null, primary key
-#  title               :string(255)   
-#  body                :text          
-#  user_id             :integer(11)   
-#  priority_in_feature :integer(11)   
-#  priority_in_product :integer(11)   
-#  estimate_in_hours   :float         
-#  automated           :boolean(1)    
-#  created_at          :datetime      
-#  updated_at          :datetime      
-#  updated_by          :integer(11)   
-#  category_id         :integer(11)   
-#  tag                 :string(255)   
-#  qatraq_id           :integer(11)   
-#  version             :integer(11)   
-#  project_id          :string(255)   
+#  id                    :integer(4)      not null, primary key
+#  title                 :string(255)
+#  body                  :text
+#  user_id               :integer(4)
+#  priority_in_feature   :integer(4)
+#  priority_in_product   :integer(4)
+#  estimate_in_hours     :float
+#  automated             :boolean(1)
+#  created_at            :datetime
+#  updated_at            :datetime
+#  updated_by            :integer(4)
+#  category_id           :integer(4)
+#  tag                   :string(255)
+#  qatraq_id             :integer(4)
+#  version               :integer(4)
+#  project_id            :string(255)
+#  active                :boolean(1)      default(TRUE)
+#  automation_class_path :string(255)
 #
 
 class KoalaTestCase < ActiveRecord::Base

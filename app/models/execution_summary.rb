@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: execution_summaries
+#
+#  date        :date
+#  playlist_id :integer(4)
+#  passed      :integer(4)
+#  failed      :integer(4)
+#  blocked     :integer(4)
+#  nyied       :integer(4)
+#
+
 class ExecutionSummary < ActiveRecord::Base
   def self.build_full_summary
     d1 = TestCaseExecution.find(:first).created_at.to_date
