@@ -80,6 +80,7 @@ class TestCasesController < ApplicationController
   # POST /test_cases.xml
   def create
     @uploaded_data = params[:koala_test_case].delete :uploaded_data if params[:koala_test_case]
+    params[:koala_test_case].merge!(params[:test_case])
     @test_case = KoalaTestCase.new(params[:koala_test_case])
     @test_case.updated_by = current_user.id if logged_in?
 
@@ -113,7 +114,7 @@ class TestCasesController < ApplicationController
     @test_case.updated_by = current_user.id if logged_in?
     
 #    update_tags
-    
+    params[:koala_test_case].merge!(params[:test_case])
     respond_to do |format|
       if @test_case.update_attributes(params[:koala_test_case])
         unless @uploaded_data.blank?
