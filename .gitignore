@@ -3,4 +3,8 @@ tmp/**/*
 .DS_Store
 doc/api
 doc/app
-
+db/sphinx/**/*
+nbproject/**/*
+nbproject/*
+config/development.sphinx.conf
+tcm_prod.sql
