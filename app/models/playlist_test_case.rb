@@ -25,10 +25,11 @@ class PlaylistTestCase < ActiveRecord::Base
 
 	define_index do
 		indexes test_case.title, :as => :title
-		indexes user.login, :as => :assignedto		
+		indexes user.login, :as => :assignedto, :sortable => true		
 		indexes test_case.body, :as => :body
-		indexes test_case.category.name, :as => :category
-		indexes test_case.priority_in_feature, :as => :priority
+		indexes test_case.category.name, :as => :category, :sortable => true
+		indexes test_case.category.ancestor_cache, :as => :category_string, :sortable => true
+		indexes test_case.priority_in_feature, :as => :priority, :sortable => true
 		has playlist_id, user_id, test_case_executions_count
 	end
 
