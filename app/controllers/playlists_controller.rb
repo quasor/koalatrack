@@ -100,7 +100,7 @@ class PlaylistsController < ApplicationController
            sort = case params[:sort]
              when "feature"  then :priority
              when "assigned" then :assignedto
-             when "category" then [:category, :category
+             when "category" then :category
              else
                nil
              end
