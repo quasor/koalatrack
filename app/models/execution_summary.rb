@@ -42,9 +42,7 @@ class ExecutionSummary < ActiveRecord::Base
       TestCaseExecution.connection.execute @sql
     end
   end
-  def self.build_summary
-    d1 = Date.yesterday
-    d2 = Date.today
+  def self.build_summary(d1 = Date.yesterday, d2 = Date.today)
     for date in (d1..d2) do  
     @sql = <<-SQL
     REPLACE INTO execution_summaries 
