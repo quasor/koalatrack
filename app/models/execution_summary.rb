@@ -12,7 +12,7 @@
 
 class ExecutionSummary < ActiveRecord::Base
   def self.build_full_summary
-    d1 = TestCaseExecution.find(:first).created_at.to_date
+    d1 = TestCaseExecution.last.created_at.to_date - 7  
     d2 = Date.today
     for date in (d1..d2) do  
     @sql = <<-SQL

@@ -1,0 +1,75 @@
+--- !ruby/object:Gem::Specification 
+name: alexvollmer-daemon-spawn
+version: !ruby/object:Gem::Version 
+  version: 0.1.0
+platform: ruby
+authors: 
+- Alex Vollmer
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2009-01-26 00:00:00 -08:00
+default_executable: daemon-spawn
+dependencies: 
+- !ruby/object:Gem::Dependency 
+  name: hoe
+  type: :runtime
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: 1.8.2
+    version: 
+description: Daemon launching and management made dead simple.  With daemon-spawn you can start, stop and restart processes that run in the background. Processed are tracked by a simple PID file written to disk.  In addition, you can choose to either execute ruby in your daemonized process or 'exec' another process altogether (handy for wrapping other services).
+email: 
+- alex@evri.com
+executables: 
+- daemon-spawn
+extensions: []
+
+extra_rdoc_files: 
+- History.txt
+- Manifest.txt
+- README.txt
+files: 
+- History.txt
+- Manifest.txt
+- README.txt
+- Rakefile
+- bin/daemon-spawn
+- lib/daemon-spawn.rb
+- test/test_daemon-spawn.rb
+- examples/echo_server.rb
+has_rdoc: true
+homepage: http://github.com/alexvollmer/daemon-spawn
+licenses: []
+
+post_install_message: 
+rdoc_options: 
+- --main
+- README.txt
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      version: "0"
+  version: 
+requirements: []
+
+rubyforge_project: daemon-spawn
+rubygems_version: 1.3.4
+signing_key: 
+specification_version: 2
+summary: Daemon launching and management made dead simple
+test_files: 
+- test/test_daemon-spawn.rb

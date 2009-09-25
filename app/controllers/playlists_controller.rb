@@ -47,13 +47,13 @@ class PlaylistsController < ApplicationController
   # require 'memcache_util'
   def show
 	  @playlist_test_cases =[]
-    if false
+    if true
     Rails.cache.fetch('RecentSummaryUpdater', :expires_in => 5) do 
-      ExecutionSummary.build_summary      
+      Delayed::Job.enqueue DelayedReprocess.new(false)
       @refresh = true
     end
     Rails.cache.fetch('OnceDailySummaryUpdater', :expires_in => 24.hours) do 
-      ExecutionSummary.build_full_summary      
+      Delayed::Job.enqueue DelayedReprocess.new(true)
     end
     end
     
